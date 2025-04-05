@@ -1,0 +1,54 @@
+{ "frames": [
+   {
+    "filename": "tiles.ase",
+    "frame": { "x": 0, "y": 0, "w": 102, "h": 78 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 102, "h": 78 },
+    "sourceSize": { "w": 102, "h": 78 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.5-arm64",
+  "image": "tiles.png",
+  "format": "RGBA8888",
+  "size": { "w": 102, "h": 78 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+   { "name": "empty", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 6, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 0 } }] },
+   { "name": "water", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 18, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "storage", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 18, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 5 } }] },
+   { "name": "ground", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "remains", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 30, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "soil", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 36, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "plant", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 42, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "wheatseedling", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 48, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "wheatsprout", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 54, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 4 } }] },
+   { "name": "wheatyoung", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 60, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 6 } }] },
+   { "name": "wheatgrown", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 66, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 7 } }] },
+   { "name": "wheathalf", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 72, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 5 } }] },
+   { "name": "wheatfull", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 78, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 6 } }] },
+   { "name": "parking", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 84, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 5 } }] },
+   { "name": "truck", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 90, "y": 6, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 6 } }] },
+   { "name": "sand", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 6, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "firmament", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 36, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "sand_wet", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 12, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "water_half", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 24, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "water_low", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 30, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 2 } }] },
+   { "name": "firmament_hole", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 42, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 2 } }] },
+   { "name": "cornseedling", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 48, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "cornsprout", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 54, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "cornyoung", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 60, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "corngrown", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 66, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 3 } }] },
+   { "name": "cornhalf", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 72, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 5 } }] },
+   { "name": "cornfull", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 78, "y": 18, "w": 6, "h": 12 }, "pivot": {"x": 0, "y": 6 } }] }
+  ]
+ }
+}

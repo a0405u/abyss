@@ -1,0 +1,3 @@
+GRAVITY = 9.8
+DRAG = 2
+PC_PLANKS = 2
