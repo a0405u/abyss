@@ -23,7 +23,7 @@ end
 function Mouse:draw()
 
     if self.visible then
-        self.sprite:draw(self.position.screen)
+        self.sprite:draw(DL_MOUSE, self.position.screen)
         -- deep.queue(mouse.dq, function() mouse.sprite:draw(mouse.posx, mouse.posy) end)
     end
 end
@@ -33,19 +33,23 @@ function Mouse:pressed(x, y, button, istouch, presses)
     local position = self:get_map_position(x, y)
 
     if self.plank then
-        self.plank:unfreeze()
+        self.plank:activate()
+        self.plank:add_nail(self.plank.point)
+        self.plank:add_nail(self.plank.position)
         self.plank = nil
         return
     end
 
-    if self.building then
-        self.building:unfreeze()
+    if self.building and game.player:in_range(position) then
+        self.building:activate()
         self.building = nil
         return
     end
 
-    self.plank = Plank(position)
-    game.map:add(self.plank)
+    if game.player:in_range(position) then
+        self.plank = Plank(position)
+        game.map:add(self.plank)
+    end
 end
 
 

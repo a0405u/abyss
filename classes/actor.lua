@@ -15,7 +15,7 @@ function Actor:init(position, name, sprite, args)
     if not args then args = {} end
 
     self.name = name or nil
-    self.sprite = sprites.explosion:instantiate()
+    self.sprite = sprites.player:instantiate()
     self.mass = 70
     self.position = position or Vector2()
     self.size = Vector2(1.5, 1.75)
@@ -28,17 +28,36 @@ function Actor:init(position, name, sprite, args)
     self.look_direction = 1
     self.jump_impulse = 8 * self.mass
     self.health = args.health or 3
+    self.range = 8
 
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, 0, self.size.x, self.size.y), 26)
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, self.size.y / 2, self.size.x, self.size.y), 26)
     self.fixture:setCategory(PC_PLAYER)
+    self.area = love.physics.newFixture(self.body, love.physics.newCircleShape(0, self.size.y / 2, self.range), 0)
+    self.area:setCategory(PC_PLAYER_AREA)
+    self.area:setSensor(true)
     self.body:setMass(self.mass)
+    self.body:setFixedRotation(true)
+
+    self.sprite.animation:play()
 end
 
 
 function Actor:update(dt)
 
+    self.sprite:update(dt)
+    self:update_direction(dt)
     self:move(dt)
+end
+
+
+function Actor:in_range(position, range)
+
+    range = range or self.range
+    if Vector2(self.position.x - position.x, self.position.y - position.y):length() > range then
+        return false
+    end
+    return true
 end
 
 
@@ -47,9 +66,10 @@ function Actor:draw()
     local position = game.map:get_draw_position(self.position)
     local size = game.map:get_scaled_vector(self.size)
 
-    love.graphics.points(position.x, position.y)
-    love.graphics.circle("fill", position.x, position.y, 1)
-    love.graphics.rectangle("fill", position.x - size.x / 2, position.y - size.y / 2, size.x, size.y)
+    -- love.graphics.points(position.x, position.y)
+    -- love.graphics.circle("fill", position.x, position.y, 1)
+    -- love.graphics.rectangle("fill", position.x - size.x / 2, position.y - size.y / 2, size.x, size.y)
+    self.sprite:draw(DL_PLAYER, position)
 end
 
 
@@ -57,7 +77,24 @@ function Actor:set_direction(direction)
 
     self.direction = direction
     self.look_direction = direction
-    self.moving = true
+    self.sprite.scale = Vector2(self.look_direction, 1)
+end
+
+
+function Actor:update_direction(dt)
+    if self.moving == false then
+        if self.direction ~= 0 then
+            self.moving = true
+            self.sprite.animation = self.sprite.animations.run
+            self.sprite.animation:play()
+        end
+    else
+        if self.direction == 0 then
+            self.moving = false
+            self.sprite.animation = self.sprite.animations.idle
+            self.sprite.animation:play()
+        end
+    end
 end
 
 
@@ -75,8 +112,7 @@ function Actor:move(dt)
 
     -- self.velocity.x = math.clamp(self.velocity.x, -self.max_speed, self.max_speed)
 
-    self.position:set(self.body:getPosition())
-    self.moving = false
+    self.position = Vector2(self.body:getPosition())
     self.direction = 0
 end
 

@@ -2,9 +2,14 @@ local sprites = {}
 
 --- @param filepath string
 --- @return love.Image
-local function load_from_file(filepath)
+local function load_from_file(filepath, size, scale, offset)
 
-    return love.graphics.newImage(filepath .. ".png")
+    local image = love.graphics.newImage(filepath .. ".png")
+    if love.filesystem.getInfo(filepath .. ".json") then
+        local data = json.decode(love.filesystem.read(filepath .. ".json"))
+        return Sprite(image, data, size, scale, offset)
+    end
+    return Sprite(image, nil, size, scale, offset)
 end
 
 --- @param image_data love.ImageData
@@ -18,17 +23,10 @@ end
 function sprites.load(filepath)
 
     sprites.load_ui()
-    local image = load_from_file("sprites/explosion")
-    local frames = Animation.get_frames(image, Vector2(32, 32), Vector2(0, 0), 3)
-    local animation = Animation(image, frames, 0.083)
-    sprites.explosion = Sprite({idle = animation}, Vector2(1, 1), Vector2(16, 16))
-
-    image = load_from_file("sprites/house_1")
-    local file = love.filesystem.newFile("sprites/house_1.json")
-    local data = json.decode(file)
-    frames = sprites.load_spritesheet(image)
-    animation = Animation(image, frames, 0.083)
-    sprites.building = Sprite({idle = animation}, Vector2(1, 1), Vector2(image:getWidth() / 2, image:getHeight() / 2))
+    sprites.player = load_from_file("sprites/player")
+    sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
+    sprites.nail = load_from_file("sprites/nail")
+    sprites.building = load_from_file("sprites/house_1")
 end
 
 
@@ -41,14 +39,14 @@ end
 
 function sprites.load_ui()
 
-    sprites.mouse = Sprite(load_from_file("sprites/mouse"))
-    sprites.cursor = Sprite(load_from_file("sprites/cursor"))
-    sprites.hand = Sprite(load_from_file("sprites/hand"))
-    sprites.item_frame = Sprite(load_from_file("sprites/item_frame"))
+    sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector2(0, 0))
+    sprites.cursor = load_from_file("sprites/cursor")
+    sprites.hand = load_from_file("sprites/hand")
+    sprites.item_frame = load_from_file("sprites/item_frame")
 
     sprites.screen = {
 
-        logo = Sprite(load_from_file("sprites/logo"))
+        logo = load_from_file("sprites/logo")
     }
 end
 

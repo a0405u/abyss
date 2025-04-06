@@ -23,10 +23,20 @@ end
 
 function game.beginContact(a, b, contact)
 
+    if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
+
+        -- b:getBody():getUserData():presolve(a, b, contact)
+        return
+    end
 end
 
 function game.endContact(a, b, contact)
 
+    if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
+
+        a:getBody():getUserData():endcontact(a, b, contact)
+        return
+    end
 end
 
 function game.preSolve(a, b, contact)
@@ -69,15 +79,8 @@ end
 
 function game.draw()
 
-    screen.setCanvas(canvas.screen.main)
-    love.graphics.clear(color.black)
-
     game.map:draw()
-
-    color.reset()
     game.player:draw()
-
-    -- palette:draw()
     ui:draw()
 end
 

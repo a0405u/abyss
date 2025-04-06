@@ -140,3 +140,8 @@ function bool_to_inv_number(value)
 
   return value and 0 or 1
 end
+
+function sign(n)
+
+  return n >= 0 and 1 or -1
+end

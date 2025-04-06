@@ -12,6 +12,8 @@ function screen.load()
     screen.height = config.screen.height
     screen.scale = config.screen.scale
 
+    screen.layer = deep:new()
+
     love.window.setTitle(config.screen.title)
     love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
 
@@ -30,7 +32,10 @@ function screen.draw()
 
     -- screen[screen.state].draw() -- Запуск функции соответствующей состоянию экрана
 
+    screen.setCanvas(canvas.screen.main)
+    love.graphics.clear(color.black)
     game.draw()
+    screen.layer:draw()
 
     if config.screen.scanlines == true then
         screen.scanlines()

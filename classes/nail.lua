@@ -1,26 +1,40 @@
---- @class Nail
+--- @class Nail: Object
 local Nail = class("Nail", Object)
 
---- @param a love.Body
---- @param b love.Body
-function Nail:init(position, a, b, allow_rotation)
+function Nail:init(position, a, b, fixed)
 
     self.position = position or Vector2()
-    self.body = {
+    self.sprite = sprites.nail
+    self.objects = {
         a = a,
         b = b
     }
-    self.allow_rotation = (allow_rotation ~= false)
-    if allow_rotation then
-        self.joint = love.physics.newRevoluteJoint(a, b, self.position.x, self.position.y, false)
+    if a.nails then a.nails[self] = self end
+    if b.nails then b.nails[self] = self end
+    self.strength = 400
+    self.fixed = (fixed ~= false)
+
+    if not self.fixed then
+        print("Added new nail at:", position.x, position.y)
+        self.joint = love.physics.newRevoluteJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
     else
-        self.joint = love.physics.newWeldJoint(a, b, self.position.x, self.position.y, false)
+        print("Added new weld at:", position.x, position.y)
+        self.joint = love.physics.newWeldJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
     end
+end
+
+
+function Nail:destroy()
+    self.joint:destroy()
+    self.parent:remove(self)
 end
 
 
 function Nail:update(dt)
 
+    if not self.fixed and Vector2(self.joint:getReactionForce(1/dt)):length() > self.strength then
+        self:destroy()
+    end
     -- print(self.joint:getAnchors())
 end
 
@@ -28,8 +42,9 @@ end
 function Nail:draw()
 
     local position = game.map:get_draw_position(self.position)
-    color.set(color.red)
-    love.graphics.points(position.x, position.y)
+    -- color.set(color.red)
+    -- love.graphics.points(position.x, position.y)
+    self.sprite:draw(DL_NAIL, position)
 end
 
 
