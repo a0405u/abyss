@@ -11,14 +11,12 @@ function Nail:init(position, a, b, fixed)
     }
     if a.nails then a.nails[self] = self end
     if b.nails then b.nails[self] = self end
-    self.strength = 400
+    self.strength = 8000
     self.fixed = (fixed ~= false)
 
     if not self.fixed then
-        print("Added new nail at:", position.x, position.y)
         self.joint = love.physics.newRevoluteJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
     else
-        print("Added new weld at:", position.x, position.y)
         self.joint = love.physics.newWeldJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
     end
 end
@@ -26,6 +24,8 @@ end
 
 function Nail:destroy()
     self.joint:destroy()
+    if self.objects.a.nails then self.objects.a.nails[self] = nil end
+    if self.objects.b.nails then self.objects.b.nails[self] = nil end
     self.parent:remove(self)
 end
 

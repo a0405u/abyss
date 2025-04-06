@@ -51,6 +51,23 @@ function Plank:init(position, rotation, length, mass)
     self.body:setFixedRotation(true)
     self.body:setActive(false)
     self.nails = {}
+    
+end
+
+
+function Plank:activate()
+
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), 28)
+    print(self.body:getMass())
+    self.fixture:setCategory(PC_PLANK)
+    self.ghost = false
+    self.body:setActive(true)
+
+    if (math.abs(self.rotation) > math.pi / 3 and math.abs(self.rotation) < 2 * math.pi / 3) then
+        self:set_type(Type.column, self.sprite.animations.column)
+    else
+        self:set_type(Type.platform, self.sprite.animations.platform)
+    end
 end
 
 
@@ -71,7 +88,6 @@ function Plank:destroy(point)
 
     for key, nail in pairs(self.nails) do
         nail:destroy()
-        self.nails[key] = nil
     end
     self.body:destroy()
     if self.length > 2 then
@@ -105,7 +121,7 @@ end
 function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 
     if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector2(contact:getPositions())) end
+        self.update = function(dt) self:destroy(Vector2(contact.position)) end
     end
 end
 
@@ -145,21 +161,6 @@ function Plank:add_nail(position)
 end
 
 
-function Plank:activate()
-
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width))
-    self.fixture:setCategory(PC_PLANK)
-    self.ghost = false
-    self.body:setActive(true)
-
-    if (math.abs(self.rotation) > math.pi / 3 and math.abs(self.rotation) < 2 * math.pi / 3) then
-        self:set_type(Type.column, self.sprite.animations.column)
-    else
-        self:set_type(Type.platform, self.sprite.animations.platform)
-    end
-end
-
-
 --- @param point Vector2
 function Plank:set_point(point)
     local vector = Vector2(point.x - self.position.x, point.y - self.position.y)
@@ -191,19 +192,6 @@ function Plank:update(dt)
     self.point = Vector2(
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
-
-    local contacts = self.body:getContacts()
-
-    for i, contact in ipairs(contacts) do
-
-        local x, y = contact:getPositions()
-        local nx, ny = contact:getNormal()
-        if ny > 0.5 and self.position.y > y then
-            -- contact:setEnabled(false)
-            return true
-        end
-    end
-    return false
 end
 
 

@@ -50,9 +50,17 @@ end
 
 function game.postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
-    if a:getCategory() == PC_PLAYER and b:getCategory() == PC_PLANK then
+    local cache = {
+        position = contact:getPositions()
+    }
 
-        b:getBody():getUserData():postsolve(a, b, contact, normalimpulse, tangentimpulse)
+    if a:getCategory() == PC_PLANK then
+        a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
+        return
+    end
+
+    if b:getCategory() == PC_PLANK then
+        b:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
         return
     end
 end
