@@ -8,7 +8,7 @@ local Animation = class("Animation")
 function Animation:init(image, frames, durations, on_loop, parent)
 
     assert(image, "No image provided for Animation!")
-    if frames == nil then frames = Animation.get_frames(image, Vector2(image:getWidth(), image:getHeight()), Vector2(0, 0), 1) end
+    if frames == nil then frames = Animation.get_frames(image, Vector2(image:getHeight(), image:getHeight()), Vector2(0, 0), image:getWidth() / image:getHeight()) end
     if durations == nil then durations = 1 end
     if (type(durations) == "number") then
         local duration = durations
@@ -20,6 +20,7 @@ function Animation:init(image, frames, durations, on_loop, parent)
 
     self.parent = parent or nil
     self.image = image
+    self.size = frames.size
     self.frames = frames
     self.durations = durations
     self.frame = 1
@@ -77,6 +78,7 @@ function Animation.get_frames(image, size, offset, count)
     for i = 1, count do
         frames[i] = love.graphics.newQuad(offset.x + size.x * (i - 1), offset.y, size.x, size.y, image)
     end
+    frames.size = size
     return frames
 end
 

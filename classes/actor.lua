@@ -31,6 +31,7 @@ function Actor:init(position, name, sprite, args)
 
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, 0, self.size.x, self.size.y), 26)
+    self.fixture:setCategory(PC_PLAYER)
     self.body:setMass(self.mass)
 end
 

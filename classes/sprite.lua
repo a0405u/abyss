@@ -6,8 +6,28 @@ local Sprite = class("Sprite")
 
 --- @param input table|love.Image|Animation
 function Sprite:init(input, scale, offset, parent)
-
     assert(input, "No input provided for Sprite!")
+
+    if type(input) == "string" then
+        local filepath = input
+        input = {}
+        input.image = love.graphics.newImage(filepath .. ".png")
+        input.data = json.decode(love.filesystem.newFile(filepath .. ".json"))
+    end
+
+    if type(input) == "table" and input.image and input.data then
+        self.data = {
+            tags = input.data.meta.frameTags,
+            layers = input.data.meta.layers,
+            slices = input.data.meta.slices,
+        }
+        self.image = image
+        self.animations = {}
+        for i, tag in self.data.tags do
+            local frames = 
+            self.animations[tag.name] = Animation()
+        end
+    end
 
     if input.typeOf and input:typeOf("Image") then
         self.animations = {idle = Animation(input)}
@@ -24,7 +44,7 @@ function Sprite:init(input, scale, offset, parent)
     assert(self.animations.idle, "No idle animation provided for Sprite!")
     self.parent = parent or nil
     self.animation = self.animations.idle
-    self.size = Vector2(0, 0)
+    self.size = self.animations.idle.size
     self.scale = scale or Vector2(1, 1)
     self.offset = offset or Vector2(0, 0)
 end

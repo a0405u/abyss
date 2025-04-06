@@ -21,7 +21,7 @@ end
 
 function Nail:update(dt)
 
-
+    -- print(self.joint:getAnchors())
 end
 
 

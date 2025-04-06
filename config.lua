@@ -1,7 +1,12 @@
+-- #TODO Json
 local config = {}
 
 config.physics = {
     scale = 1
+}
+
+config.theme = {
+    palette = "sprites/palette.png"
 }
 
 config.screen = {
@@ -36,6 +41,9 @@ config.input = {
     back = "escape",
     start = "enter",
     select = "space",
+    one = "1",
+    two = "2",
+    three = "3",
 }
 
 return config

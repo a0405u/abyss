@@ -3,7 +3,6 @@ require "headers"
 function love.load()
 
     love.physics.setMeter(config.physics.scale)
-    color.load("sprites/palette.png")
     font.load()
     sound.load()        
     screen.load()

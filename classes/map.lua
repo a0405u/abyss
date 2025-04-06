@@ -14,8 +14,11 @@ function Map:init()
         y = screen.height / self.scale
     }
     self.objects = {}
-    self.body = love.physics.newBody(game.world, self.size.x / 2, 0, "static")
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, 2))
+    self.ground = {
+        height = 2
+    }
+    self.body = love.physics.newBody(game.world, self.size.x / 2, self.ground.height / 2, "static")
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.ground.height))
 end
 
 
@@ -27,6 +30,9 @@ end
 
 function Map:draw()
 
+    local position = self:get_draw_position(Vector2(self.size.x, self.ground.height))
+    color.set(color.darkest)
+    love.graphics.line(0, position.y, position.x, position.y)
     color.reset()
     Object.draw(self)
 end

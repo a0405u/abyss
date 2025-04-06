@@ -1,6 +1,5 @@
 local color = {}
 
-
 function color.load(palette)
 
     data = love.image.newImageData(palette)
@@ -167,5 +166,6 @@ function rgba(r, g, b, a)
     return {r/255, g/255, b/255, a}
 end
 
+color.load(config.theme.palette)
 
 return color

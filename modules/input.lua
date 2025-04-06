@@ -17,6 +17,12 @@ function love.keypressed(key, scancode, isrepeat)
     if key == config.input.select then
         game.player:jump()
     end
+
+    if key == config.input.one then
+        if not ui.mouse.building then
+            game.spawn_building(ui.mouse.position.map)
+        end
+    end
 end
 
 

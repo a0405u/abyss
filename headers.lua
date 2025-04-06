@@ -7,6 +7,7 @@ deep = require "lib/deep"
 time = require "lib/cron"
 utf8 = require "lib/utf8"
 file = require "lib/file"
+json = require "lib/json"
 
 Signal = require "lib/signal"
 
@@ -45,3 +46,4 @@ Map = require "classes/map"
 Actor = require "classes/actor"
 Plank = require "classes/plank"
 Nail = require "classes/nail"
+Building = require "classes/building"
