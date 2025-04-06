@@ -28,6 +28,16 @@ function game.beginContact(a, b, contact)
         -- b:getBody():getUserData():presolve(a, b, contact)
         return
     end
+    if a:getCategory() == PC_PLAYER_FLOOR_BOX then
+
+        game.player:begincontact(b, contact)
+        return
+    end
+    if b:getCategory() == PC_PLAYER_FLOOR_BOX then
+
+        game.player:begincontact(a, contact)
+        return
+    end
 end
 
 function game.endContact(a, b, contact)
@@ -35,6 +45,16 @@ function game.endContact(a, b, contact)
     if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
 
         a:getBody():getUserData():endcontact(a, b, contact)
+        return
+    end
+    if a:getCategory() == PC_PLAYER_FLOOR_BOX then
+
+        game.player:endcontact(b, contact)
+        return
+    end
+    if b:getCategory() == PC_PLAYER_FLOOR_BOX then
+
+        game.player:endcontact(a, contact)
         return
     end
 end

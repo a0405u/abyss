@@ -29,6 +29,7 @@ function Actor:init(position, name, sprite, args)
     self.jump_impulse = 8 * self.mass
     self.health = args.health or 3
     self.range = 8
+    self.floor_count = 0
 
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, self.size.y / 2, self.size.x, self.size.y), 26)
@@ -36,6 +37,9 @@ function Actor:init(position, name, sprite, args)
     self.area = love.physics.newFixture(self.body, love.physics.newCircleShape(0, self.size.y / 2, self.range), 0)
     self.area:setCategory(PC_PLAYER_AREA)
     self.area:setSensor(true)
+    self.floor_box = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, 1), 0)
+    self.floor_box:setCategory(PC_PLAYER_FLOOR_BOX)
+    self.floor_box:setSensor(true)
     self.body:setMass(self.mass)
     self.body:setFixedRotation(true)
 
@@ -126,19 +130,21 @@ function Actor:jump()
 end
 
 
+function Actor:begincontact(body, contact)
+    
+    self.floor_count = math.max(0, self.floor_count + 1)
+end
+
+
+function Actor:endcontact(body, contact)
+
+    self.floor_count = math.max(0, self.floor_count - 1)
+end
+
+
 function Actor:is_on_floor()
 
-    local contacts = self.body:getContacts()
-
-    for i, contact in ipairs(contacts) do
-
-        local x, y = contact:getPositions()
-        local nx, ny = contact:getNormal()
-        if ny > 0.5 or ny < -0.5 and self.position.y > y then
-            return true
-        end
-    end
-    return false
+    return self.floor_count > 0
 end
 
 return Actor

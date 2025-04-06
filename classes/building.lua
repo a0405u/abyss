@@ -48,7 +48,7 @@ function Building:draw()
 
     color.reset()
     local position = game.map:get_draw_position(self.position)
-    self.sprite:draw(position, -self.rotation)
+    self.sprite:draw(DL_BUILDING, position, -self.rotation)
 end
 
 

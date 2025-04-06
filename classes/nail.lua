@@ -11,7 +11,7 @@ function Nail:init(position, a, b, fixed)
     }
     if a.nails then a.nails[self] = self end
     if b.nails then b.nails[self] = self end
-    self.strength = 8000
+    self.strength = NAIL_STRENGTH
     self.fixed = (fixed ~= false)
 
     if not self.fixed then
@@ -32,10 +32,11 @@ end
 
 function Nail:update(dt)
 
-    if not self.fixed and Vector2(self.joint:getReactionForce(1/dt)):length() > self.strength then
+    if not self.fixed and Vector2(self.joint:getReactionForce(1)):length() > self.strength then
         self:destroy()
+        return
     end
-    -- print(self.joint:getAnchors())
+    self.position.x, self.position.y = self.joint:getAnchors()
 end
 
 

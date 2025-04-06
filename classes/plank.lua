@@ -41,7 +41,7 @@ function Plank:init(position, rotation, length, mass)
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
     self.velocity = Vector2()
-    self.strength = 120
+    self.strength = PLANK_STRENGTH
     self.mass = mass or self.length * 5
     self.ghost = true
     self.frozen = true
@@ -58,7 +58,6 @@ end
 function Plank:activate()
 
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), 28)
-    print(self.body:getMass())
     self.fixture:setCategory(PC_PLANK)
     self.ghost = false
     self.body:setActive(true)
@@ -152,7 +151,6 @@ function Plank:add_nail(position)
 
             if fixture == self.fixture then return true end
             if fixture:testPoint(position.x, position.y) and fixture:getCategory() == PC_PLANK then
-                print("Plank")
                 game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self, false))
             end
             return true
