@@ -1,26 +1,27 @@
 local screen = {
-    map = {},
+    logo = {},
     game = {},
     death = {},
     editor = {},
 }
 
 
-function screen.load()
+screen.width = config.screen.width
+screen.height = config.screen.height
+screen.scale = DEBUG and 2 or config.screen.scale
+screen.state = screen.logo
 
-    screen.width = config.screen.width
-    screen.height = config.screen.height
-    screen.scale = config.screen.scale
+love.window.setTitle(config.screen.title)
+love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
 
-    screen.layer = deep:new()
+love.graphics.setDefaultFilter(config.screen.filtermode, config.screen.filtermode)
+love.graphics.setLineStyle(config.screen.linestyle)
+love.mouse.setVisible(config.screen.os_mouse_visibility)
 
-    love.window.setTitle(config.screen.title)
-    love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
+love.window.setFullscreen(config.screen.fullscreen)
 
-    love.graphics.setDefaultFilter(config.screen.filtermode, config.screen.filtermode)
-    love.graphics.setLineStyle(config.screen.linestyle)
-    love.mouse.setVisible(config.screen.os_mouse_visibility)
-end
+screen.time = 0
+screen.layer = deep:new()
 
 
 function screen.draw()
@@ -30,11 +31,7 @@ function screen.draw()
     --     return
     -- end
 
-    -- screen[screen.state].draw() -- Запуск функции соответствующей состоянию экрана
-
-    screen.setCanvas(canvas.screen.main)
-    love.graphics.clear(color.black)
-    game.draw()
+    screen.state.draw() -- Запуск функции соответствующей состоянию экрана
     screen.layer:draw()
 
     if config.screen.scanlines == true then
@@ -49,14 +46,6 @@ end
 
 function screen.update(dt)
     screen.time = screen.time + dt
-
-    if screen.state == "intro" and screen.time > 8 then
-        game.logo()
-    end
-
-    if screen.state == "logo" and screen.time > 3 then
-        game.title()
-    end
 end
 
 
@@ -86,19 +75,19 @@ function screen.fps()
 end
 
 
+function screen.logo.draw()
+
+    sprites.screen.logo:draw(DL_UI, Vector2(screen.width / 2, screen.height / 2))
+    if screen.time > 3 then
+        screen.state = screen.game
+        game:start()
+    end
+end
+
+
 function screen.game.draw()
 
-    screen.setCanvas(canvas.screen.main)
-    love.graphics.clear(color.black)
-
-    color.reset()
-
-    game.map.draw()
-    -- ui.draw()
-    -- cursor.draw()
-    mouse:draw()
-
-    deep.execute()
+    game:draw()
 end
 
 

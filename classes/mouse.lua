@@ -23,7 +23,7 @@ end
 function Mouse:draw()
 
     if self.visible then
-        self.sprite:draw(DL_MOUSE, self.position.screen)
+        self.sprite:draw(DL_UI_MOUSE, self.position.screen)
         -- deep.queue(mouse.dq, function() mouse.sprite:draw(mouse.posx, mouse.posy) end)
     end
 end
@@ -31,24 +31,29 @@ end
 function Mouse:pressed(x, y, button, istouch, presses)
 
     local position = self:get_map_position(x, y)
+    local ui_button = ui.get_button(self:get_screen_position(x, y))
 
-    if self.plank then
-        self.plank:activate()
-        self.plank:add_nail(self.plank.point)
-        self.plank:add_nail(self.plank.position)
-        self.plank = nil
+    if ui_button then
+        ui_button:press()
         return
     end
 
-    if self.building and game.player:in_range(position) then
-        self.building:activate()
-        self.building = nil
+    if button == 1 then
+        game:activate(position)
+
+        if game.player:in_range(position, game.player.range * 2) then
+
+            if self.building then
+                self.building:activate()
+                self.building = nil
+                return
+            end
+        else
+            game.player.sphere.show(game.player.range * 2)
+        end
         return
     end
-
-    if game.player:in_range(position) then
-        self.plank = Plank(position)
-        game.map:add(self.plank)
+    if button == 2 then
     end
 end
 
@@ -56,6 +61,13 @@ end
 function Mouse:released(x, y, button, istouch, presses)
 
     local position = self:get_map_position(x, y)
+
+    local ui_button = ui.get_button(self:get_screen_position(x, y))
+
+    if ui_button then
+        ui_button:release()
+        return
+    end
 end
 
 
@@ -67,10 +79,6 @@ function Mouse:update(dt)
     self.position.map = self:get_map_position(x, y)
     self.sprite:update(dt)
 
-    if self.plank then
-        self.plank:set_point(self.position.map)
-        return
-    end
     if self.building then
         self.building:set_position(self.position.map)
     end

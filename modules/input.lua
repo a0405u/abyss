@@ -28,7 +28,7 @@ end
 
 function love.keyreleased(key)
 
-    if screen.state == "game" then
+    if screen.state == screen.game then
 
         return
     end
@@ -55,7 +55,7 @@ end
 
 function input.update(dt)
 
-    if screen.state == "game" then
+    if screen.state == screen.game then
 
         if love.keyboard.isDown(config.input.right) then
             game.player:set_direction(1)

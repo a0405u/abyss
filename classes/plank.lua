@@ -17,7 +17,9 @@ local Type = {
 	gib = {
         category = PC_GIB,
         color = color.purple,
-        dl = DL_GIB
+        -- mask = PC_GIB,
+        dl = DL_GIB,
+        strength = PLANK_STRENGTH / 4
     },
 	ghost = {
         category = PC_GIB,
@@ -50,12 +52,30 @@ function Plank:init(position, rotation, length, mass)
     self.body:setAngle(self.rotation)
     self.body:setFixedRotation(true)
     self.body:setActive(false)
+    -- self.body:setSleepingAllowed(false)
     self.nails = {}
     
 end
 
 
+function Plank:build()
+
+end
+
+
+function Plank:place()
+    self:activate()
+    self:add_nail(self.point)
+    self:add_nail(self.position)
+end
+
+
 function Plank:activate()
+
+    if self.length < 1 then
+        self:destroy()
+        return
+    end
 
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), 28)
     self.fixture:setCategory(PC_PLANK)
@@ -107,18 +127,23 @@ end
 
 function Plank:presolve(a, b, contact)
 
-    local x, y = contact:getPositions()
-    local nx, ny = contact:getNormal()
-    local c1, c2 = a:getCategory()
-    if ny > -0.5 or c2 == PC_COLUMN then
-        contact:setEnabled(false)
-        return true
+    if b:getCategory() == PC_PLAYER then
+        local x, y = contact:getPositions()
+        local nx, ny = contact:getNormal()
+        local c1, c2 = self.fixture:getCategory()
+        if ny > -0.5 or c2 == PC_COLUMN then
+            contact:setEnabled(false)
+            return true
+        end
     end
 end
 
 
 function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 
+    if self.frozen then
+        self:unfreeze()
+    end
     if normalimpulse > self.strength then
         self.update = function(dt) self:destroy(Vector2(contact.position)) end
     end
@@ -128,7 +153,8 @@ function Plank:set_type(type, animation)
 
     self.type = type
     self.fixture:setCategory(PC_PLANK, type.category)
-    if type.mask then self.fixture:setMask(type.mask) end
+    if type.mask then self.fixture:setMask(type.mask) else self.fixture:setMask() end
+    self.strength = type.strength or PLANK_STRENGTH
     self.sprite:set(animation)
 end
 
@@ -144,14 +170,20 @@ end
 function Plank:add_nail(position)
 
     if (game.map.fixture:testPoint(position.x, position.y)) then
-        game.map:add(Nail(Vector2(position.x, position.y), game.map, self))
+        -- game.map:add(Nail(Vector2(position.x, position.y), game.map, self))
         return
     else
         game.world:queryBoundingBox(position.x - 1, position.y - 1, position.x + 1, position.y + 1, function(fixture)
 
             if fixture == self.fixture then return true end
-            if fixture:testPoint(position.x, position.y) and fixture:getCategory() == PC_PLANK then
-                game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self, false))
+            if fixture:testPoint(position.x, position.y) then
+                if fixture:getCategory() == PC_PLANK then
+                    game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self, false))
+                    return true
+                end
+                if fixture:getCategory() == PC_BLOCK then
+                    game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self))
+                end
             end
             return true
         end)

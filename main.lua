@@ -3,16 +3,18 @@ require "headers"
 function love.load()
 
     love.physics.setMeter(config.physics.scale)
-    font.load()
-    sound.load()        
-    screen.load()
-    sprites.load("sprites/")
-    game.load()
+    sound.load()
+    game:load()
     canvas.load()
-    ui.init()
-    game.start()
-end
 
+    if not DEBUG then
+        audio.play(sound.logo)
+    end
+
+    if DEBUG then
+        game:start()
+    end
+end
 
 
 function love.draw()
@@ -36,7 +38,7 @@ function love.update(dt)
     input.update(dt)
 
     if not game.paused then
-        game.update(dt)
+        game:update(dt)
     end
 
     screen.update(dt)

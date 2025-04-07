@@ -10,13 +10,14 @@ config.theme = {
 }
 
 config.screen = {
-    scale = 4,
-    width = 240,
-    height = 136,
-    title = "powww",
+    scale = 3,
+    width = 640,
+    height = 360,
+    title = "abyss",
     filtermode = "nearest",
     linestyle = "rough",
     borderless = true,
+    fullscreen = false,
     os_mouse_visibility = false,
 }
 

@@ -23,7 +23,7 @@ function Actor:init(position, name, sprite, args)
     self.moving = false
     self.acceleration = args.acceleration or 18
     self.max_speed = args.max_speed or 8
-    self.friction = args.friction or 32
+    self.friction = args.friction or 64
     self.normal = Vector2()
     self.look_direction = 1
     self.jump_impulse = 8 * self.mass
@@ -44,6 +44,26 @@ function Actor:init(position, name, sprite, args)
     self.body:setFixedRotation(true)
 
     self.sprite.animation:play()
+
+    self.sphere = {
+        last = -1,
+        show = function()
+            self.sphere.last = love.timer.getTime()
+        end,
+        draw = function(position)
+            local time = love.timer.getTime()
+            local delta = time - self.sphere.last
+            local a = 1 - delta
+            
+            if a > 0 then
+                screen.layer:queue(DL_PLAYER, function ()
+                    color.set(color.darkest, a)
+                    love.graphics.circle("line", position.x, position.y, self.range * game.map.scale)
+                    color.reset()
+                end)
+            end
+        end
+    }
 end
 
 
@@ -52,16 +72,6 @@ function Actor:update(dt)
     self.sprite:update(dt)
     self:update_direction(dt)
     self:move(dt)
-end
-
-
-function Actor:in_range(position, range)
-
-    range = range or self.range
-    if Vector2(self.position.x - position.x, self.position.y - position.y):length() > range then
-        return false
-    end
-    return true
 end
 
 
@@ -74,6 +84,17 @@ function Actor:draw()
     -- love.graphics.circle("fill", position.x, position.y, 1)
     -- love.graphics.rectangle("fill", position.x - size.x / 2, position.y - size.y / 2, size.x, size.y)
     self.sprite:draw(DL_PLAYER, position)
+    self.sphere.draw(position)
+end
+
+
+function Actor:in_range(position, range)
+
+    range = range or self.range
+    if Vector2(self.position.x - position.x, self.position.y - position.y):length() > range then
+        return false
+    end
+    return true
 end
 
 
@@ -130,13 +151,13 @@ function Actor:jump()
 end
 
 
-function Actor:begincontact(body, contact)
+function Actor:begincontact(a, b, contact)
     
     self.floor_count = math.max(0, self.floor_count + 1)
 end
 
 
-function Actor:endcontact(body, contact)
+function Actor:endcontact(a, b, contact)
 
     self.floor_count = math.max(0, self.floor_count - 1)
 end

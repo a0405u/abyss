@@ -1,27 +1,74 @@
 local game = {}
 
 
-function game.load()
+function game:load()
     
-    game.state = "intro"
-    game.paused = true
+    self.state = "intro"
+    self.paused = true
 
-    game.world = love.physics.newWorld(0.0, -GRAVITY)
-    game.world:setCallbacks(game.beginContact, game.endContact, game.preSolve, game.postSolve)
-    game.map = Map()
+    self.world = love.physics.newWorld(0.0, -GRAVITY)
+    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+    self.map = Map()
 
-    game.player = Actor(Vector2(game.map.size.x / 2, 8))
+    self.player = Actor(Vector2(game.map.size.x / 6, 2))
+    self.economy = Economy()
+
+    self.tools = {
+        plank = ToolPlank(),
+        block = ToolBlock(),
+        soil = ToolSoil(),
+    }
+    self.tool = self.tools.plank
+    ui.left.buttons.plank:activate()
+
+    self.map.tilemap:add_hill(Vector2(8, 1))
 end
 
 
-function game.spawn_building(position)
+function game:set_tool(tool)
+
+    self.tool = tool
+end
+
+
+function game:activate(position)
+
+    if self.tool then self.tool:use(position) end
+end
+
+
+function game:build_plank(position)
+
+    if self.economy:has(COST_PLANK) then
+        self.economy:take(COST_PLANK)
+        local plank = Plank(position)
+        self.map:add(plank)
+        return plank
+    end
+    return false
+end
+
+
+function game:build_block(block, cost, position)
+
+    local tilemap_position = self.map.tilemap:get_position(position)
+    if not self.map.tilemap:is_in_tile(self.player.position, tilemap_position) then
+        if self.economy:has(cost) then
+            if self.map.tilemap:build(block, tilemap_position) then
+                self.economy:take(cost)
+            end
+        end
+    end
+end
+
+function game:spawn_building(position)
     local building = Building(position)
-    game.map:add(building)
+    self.map:add(building)
     ui.mouse.building = building
 end
 
 
-function game.beginContact(a, b, contact)
+function beginContact(a, b, contact)
 
     if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
 
@@ -30,17 +77,15 @@ function game.beginContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:begincontact(b, contact)
-        return
+        game.player:begincontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:begincontact(a, contact)
-        return
+        game.player:begincontact(a, b, contact)
     end
 end
 
-function game.endContact(a, b, contact)
+function endContact(a, b, contact)
 
     if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
 
@@ -49,26 +94,23 @@ function game.endContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endcontact(b, contact)
-        return
+        game.player:endcontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endcontact(a, contact)
+        game.player:endcontact(b, a, contact)
+    end
+end
+
+function preSolve(a, b, contact)
+
+    if b:getCategory() == PC_PLANK then
+        b:getBody():getUserData():presolve(b, a, contact)
         return
     end
 end
 
-function game.preSolve(a, b, contact)
-
-    if a:getCategory() == PC_PLAYER and b:getCategory() == PC_PLANK then
-
-        b:getBody():getUserData():presolve(a, b, contact)
-        return
-    end
-end
-
-function game.postSolve(a, b, contact, normalimpulse, tangentimpulse)
+function postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
     local cache = {
         position = contact:getPositions()
@@ -76,47 +118,48 @@ function game.postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
     if a:getCategory() == PC_PLANK then
         a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
-        return
     end
 
     if b:getCategory() == PC_PLANK then
-        b:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
-        return
+        b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
     end
 end
 
 
-function game.start()
+function game:start()
 
-    game.state = "game"
-    game.paused = false
-    screen.show("game")
+    self.state = "game"
+    self.paused = false
+    screen.show(screen.game)
     
-    audio.stop(sound.intro)
+    audio.stop(sound.logo)
     -- audio.play(sound.start)
 end
 
 
-function game.update(dt)
-    game.world:update(dt)
-    game.map:update(dt)
-    game.player:update(dt)
+function game:update(dt)
+    self.world:update(dt)
+    self.map:update(dt)
+    self.player:update(dt)
+    self.economy:update(dt)
+    self.tool:update(dt)
     ui:update(dt)
 end
 
 
-function game.draw()
+function game:draw()
 
-    game.map:draw()
-    game.player:draw()
+    self.map:draw()
+    self.player:draw()
+    self.tool:draw()
     ui:draw()
 end
 
 
-function game.death()
+function game:death()
 
-    game.state = "death"
-    screen.show("death")
+    self.state = "death"
+    screen.show(screen.death)
 end
 
 

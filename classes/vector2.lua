@@ -62,8 +62,6 @@ function Vector2:set(x, y)
 end
 
 
---- @param x number
---- @param y number
 --- @return number, number
 function Vector2:get()
     return self.x, self.y

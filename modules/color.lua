@@ -26,6 +26,7 @@ function color.load(palette)
     color.green = color[11]
     color.pink = color[31]
     color.skin = color[32]
+    color.text = rgb(163, 165, 149)
     color.transparent = {0, 0, 0, 0}
 end
 

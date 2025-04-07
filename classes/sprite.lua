@@ -64,12 +64,17 @@ end
 --- @param rotation number|nil
 --- @param scale Vector2|nil
 --- @param offset Vector2|nil
-function Sprite:draw(dl, position, rotation, scale, offset)
+function Sprite:draw(dl, position, rotation, scale, offset, c, a)
 
     scale = scale or self.scale
     offset = offset or self.offset
+    position = position or Vector2()
+    c = c or color.white
+    a = a or 1
     screen.layer:queue(dl, function()
+        color.set(c, a)
         self.animation:draw(position, rotation, scale, offset)
+        color.reset()
     end)
 end
 
@@ -84,7 +89,7 @@ function Sprite:play()
 
 end
 
-function Sprite:getWidth() return self.width end
-function Sprite:getHeight() return self.height end
+function Sprite:getWidth() return self.size.x end
+function Sprite:getHeight() return self.size.y end
 
 return Sprite

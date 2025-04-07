@@ -12,21 +12,12 @@ local function load_from_file(filepath, size, scale, offset)
     return Sprite(image, nil, size, scale, offset)
 end
 
+
 --- @param image_data love.ImageData
 --- @return love.Image
 local function load_from_data(image_data)
 
     return love.graphics.newImage(image_data)
-end
-
-
-function sprites.load(filepath)
-
-    sprites.load_ui()
-    sprites.player = load_from_file("sprites/player")
-    sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
-    sprites.nail = load_from_file("sprites/nail")
-    sprites.building = load_from_file("sprites/house_1")
 end
 
 
@@ -36,19 +27,49 @@ function sprites.load_spritesheet(image)
 end
 
 
+sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector2(0, 0))
+sprites.cursor = load_from_file("sprites/cursor")
+sprites.hand = load_from_file("sprites/hand")
+sprites.item_frame = load_from_file("sprites/item_frame")
 
-function sprites.load_ui()
-
-    sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector2(0, 0))
-    sprites.cursor = load_from_file("sprites/cursor")
-    sprites.hand = load_from_file("sprites/hand")
-    sprites.item_frame = load_from_file("sprites/item_frame")
-
-    sprites.screen = {
-
-        logo = load_from_file("sprites/logo")
+sprites.ui = {
+    left = load_from_file("sprites/ui_left"),
+    right = load_from_file("sprites/ui_right"),
+    button = load_from_file("sprites/button"),
+    icons = {
+        empty = load_from_file("sprites/icon_empty"),
+        plank = load_from_file("sprites/icon_plank"),
+        block = load_from_file("sprites/icon_block"),
+        soil = load_from_file("sprites/icon_soil"),
+        house = load_from_file("sprites/icon_house"),
+        temple = load_from_file("sprites/icon_temple"),
+        townhall = load_from_file("sprites/icon_townhall"),
+        mine = load_from_file("sprites/icon_mine"),
+        sawmill = load_from_file("sprites/icon_sawmill"),
+        windmill = load_from_file("sprites/icon_windmill"),
     }
-end
+}
+
+sprites.icon = {
+    wood = load_from_file("sprites/wood"),
+    stone = load_from_file("sprites/stone"),
+    food = load_from_file("sprites/food"),
+}
+
+sprites.screen = {
+
+    logo = load_from_file("sprites/logo")
+}
+
+sprites.player = load_from_file("sprites/player")
+sprites.tile = load_from_file("sprites/tile")
+sprites.tile_ghost = load_from_file("sprites/tile_ghost")
+sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
+sprites.nail = load_from_file("sprites/nail")
+sprites.block = load_from_file("sprites/block")
+sprites.soil = load_from_file("sprites/soil")
+sprites.hill = load_from_file("sprites/hill", nil, nil, Vector2(0, 320))
+sprites.building = load_from_file("sprites/house_1")
 
 
 return sprites
