@@ -27,6 +27,7 @@ function Tilemap:add_hill(position)
     local world_position = self:get_world_position(position)
     world_position.x = world_position.x - self.tile_size.x / 2
     world_position.y = world_position.y - self.tile_size.y / 2
+    game.map:add(Drawable(world_position, sprites.hillbg, DL_HILL_BG))
     game.map:add(Drawable(world_position, sprites.hill, DL_HILL))
 
     self:line(Tile(), Vector2(position.x + 8, 1), 11)

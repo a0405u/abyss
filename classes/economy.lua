@@ -31,6 +31,14 @@ function Economy:take(amount)
 end
 
 
+function Economy:add(amount, mult)
+
+    self.wood:add(amount.wood * mult)
+    self.stone:add(amount.stone * mult)
+    self.food:add(amount.food * mult)
+end
+
+
 function Economy:update(dt)
 
 end

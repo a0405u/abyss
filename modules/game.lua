@@ -17,11 +17,11 @@ function game:load()
         plank = ToolPlank(),
         block = ToolBlock(),
         soil = ToolSoil(),
+        building = ToolBuilding()
     }
     self.tool = self.tools.plank
     ui.left.buttons.plank:activate()
-
-    self.map.tilemap:add_hill(Vector2(8, 1))
+    self.map.tilemap:add_hill(Vector2(10, 1))
 end
 
 
@@ -61,10 +61,10 @@ function game:build_block(block, cost, position)
     end
 end
 
-function game:spawn_building(position)
-    local building = Building(position)
+function game:spawn_building(position, building)
+
+    building:place(position)
     self.map:add(building)
-    ui.mouse.building = building
 end
 
 

@@ -20,6 +20,12 @@ function Resource:has(amount)
 end
 
 
+function Resource:add(amount)
+
+    self.value = self.value + amount
+end
+
+
 function Resource:update(dt)
 
 end

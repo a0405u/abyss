@@ -20,6 +20,7 @@ function Map:init()
     self.tilemap = Tilemap(Vector2(0, self.ground.height), Vector2(64, 64))
     self.body = love.physics.newBody(game.world, self.size.x / 2, self.ground.height / 2, "static")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.ground.height))
+    self.background = Drawable(Vector2(54, 48), sprites.background, DL_BACKGROUND)
 end
 
 
@@ -36,6 +37,7 @@ function Map:draw()
     color.set(color.darkest)
     love.graphics.line(0, position.y, position.x, position.y)
     color.reset()
+    self.background:draw()
     Object.draw(self)
     self.tilemap:draw()
 end

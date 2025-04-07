@@ -10,14 +10,23 @@ left.buttons = {
         function() game:set_tool(game.tools.block) end),
     soil = Button(left, Vector2(36, 83), sprites.ui.icons.soil, nil, nil,
         function() game:set_tool(game.tools.soil) end),
-    house = Button(left, Vector2(73, 83), sprites.ui.icons.house, nil, true,
-        function() game:set_tool(game.tools.house) end),
-    windmill = Button(left, Vector2(36, 120), sprites.ui.icons.windmill, nil, true,
-        function() game:set_tool(game.tools.windmill) end),
-    sawmill = Button(left, Vector2(73, 120), sprites.ui.icons.sawmill, nil, true,
-        function() game:set_tool(game.tools.sawmill) end),
-    -- mine = Button(left, Vector2(36, 120), sprites.ui.icons.mine, nil, true,
-        -- function() game:set_tool(game.tools.mine) end),
+    mine = Button(left, Vector2(73, 83), sprites.ui.icons.mine, nil, nil,
+        function()
+            game:set_tool(game.tools.building) 
+            game.tool:activate(Mine())
+        end),
+    windmill = Button(left, Vector2(36, 120), sprites.ui.icons.windmill, nil, nil,
+    function()
+        game:set_tool(game.tools.building) 
+        game.tool:activate(Windmill())
+    end),
+    sawmill = Button(left, Vector2(73, 120), sprites.ui.icons.sawmill, nil, nil,
+    function()
+        game:set_tool(game.tools.building) 
+        game.tool:activate(Sawmill())
+    end),
+    -- house = Button(left, Vector2(73, 83), sprites.ui.icons.house, nil, true,
+        -- function() game:set_tool(game.tools.house) end),
     -- townhall = Button(left, Vector2(73, 120), sprites.ui.icons.townhall, nil, true,
         -- function() game:set_tool(game.tools.townhall) end),
 }
@@ -74,9 +83,9 @@ end
 
 function economy:update(dt)
 
-    self.wood.value = game.economy.wood.value
-    self.stone.value = game.economy.stone.value
-    self.food.value = game.economy.food.value
+    self.wood.value = math.floor(game.economy.wood.value)
+    self.stone.value = math.floor(game.economy.stone.value)
+    self.food.value = math.floor(game.economy.food.value)
 end
 
 

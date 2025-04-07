@@ -62,14 +62,26 @@ sprites.screen = {
 }
 
 sprites.player = load_from_file("sprites/player")
-sprites.tile = load_from_file("sprites/tile")
-sprites.tile_ghost = load_from_file("sprites/tile_ghost")
 sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
 sprites.nail = load_from_file("sprites/nail")
+
+sprites.tile = load_from_file("sprites/tile")
+sprites.tile_ghost = load_from_file("sprites/tile_ghost")
 sprites.block = load_from_file("sprites/block")
 sprites.soil = load_from_file("sprites/soil")
+
 sprites.hill = load_from_file("sprites/hill", nil, nil, Vector2(0, 320))
+sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector2(0, 320))
+sprites.background = load_from_file("sprites/background")
+
 sprites.building = load_from_file("sprites/house_1")
+sprites.house = load_from_file("sprites/house")
+sprites.mine = load_from_file("sprites/mine")
+sprites.windmill = load_from_file("sprites/windmill")
+sprites.sawmill = load_from_file("sprites/sawmill")
+sprites.townhall = load_from_file("sprites/townhall")
+sprites.temple = load_from_file("sprites/temple")
+
 
 
 return sprites

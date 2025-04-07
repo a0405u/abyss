@@ -3,6 +3,7 @@ local Drawable = class("Drawable", Object)
 
 
 function Drawable:init(position, sprite, dl)
+    assert(sprite, "No sprite on Drawable!")
 
     self.position = position
     self.sprite = sprite

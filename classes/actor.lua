@@ -47,8 +47,9 @@ function Actor:init(position, name, sprite, args)
 
     self.sphere = {
         last = -1,
-        show = function()
+        show = function(radius)
             self.sphere.last = love.timer.getTime()
+            self.sphere.radius = radius or self.range
         end,
         draw = function(position)
             local time = love.timer.getTime()
@@ -56,9 +57,10 @@ function Actor:init(position, name, sprite, args)
             local a = 1 - delta
             
             if a > 0 then
+                print(self.sphere.radius)
                 screen.layer:queue(DL_PLAYER, function ()
                     color.set(color.darkest, a)
-                    love.graphics.circle("line", position.x, position.y, self.range * game.map.scale)
+                    love.graphics.circle("line", position.x, position.y, game.player.sphere.radius * game.map.scale)
                     color.reset()
                 end)
             end

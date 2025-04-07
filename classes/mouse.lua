@@ -49,7 +49,7 @@ function Mouse:pressed(x, y, button, istouch, presses)
                 return
             end
         else
-            game.player.sphere.show(game.player.range * 2)
+            -- game.player.sphere.show(game.player.range * 2)
         end
         return
     end
