@@ -105,7 +105,8 @@ function Tilemap:place(tile, position)
         if fixture == tile.fixture then return true end
         
         if fixture:getCategory() == PC_PLANK then
-            game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), tile))
+            local plank = fixture:getBody():getUserData()
+            game.map:add(Nail(Vector2(world_position.x, world_position.y), fixture:getBody():getUserData(), tile))
             return true
         end
         return true

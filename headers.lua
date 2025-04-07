@@ -52,6 +52,7 @@ Economy = require "classes/economy"
 Actor = require "classes/actor"
 Plank = require "classes/plank"
 Nail = require "classes/nail"
+Gib = require "classes/gib"
 
 Tool = require "classes/tools/tool"
 ToolPlank = require "classes.tools.toolplank"

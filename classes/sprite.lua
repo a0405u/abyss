@@ -26,18 +26,23 @@ function Sprite:init(image, data, size, scale, offset, parent)
             }
         end
         
-        self.animations = {}
-        for i, tag in ipairs(self.data.tags) do
-            local offset = Vector2(self.size.x * tag.from, 0)
-            local count = tag.to - tag.from + 1
-            local frames = Animation.get_frames(self.image, self.size, offset, count)
-            local durations = {}
-            for j = tag.from + 1, tag.to do
-                table.insert(durations, self.data.frames[j].duration / 1000)
+        if #self.data.tags == 0 then
+            self.animations = {idle = Animation(image)}
+            self.animation = self.animations.idle
+        else
+            self.animations = {}
+            for i, tag in ipairs(self.data.tags) do
+                local offset = Vector2(self.size.x * tag.from, 0)
+                local count = tag.to - tag.from + 1
+                local frames = Animation.get_frames(self.image, self.size, offset, count)
+                local durations = {}
+                for j = tag.from + 1, tag.to do
+                    table.insert(durations, self.data.frames[j].duration / 1000)
+                end
+                self.animations[tag.name] = Animation(self.image, frames, durations)
             end
-            self.animations[tag.name] = Animation(self.image, frames, durations)
+            self.animation = self.animations[self.data.tags[1].name]
         end
-        self.animation = self.animations[self.data.tags[1].name]
     else
         self.size = size or Vector2(image:getWidth(), image:getHeight())
         self.offset = offset or Vector2(self.size.x / 2, self.size.y / 2)

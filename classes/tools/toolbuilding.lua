@@ -17,9 +17,15 @@ end
 function ToolBuilding:use(position)
 
     if self.building then
+        if not game.economy:has(self.building.cost) then
+            return
+        end
+
         if game.player:in_range(position, game.player.range * 2) then
-            game:spawn_building(position, self.building)
-            self.building = nil
+            if game:spawn_building(position, self.building) then
+                game.economy:take(self.building.cost)
+                self.building = nil
+            end
         else
             game.player.sphere.show(game.player.range * 2)
         end

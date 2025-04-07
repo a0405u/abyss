@@ -18,8 +18,11 @@ function Map:init()
         height = 2
     }
     self.tilemap = Tilemap(Vector2(0, self.ground.height), Vector2(64, 64))
-    self.body = love.physics.newBody(game.world, self.size.x / 2, self.ground.height / 2, "static")
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.ground.height))
+    self.body = love.physics.newBody(game.world, self.size.x / 2, self.size.y / 2, "static")
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, - self.size.y / 2 + self.ground.height / 2, self.size.x, self.ground.height))
+    self.fixture:setCategory(PC_GROUND)
+    self.left_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(-self.size.x, 0, self.size.x, self.size.y))
+    self.right_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, 0, self.size.x, self.size.y))
     self.background = Drawable(Vector2(54, 48), sprites.background, DL_BACKGROUND)
 end
 

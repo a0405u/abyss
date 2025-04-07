@@ -1,4 +1,4 @@
---- @class Building
+--- @class Building: Object
 local Building = class("Building", Object)
 
 
@@ -8,16 +8,43 @@ function Building:init(position, rotation, sprite, colliders)
     self.rotation = rotation or 0.0
     self.sprite = sprite:instantiate() or sprites.building:instantiate()
     self.colliders = colliders or sprite.data.slices
-    print(self.colliders[1].keys[1].bounds)
     self.ghost = true
+    self.strength = BUILDING_STRENGTH
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
-
+    self.body:setUserData(self)
+    self.body:setActive(false)
     self.sprite:set(self.sprite.animations.ghost)
 end
 
 
-function Building:destroy()
+function Building:make_gib(position, rotation, velocity)
 
+    local gib = Gib(position, rotation)
+    game.map:add(gib)
+    gib:place()
+    gib.body:setLinearVelocity(velocity.x, velocity.y)
+end
+
+function Building:destroy(position)
+
+    self.body:destroy()
+    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self.parent:remove(self)
+end
+
+
+function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+
+    if self.rotation > math.pi / 2 or self.rotation < - math.pi / 2 then
+        normalimpulse = normalimpulse * 4
+    end 
+    if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
+        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+    end
 end
 
 
@@ -33,10 +60,9 @@ function Building:place(position)
     if position then self.body:setPosition(position.x, position.y) end
 
     for i, collider in ipairs(self.colliders) do
-        local bounds = collider.keys[1].bounds
-        bounds.x, bounds.y = bounds.x / game.map.scale, bounds.y / game.map.scale
-        bounds.w, bounds.h = bounds.w / game.map.scale, bounds.h / game.map.scale
-        self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, bounds.h / 2, bounds.w, bounds.h), DS_BUILDING)
+        local w = collider.keys[1].bounds.w / game.map.scale
+        local h = collider.keys[1].bounds.h / game.map.scale
+        self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, h / 2, w, h), DS_BUILDING)
         self.fixture:setCategory(PC_BUILDING)
         self.fixture:setMask(PC_PLAYER)
     end

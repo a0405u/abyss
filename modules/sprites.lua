@@ -65,6 +65,21 @@ sprites.player = load_from_file("sprites/player")
 sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
 sprites.nail = load_from_file("sprites/nail")
 
+sprites.gib = {
+    load_from_file("sprites/gib/scrab_1"),
+    load_from_file("sprites/gib/scrab_2"),
+    load_from_file("sprites/gib/scrab_3"),
+    load_from_file("sprites/gib/scrab_4"),
+    load_from_file("sprites/gib/scrab_5"),
+    load_from_file("sprites/gib/scrab_6"),
+    load_from_file("sprites/gib/scrab_7"),
+    load_from_file("sprites/gib/scrab_8"),
+    load_from_file("sprites/gib/scrab_9"),
+    load_from_file("sprites/gib/scrab_10"),
+    load_from_file("sprites/gib/scrab_11"),
+    load_from_file("sprites/gib/scrab_12")
+}
+
 sprites.tile = load_from_file("sprites/tile")
 sprites.tile_ghost = load_from_file("sprites/tile_ghost")
 sprites.block = load_from_file("sprites/block")

@@ -63,8 +63,12 @@ end
 
 function game:spawn_building(position, building)
 
+    if self.map.tilemap:is_present(self.map.tilemap:get_position(position)) then
+        return false
+    end
     building:place(position)
     self.map:add(building)
+    return true
 end
 
 
@@ -121,6 +125,14 @@ function postSolve(a, b, contact, normalimpulse, tangentimpulse)
     end
 
     if b:getCategory() == PC_PLANK then
+        b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
+    end
+
+    if a:getCategory() == PC_BUILDING then
+        a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
+    end
+
+    if b:getCategory() == PC_BUILDING then
         b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
     end
 end

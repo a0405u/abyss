@@ -21,8 +21,9 @@ function Actor:init(position, name, sprite, args)
     self.size = Vector2(1.5, 1.75)
     self.direction = 0.0
     self.moving = false
+    self.on_floor = false
     self.acceleration = args.acceleration or 18
-    self.max_speed = args.max_speed or 8
+    self.max_speed = args.max_speed or 16
     self.friction = args.friction or 64
     self.normal = Vector2()
     self.look_direction = 1
@@ -37,7 +38,7 @@ function Actor:init(position, name, sprite, args)
     self.area = love.physics.newFixture(self.body, love.physics.newCircleShape(0, self.size.y / 2, self.range), 0)
     self.area:setCategory(PC_PLAYER_AREA)
     self.area:setSensor(true)
-    self.floor_box = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, 1), 0)
+    self.floor_box = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x - self.size.x / 4, 1), 0)
     self.floor_box:setCategory(PC_PLAYER_FLOOR_BOX)
     self.floor_box:setSensor(true)
     self.body:setMass(self.mass)
@@ -57,7 +58,6 @@ function Actor:init(position, name, sprite, args)
             local a = 1 - delta
             
             if a > 0 then
-                print(self.sphere.radius)
                 screen.layer:queue(DL_PLAYER, function ()
                     color.set(color.darkest, a)
                     love.graphics.circle("line", position.x, position.y, game.player.sphere.radius * game.map.scale)
@@ -112,32 +112,61 @@ function Actor:update_direction(dt)
     if self.moving == false then
         if self.direction ~= 0 then
             self.moving = true
-            self.sprite.animation = self.sprite.animations.run
+            self.sprite:set(self.sprite.animations.run)
             self.sprite.animation:play()
         end
     else
         if self.direction == 0 then
             self.moving = false
-            self.sprite.animation = self.sprite.animations.idle
+            self.sprite:set(self.sprite.animations.idle)
             self.sprite.animation:play()
         end
     end
 end
 
 
+function Actor:land()
+    if self.moving == true then
+        self.sprite:set(self.sprite.animations.run)
+        self.sprite.animation:play()
+    else
+        self.sprite:set(self.sprite.animations.idle)
+        self.sprite.animation:play()
+    end
+end
+
+
 function Actor:move(dt)
 
-    local normal = Vector2(self.body:getLinearVelocity()):normalized()
+    local velocity = Vector2(self.body:getLinearVelocity())
+    local normal = velocity:normalized()
     local acceleration = self.direction * self.acceleration
     local friction = 0.0
 
-    if self:is_on_floor() and not self.moving then
-        friction = normal.x * self.friction
+    if self:is_on_floor() then
+        if not self.on_floor then
+            self.on_floor = true
+            self:land()
+        end
+        if not self.moving then
+            friction = normal.x * self.friction
+        end
+    else
+        self.on_floor = false
+        if normal.y < 0 then
+            self.sprite:set(self.sprite.animations.fall)
+            self.sprite.animation:play()
+        else
+            self.sprite:set(self.sprite.animations.jump)
+            self.sprite.animation:play()
+        end
     end
 
-    self.body:applyLinearImpulse((acceleration - friction) * self.mass * dt, 0)
+    velocity.x = math.clamp(velocity.x, -self.max_speed, self.max_speed)
+    velocity.y = math.clamp(velocity.y, -self.max_speed * 4, self.max_speed * 4)
+    self.body:setLinearVelocity(velocity.x, velocity.y)
 
-    -- self.velocity.x = math.clamp(self.velocity.x, -self.max_speed, self.max_speed)
+    self.body:applyLinearImpulse((acceleration - friction) * self.mass * dt, 0)
 
     self.position = Vector2(self.body:getPosition())
     self.direction = 0

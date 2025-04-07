@@ -6,6 +6,7 @@ function Mine:init(position, rotation)
 
     Building.init(self, position, rotation, sprites.mine)
     self.income = INCOME_MINE
+    self.cost = COST_MINE
 end
 
 

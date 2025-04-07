@@ -19,9 +19,7 @@ function love.keypressed(key, scancode, isrepeat)
     end
 
     if key == config.input.one then
-        if not ui.mouse.building then
-            game.spawn_building(ui.mouse.position.map)
-        end
+        
     end
 end
 

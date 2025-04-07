@@ -8,7 +8,7 @@ local screen = {
 
 screen.width = config.screen.width
 screen.height = config.screen.height
-screen.scale = DEBUG and 2 or config.screen.scale
+screen.scale = config.screen.scale
 screen.state = screen.logo
 
 love.window.setTitle(config.screen.title)

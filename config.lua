@@ -10,7 +10,7 @@ config.theme = {
 }
 
 config.screen = {
-    scale = 3,
+    scale = (DEBUG and 3) or 2,
     width = 640,
     height = 360,
     title = "abyss",
