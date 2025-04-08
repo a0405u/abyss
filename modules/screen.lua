@@ -6,23 +6,25 @@ local screen = {
     ending = {}
 }
 
+function screen.load()
 
-screen.width = config.screen.width
-screen.height = config.screen.height
-screen.scale = config.screen.scale
-screen.state = screen.logo
+    screen.width = config.screen.width
+    screen.height = config.screen.height
+    screen.scale = config.screen.scale
+    screen.state = screen.logo
 
-love.window.setTitle(config.screen.title)
-love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
+    love.window.setTitle(config.screen.title)
+    love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
 
-love.graphics.setDefaultFilter(config.screen.filtermode, config.screen.filtermode)
-love.graphics.setLineStyle(config.screen.linestyle)
-love.mouse.setVisible(config.screen.os_mouse_visibility)
+    love.graphics.setDefaultFilter(config.screen.filtermode, config.screen.filtermode)
+    love.graphics.setLineStyle(config.screen.linestyle)
+    love.mouse.setVisible(config.screen.os_mouse_visibility)
 
-love.window.setFullscreen(config.screen.fullscreen)
+    love.window.setFullscreen(config.screen.fullscreen)
 
-screen.time = 0
-screen.layer = deep:new()
+    screen.time = 0
+    screen.layer = deep:new()
+end
 
 
 function screen.draw()

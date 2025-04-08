@@ -1,8 +1,10 @@
 local input = {}
 
-love.keyboard.setKeyRepeat(config.input.keyrepeat)
+function input.load()
 
-input.keydown = love.keyboard.isDown
+    love.keyboard.setKeyRepeat(config.input.keyrepeat)
+    input.keydown = love.keyboard.isDown
+end
 
 function love.keypressed(key, scancode, isrepeat)
 
@@ -20,6 +22,11 @@ function love.keypressed(key, scancode, isrepeat)
 
     if key == config.input.one then
         
+    end
+
+    if key == "r" then
+        game:load()
+        game:start()
     end
 end
 

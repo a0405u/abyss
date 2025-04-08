@@ -1,10 +1,23 @@
 require "headers"
 
-function love.load()
+function love.load(args)
 
+    if args then
+        for i, arg in ipairs(args) do
+            if arg == "-d" then DEBUG = true end
+        end
+    end
+
+    config:load()
     love.physics.setMeter(config.physics.scale)
+    input.load()
+    color.load(config.theme.palette)
+    screen.load()
+    canvas.load()
     audio.load()
     sound.load()
+    sprites.load()
+    ui.load()
     game:load()
 
     if not DEBUG then
