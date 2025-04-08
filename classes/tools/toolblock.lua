@@ -14,8 +14,10 @@ function ToolBlock:use(position)
         if game:build_block(Block(), COST_BLOCK, position) then
             audio.play(sound.build)
         end
+        audio.play(sound.deny)
     else
         game.player.sphere.show(game.player.range)
+        audio.play(sound.deny)
     end
 end
 

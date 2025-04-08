@@ -18,6 +18,7 @@ function ToolPlank:use(position)
             end
         else
             game.player.sphere.show(game.player.range)
+            audio.play(sound.deny)
         end
     else
         self.plank:place()

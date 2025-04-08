@@ -23,7 +23,7 @@ config.screen = {
 
 config.audio = {
     enabled = true,
-    volume = 0.1,
+    volume = 0.5,
 }
 
 config.debug = {

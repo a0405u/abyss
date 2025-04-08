@@ -5,6 +5,12 @@ function audio.load()
     love.audio.setVolume(config.audio.volume)
 end
 
+
+function audio.volume(v)
+
+    love.audio.setVolume(v)
+end
+
 function audio.play(sound)
 
     if config.audio.enabled then

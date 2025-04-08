@@ -143,6 +143,7 @@ end
 
 function game:start()
 
+    love.audio.setVolume(config.audio.volume)
     self.state = "game"
     self.paused = false
     screen.show(screen.game)

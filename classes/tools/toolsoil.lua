@@ -11,9 +11,13 @@ end
 function ToolSoil:use(position)
 
     if game.player:in_range(position, game.player.range) then
-        game:build_block(Soil(), COST_SOIL, position)
+        if game:build_block(Soil(), COST_BLOCK, position) then
+            audio.play(sound.build)
+        end
+        audio.play(sound.deny)
     else
         game.player.sphere.show(game.player.range)
+        audio.play(sound.deny)
     end
 end
 

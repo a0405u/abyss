@@ -3,10 +3,12 @@ require "headers"
 function love.load()
 
     love.physics.setMeter(config.physics.scale)
+    audio.load()
     sound.load()
     game:load()
 
     if not DEBUG then
+        love.audio.setVolume(config.audio.volume / 4)
         audio.play(sound.logo)
     end
 
