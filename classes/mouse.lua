@@ -28,6 +28,7 @@ function Mouse:draw()
     end
 end
 
+
 function Mouse:pressed(x, y, button, istouch, presses)
 
     local position = self:get_map_position(x, y)
@@ -95,6 +96,12 @@ end
 function Mouse:get_screen_position(x, y)
 
     return Vector2(math.floor(x / screen.scale), math.floor(y / screen.scale))
+end
+
+
+function Mouse:normalize_to_camera(position)
+
+    return Vector2(position.x - game.camera.position.x, position.y)
 end
 
 

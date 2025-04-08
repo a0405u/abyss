@@ -3,6 +3,7 @@ local screen = {
     game = {},
     death = {},
     editor = {},
+    ending = {}
 }
 
 
@@ -88,6 +89,10 @@ end
 function screen.game.draw()
 
     game:draw()
+end
+
+function screen.ending.draw()
+    ui.print("You managed to get out.", Vector2(0, screen.height / 2), screen.width, "center")
 end
 
 

@@ -5,7 +5,6 @@ function love.load()
     love.physics.setMeter(config.physics.scale)
     sound.load()
     game:load()
-    canvas.load()
 
     if not DEBUG then
         audio.play(sound.logo)

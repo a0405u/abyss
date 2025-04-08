@@ -11,6 +11,7 @@ function game:load()
     self.map = Map()
 
     self.player = Actor(Vector2(game.map.size.x / 6, 2))
+    self.camera = Camera(self.player.position)
     self.economy = Economy()
 
     self.tools = {
@@ -20,7 +21,7 @@ function game:load()
         building = ToolBuilding()
     }
     self.tool = self.tools.plank
-    ui.left.buttons.plank:activate()
+    ui.left.buttons.plank:activate(true)
     self.map.tilemap:add_hill(Vector2(10, 1))
 end
 
@@ -56,9 +57,11 @@ function game:build_block(block, cost, position)
         if self.economy:has(cost) then
             if self.map.tilemap:build(block, tilemap_position) then
                 self.economy:take(cost)
+                return true
             end
         end
     end
+    return false
 end
 
 function game:spawn_building(position, building)
@@ -150,28 +153,37 @@ end
 
 
 function game:update(dt)
+    if self.paused then return end
     self.world:update(dt)
     self.map:update(dt)
     self.player:update(dt)
+    self.camera:update(dt)
     self.economy:update(dt)
     self.tool:update(dt)
     ui:update(dt)
+    if self.player.position.y > self.map.size.y then
+        game:ending()
+    end
 end
 
 
 function game:draw()
-
+    love.graphics.clear(color.black)
     self.map:draw()
     self.player:draw()
     self.tool:draw()
+    screen.layer:draw()
+    screen.reset()
     ui:draw()
 end
 
 
-function game:death()
+function game:ending()
 
-    self.state = "death"
-    screen.show(screen.death)
+    self.state = "ending"
+    audio.play(sound.logo)
+    screen.show(screen.ending)
+    self.paused = true
 end
 
 

@@ -13,11 +13,15 @@ function ToolPlank:use(position)
     if not self.plank then
         if game.player:in_range(position, game.player.range) then
             self.plank = game:build_plank(position)
+            if self.plank then
+                audio.play(sound.select)
+            end
         else
             game.player.sphere.show(game.player.range)
         end
     else
         self.plank:place()
+        audio.play(sound.build)
         self.plank = nil
     end
 end

@@ -18,6 +18,7 @@ function ToolBuilding:use(position)
 
     if self.building then
         if not game.economy:has(self.building.cost) then
+            audio.play(sound.deny)
             return
         end
 
@@ -25,6 +26,7 @@ function ToolBuilding:use(position)
             if game:spawn_building(position, self.building) then
                 game.economy:take(self.building.cost)
                 self.building = nil
+                audio.play(sound.build)
             end
         else
             game.player.sphere.show(game.player.range * 2)

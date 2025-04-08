@@ -78,7 +78,7 @@ function Sprite:draw(dl, position, rotation, scale, offset, c, a)
     a = a or 1
     screen.layer:queue(dl, function()
         color.set(c, a)
-        self.animation:draw(position, rotation, scale, offset)
+        self.animation:draw(Vector2(position.x, position.y), rotation, scale, offset)
         color.reset()
     end)
 end

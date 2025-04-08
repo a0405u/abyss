@@ -49,8 +49,9 @@ function Button:release()
 end
 
 
-function Button:activate()
+function Button:activate(silent)
 
+    if not silent then audio.play(sound.select) end
     if self.parent.active then 
         self.parent.active:deactivate()
     end

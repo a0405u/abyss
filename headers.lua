@@ -33,8 +33,8 @@ audio = require "modules/audio"
 sound = require "modules/sound"
 input = require "modules/input"
 path = require "modules/path"
-canvas = require "modules/canvas"
 screen = require "modules/screen"
+canvas = require "modules/canvas"
 color = require "modules/color"
 game = require "modules/game"
 sprites = require "modules/sprites"
@@ -42,6 +42,7 @@ ui = require "modules/ui"
 
 -- Classes
 
+Camera = require "classes/camera"
 Object = require "classes/object"
 Drawable = require "classes/drawable"
 Tile = require "classes.tiles.tile"

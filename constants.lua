@@ -1,7 +1,8 @@
-DEBUG = true
+DEBUG = false
 
 GRAVITY = 9.8
 DRAG = 2
+JUMP = (DEBUG and 64) or 8
 
 TILESIZE = 4
 

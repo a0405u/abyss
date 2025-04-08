@@ -105,6 +105,7 @@ end
 
 function Plank:destroy(point)
 
+    audio.play(sound.destroy)
     for key, nail in pairs(self.nails) do
         nail:destroy()
     end
