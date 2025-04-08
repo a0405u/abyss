@@ -2,7 +2,7 @@ DEBUG = false
 
 GRAVITY = 9.8
 DRAG = 2
-JUMP = (DEBUG and 64) or 8
+JUMP = (DEBUG and 16) or 8
 
 TILESIZE = 4
 
@@ -18,9 +18,9 @@ BASE_WOOD  = 160
 BASE_STONE = 80
 BASE_FOOD  = 40
 
-       INCOME_MINE = {wood = 0,    stone = 1,      food = 0}
-    INCOME_SAWMILL = {wood = 4,    stone = 0,      food = 0}
-   INCOME_WINDMILL = {wood = 0,    stone = 0,      food = 2}
+       INCOME_MINE = {wood = 0,    stone = 0.5,      food = 0}
+    INCOME_SAWMILL = {wood = 2,    stone = 0,      food = 0}
+   INCOME_WINDMILL = {wood = 0,    stone = 0,      food = 1}
 
         COST_PLANK = {wood = 10,    stone = 0,      food = 0}
         COST_BLOCK = {wood = 10,    stone = 20,     food = 0}

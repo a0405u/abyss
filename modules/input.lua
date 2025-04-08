@@ -1,6 +1,6 @@
 local input = {}
 
-love.keyboard.setKeyRepeat(true)
+love.keyboard.setKeyRepeat(config.input.keyrepeat)
 
 input.keydown = love.keyboard.isDown
 

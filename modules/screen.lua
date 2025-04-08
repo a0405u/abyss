@@ -52,16 +52,16 @@ end
 
 function screen.reset()
 
-    love.graphics.setCanvas({canvas.screen.main, stencil = true})
-    love.graphics.setBlendMode("alpha")
+    love.graphics.setCanvas(canvas.screen.main)
+    -- love.graphics.setBlendMode("alpha")
     color.reset()
 end
 
 
 function screen.setCanvas(canvas)
 
-    love.graphics.setCanvas({canvas, stencil = true})
-    love.graphics.setBlendMode("alpha")
+    love.graphics.setCanvas(canvas)
+    -- love.graphics.setBlendMode("alpha")
     color.reset()
 end
 

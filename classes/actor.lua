@@ -144,7 +144,7 @@ function Actor:move(dt)
     local acceleration = self.direction * self.acceleration
     local friction = 0.0
 
-    if self:is_on_floor() then
+    if self:is_on_floor() and velocity.y <= 1 then
         if not self.on_floor then
             self.on_floor = true
             self:land()
@@ -176,7 +176,8 @@ end
 
 function Actor:jump()
 
-    if self:is_on_floor() then
+    local velocity = Vector2(self.body:getLinearVelocity())
+    if self:is_on_floor() and velocity.y <= 1 then
         audio.play(sound.jump)
         --self.velocity.y = self.velocity.y + self.jump_velocity
         self.body:applyLinearImpulse(0, self.jump_impulse)

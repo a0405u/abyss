@@ -31,6 +31,7 @@ config.debug = {
 }
 
 config.input = {
+    keyrepeat = false,
     up = "w",
     down = "s",
     left = "a",
