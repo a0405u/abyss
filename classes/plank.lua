@@ -11,7 +11,7 @@ local Type = {
 	column = {
         category = PC_COLUMN,
         color = color.darkest,
-        mask = PC_PLAYER,
+        mask = {PC_PLAYER, PC_BUILDING},
         dl = DL_COLUMN
     },
 	gib = {
