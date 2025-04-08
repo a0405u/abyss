@@ -7,7 +7,7 @@ input.keydown = love.keyboard.isDown
 function love.keypressed(key, scancode, isrepeat)
 
     if key == config.input.back then
-        love.event.quit()
+        if DEBUG then love.event.quit() end
     end
 
     if key == config.input.b then
