@@ -64,9 +64,10 @@ end
 
 
 function Plank:place()
-    self:activate()
-    self:add_nail(self.point)
-    self:add_nail(self.position)
+    if self:activate() then
+        self:add_nail(self.point)
+        self:add_nail(self.position)
+    end
 end
 
 
@@ -74,7 +75,7 @@ function Plank:activate()
 
     if self.length < 1 then
         self:destroy()
-        return
+        return false
     end
 
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), 28)
@@ -87,6 +88,7 @@ function Plank:activate()
     else
         self:set_type(Type.platform, self.sprite.animations.platform)
     end
+    return true
 end
 
 
@@ -105,7 +107,7 @@ end
 
 function Plank:destroy(point)
 
-    audio.play(sound.destroy)
+    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
     for key, nail in pairs(self.nails) do
         nail:destroy()
     end

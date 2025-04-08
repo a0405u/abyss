@@ -27,9 +27,9 @@ function Actor:init(position, name, sprite, args)
     self.friction = args.friction or 64
     self.normal = Vector2()
     self.look_direction = 1
-    self.jump_impulse = JUMP * self.mass
+    self.jump_impulse =  JUMP * self.mass * ((DEBUG and 2) or 1)
     self.health = args.health or 3
-    self.range = 8
+    self.range = 8 * ((DEBUG and 8) or 1)
     self.floor_count = 0
 
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")

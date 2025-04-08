@@ -41,6 +41,13 @@ function Vector2:normalize()
 end
 
 
+function Vector2:invert()
+
+    self.x = -self.x
+    self.y = -self.y
+end
+
+
 function Vector2:inverted()
 
     return Vector2(-self.x, -self.y)

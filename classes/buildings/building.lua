@@ -64,7 +64,7 @@ end
 
 function Building:destroy(position)
 
-    audio.play(sound.destroy)
+    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
     self.body:destroy()
     self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
     self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
@@ -81,6 +81,9 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
     if self.rotation > math.pi / 2 or self.rotation < - math.pi / 2 then
         normalimpulse = normalimpulse * 4
     end 
+    if contact.normal.y < 0.5 then
+        normalimpulse = normalimpulse * 4
+    end
     if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
         self.update = function(dt) self:destroy(Vector2(contact.position)) end
     end

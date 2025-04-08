@@ -120,7 +120,8 @@ end
 function postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
     local cache = {
-        position = contact:getPositions()
+        position = Vector2(contact:getPositions()),
+        normal = Vector2(contact:getNormal()),
     }
 
     if a:getCategory() == PC_PLANK then
@@ -132,6 +133,7 @@ function postSolve(a, b, contact, normalimpulse, tangentimpulse)
     end
 
     if a:getCategory() == PC_BUILDING then
+        cache.normal:invert()
         a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
     end
 
