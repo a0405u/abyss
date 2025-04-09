@@ -1,5 +1,7 @@
-local game = {}
 
+--- @class Game
+--- @field map Map
+local game = {}
 
 function game:load()
     

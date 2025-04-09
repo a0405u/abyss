@@ -109,6 +109,13 @@ function Tilemap:place(tile, position)
             game.map:add(Nail(Vector2(world_position.x, world_position.y), fixture:getBody():getUserData(), tile))
             return true
         end
+
+        if fixture:getCategory() == PC_BUILDING then
+            local building = fixture:getBody():getUserData()
+            building:destroy(world_position)
+            return true
+        end
+
         return true
     end)
 end
@@ -123,6 +130,13 @@ function Tilemap:build(tile, position)
         end
     end
     return false
+end
+
+--- @return number, number, number, number
+function Tilemap:get_box(tile_position)
+
+    local position = self:get_world_position(tile_position)
+    return position.x - self.tile_size.x, position.y - self.tile_size.y, position.x + self.tile_size.x, position.y + self.tile_size.y
 end
 
 

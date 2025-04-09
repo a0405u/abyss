@@ -1,6 +1,7 @@
 local Map = class("Map", Object)
 
 --- @class Map
+--- @field tilemap Tilemap
 function Map:init()
 
     Object.init(self)
