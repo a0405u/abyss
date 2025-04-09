@@ -159,14 +159,14 @@ function postSolve(a, b, contact, normalimpulse, tangentimpulse)
         position = Vector2(contact:getPositions()),
         normal = Vector2(contact:getNormal()),
     }
-    local category_a, category_b = a:getCategory(), b:getCategory()
+    local object_a, object_b = a:getBody():getUserData(), b:getBody():getUserData()
 
-    if a:getBody():getUserData() then
-        a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
+    if object_a and object_a.postsolve then
+        object_a:postsolve(a, b, cache, normalimpulse, tangentimpulse)
     end
 
-    if b:getBody():getUserData() then
-        b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
+    if object_b and object_b.postsolve then
+        object_b:postsolve(b, a, cache, normalimpulse, tangentimpulse)
     end
 end
 
