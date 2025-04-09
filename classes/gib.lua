@@ -8,7 +8,9 @@ function Gib:init(position, rotation, sprite, dl)
     dl = dl or DL_GIB
     Drawable.init(self, position, sprite, dl)
     self.rotation = rotation or 0.0
+    self.strength = GIB_STRENGTH
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
+    self.body:setUserData(self)
 end
 
 
@@ -36,6 +38,22 @@ function Gib:place()
     self.fixture:setCategory(PC_GIB)
     
     self.body:setActive(true)
+end
+
+
+function Gib:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+
+    if normalimpulse > self.strength then
+        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+    end
+end
+
+
+function Gib:destroy()
+
+    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    self.body:destroy()
+    self.parent:remove(self)
 end
 
 

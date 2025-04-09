@@ -22,6 +22,7 @@ end
 function Economy:take(amount)
 
     if self:has(amount) then
+        if DEBUG then return true end
         self.wood:take(amount.wood)
         self.stone:take(amount.stone)
         self.food:take(amount.food)

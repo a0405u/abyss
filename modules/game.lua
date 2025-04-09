@@ -159,21 +159,13 @@ function postSolve(a, b, contact, normalimpulse, tangentimpulse)
         position = Vector2(contact:getPositions()),
         normal = Vector2(contact:getNormal()),
     }
+    local category_a, category_b = a:getCategory(), b:getCategory()
 
-    if a:getCategory() == PC_PLANK then
+    if a:getBody():getUserData() then
         a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
     end
 
-    if b:getCategory() == PC_PLANK then
-        b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
-    end
-
-    if a:getCategory() == PC_BUILDING then
-        cache.normal:invert()
-        a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
-    end
-
-    if b:getCategory() == PC_BUILDING then
+    if b:getBody():getUserData() then
         b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
     end
 end
