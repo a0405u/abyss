@@ -4,7 +4,7 @@ local Timer = class("Timer")
 function Timer:init(action, time, active)
 
     self.time = time or 1
-    self.left = 0
+    self.left = self.time
 
     self.action = action
 
@@ -40,8 +40,9 @@ function Timer:restart()
 end
 
 
-function Timer:start(time)
+function Timer:start(time, action)
 
+    self.action = action or self.action
     self.time = time or self.time
     self.left = self.time
     self.active = true

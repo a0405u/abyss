@@ -23,6 +23,36 @@ function game:load()
     self.tool = self.tools.plank
     ui.left.buttons.plank:activate(true)
     self.map.tilemap:add_hill(Vector2(10, 1))
+    self.timer = Timer(function () 
+        ui.hint:show("You've fallen into the deep abyss, find a way to get out...")
+        end, 1, true)
+end
+
+
+function game:update(dt)
+    if self.paused then return end
+    self.timer:update(dt)
+    self.world:update(dt)
+    self.map:update(dt)
+    self.player:update(dt)
+    self.camera:update(dt)
+    self.economy:update(dt)
+    self.tool:update(dt)
+    ui:update(dt)
+    if self.player.position.y > self.map.size.y then
+        game:ending()
+    end
+end
+
+
+function game:draw()
+    love.graphics.clear(color.black)
+    self.map:draw()
+    self.player:draw()
+    self.tool:draw()
+    screen.layer:draw()
+    screen.reset()
+    ui:draw()
 end
 
 
@@ -45,6 +75,8 @@ function game:build_plank(position)
         local plank = Plank(position)
         self.map:add(plank)
         return plank
+    else
+        game.timer:start(1, function() ui.hint:show("You don't have enough resources!") end)
     end
     return false
 end
@@ -59,6 +91,8 @@ function game:build_block(block, cost, position)
                 self.economy:take(cost)
                 return true
             end
+        else
+            game.timer:start(1, function() ui.hint:show("You don't have enough resources!") end)
         end
     end
     return false
@@ -151,33 +185,8 @@ function game:start()
     screen.show(screen.game)
     
     audio.stop(sound.logo)
+    -- ui.hint:show("You've fallen into the deep abyss, find a way to get out...")
     -- audio.play(sound.start)
-end
-
-
-function game:update(dt)
-    if self.paused then return end
-    self.world:update(dt)
-    self.map:update(dt)
-    self.player:update(dt)
-    self.camera:update(dt)
-    self.economy:update(dt)
-    self.tool:update(dt)
-    ui:update(dt)
-    if self.player.position.y > self.map.size.y then
-        game:ending()
-    end
-end
-
-
-function game:draw()
-    love.graphics.clear(color.black)
-    self.map:draw()
-    self.player:draw()
-    self.tool:draw()
-    screen.layer:draw()
-    screen.reset()
-    ui:draw()
 end
 
 

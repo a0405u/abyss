@@ -2,6 +2,7 @@ local ui = {}
 local left = {}
 local right = {}
 local economy = {}
+local hint = {}
 
 function ui.load()
 
@@ -89,12 +90,36 @@ function ui.load()
         self.food.value = math.floor(game.economy.food.value)
     end
 
+    hint.position = Vector2(151, 10 - font.small:getHeight() / 2)
+    hint.limit = screen.width - 154 - 151
+    hint.text = ""
+    hint.last = 0
+    hint.time = 0
+
+    function hint:show(text, time)
+        self.text = text
+        self.time = time or 10
+        self.last = love.timer.getTime()
+        audio.play(sound.hint)
+    end
+
+
+    function hint:draw()
+        local time = love.timer.getTime()
+        local delta = time - self.last
+        local a = hint.time - delta
+
+        if a > 0 then
+            ui.print(self.text, self.position, self.limit, "center", nil, a)
+        end
+    end
+
 
     ui.mouse = Mouse(sprites.mouse, screen.scale)
     ui.left = left
     ui.right = right
     ui.economy = economy
-
+    ui.hint = hint
 end
 
 
@@ -109,10 +134,10 @@ function ui.get_button(position)
 end
 
 
-function ui.print(text, position, limit, align, dl)
+function ui.print(text, position, limit, align, dl, a)
 
     screen.layer:queue(dl or DL_UI_TEXT, function ()
-        color.set(color.text)
+        color.set(color.text, a)
         love.graphics.printf(text, font.small, position.x, position.y, limit, align) 
         color.reset()
         end)
@@ -124,6 +149,7 @@ function ui.draw()
     ui.left:draw()
     ui.right:draw()
     ui.economy:draw()
+    ui.hint:draw()
 end
 
 

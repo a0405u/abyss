@@ -17,3 +17,4 @@ cp -r bin/mac/* latest/mac/abyss.app/
 cp latest/abyss.love latest/mac/abyss.app/Contents/Resources/abyss.love
 cd latest/mac
 zip abyss_macos.zip abyss.app -y -r
+cd ../..

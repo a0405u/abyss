@@ -11,6 +11,7 @@ function sound.load()
     sound.select = love.audio.newSource("sounds/pick.wav", "static")
     sound.collide = love.audio.newSource("sounds/playerstepground.wav", "static")
     sound.destroy = love.audio.newSource("sounds/death.wav", "static")
+    sound.hint = love.audio.newSource("sounds/playerstepwater.wav", "static")
 
     sound.logo = love.audio.newSource("sounds/logo.wav", "static")
     sound.start = love.audio.newSource("sounds/start.wav", "static")

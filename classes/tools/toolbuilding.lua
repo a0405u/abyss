@@ -19,6 +19,7 @@ function ToolBuilding:use(position)
     if self.building then
         if not game.economy:has(self.building.cost) then
             audio.play(sound.deny)
+            game.timer:start(1, function() ui.hint:show("You don't have enough resources!") end)
             return
         end
 

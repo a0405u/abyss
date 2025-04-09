@@ -19,6 +19,7 @@ end
 
 function Building:update(dt)
 
+    self.sprite:update(dt)
     if self.ghost then
         return
     end
@@ -50,6 +51,7 @@ function Building:place(position)
     end
     self.ghost = false
     self.sprite:set(self.sprite.animations.idle)
+    self.sprite.animation:play()
     self.body:setActive(true)
 end
 
@@ -83,6 +85,10 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
     end 
     if contact.normal.y < 0.5 then
         normalimpulse = normalimpulse * 4
+    end
+    if b:getCategory() == PC_GROUND then
+        game.timer:start(1, function() ui.hint:show("The ground seems unstable, buildings need support!") end)
+        self.update = function(dt) self:destroy(Vector2(contact.position)) end
     end
     if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
         self.update = function(dt) self:destroy(Vector2(contact.position)) end
