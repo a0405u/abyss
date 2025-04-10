@@ -54,7 +54,8 @@ function Plank:init(position, rotation, length, mass)
     self.body:setActive(false)
     -- self.body:setSleepingAllowed(false)
     self.nails = {}
-    
+    self.nailed = false
+    self.timer = Timer()
 end
 
 
@@ -83,11 +84,12 @@ function Plank:activate()
     self.ghost = false
     self.body:setActive(true)
 
-    if (math.abs(self.rotation) > math.pi / 3 and math.abs(self.rotation) < 2 * math.pi / 3) then
+    if (math.abs(self.rotation) > math.pi / 6 and math.abs(self.rotation) < 5 * math.pi / 6) then
         self:set_type(Type.column, self.sprite.animations.column)
     else
         self:set_type(Type.platform, self.sprite.animations.platform)
     end
+    self.timer:start(3, function() self:unfreeze() end)
     return true
 end
 
@@ -143,8 +145,7 @@ end
 
 
 function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
-
-    if self.frozen then
+    if self.frozen and (b:getCategory() ~= PC_PLANK or not self.nailed) then
         self:unfreeze()
     end
     if normalimpulse > self.strength then
@@ -225,6 +226,7 @@ function Plank:update(dt)
     self.point = Vector2(
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
+    self.timer:update(dt)
 end
 
 

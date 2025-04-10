@@ -9,8 +9,14 @@ function Nail:init(position, a, b, fixed)
         a = a,
         b = b
     }
-    if a.nails then a.nails[self] = self end
-    if b.nails then b.nails[self] = self end
+    if a.nails then 
+        a.nails[self] = self 
+        a.nailed = true
+    end
+    if b.nails then 
+        b.nails[self] = self 
+        b.nailed = true
+    end
     self.strength = NAIL_STRENGTH
     self.fixed = (fixed ~= false)
 

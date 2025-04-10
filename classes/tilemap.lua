@@ -43,7 +43,10 @@ end
 
 function Tilemap:is_present(position)
 
-    return self.tile[position.x][position.y] ~= nil
+    if self.tile[position.x] then
+        return self.tile[position.x][position.y] ~= nil
+    end
+    return false
 end
 
 
@@ -101,7 +104,7 @@ function Tilemap:place(tile, position)
     tile:place(self, position)
 
     local world_position = self:get_world_position(position)
-    game.world:queryBoundingBox(world_position.x - self.tile_size.x, world_position.y - self.tile_size.y, world_position.x + self.tile_size.x, world_position.y + self.tile_size.y, function(fixture)
+    game.world:queryBoundingBox(world_position.x - self.tile_size.x / 2, world_position.y - self.tile_size.y / 2, world_position.x + self.tile_size.x / 2, world_position.y + self.tile_size.y / 2, function(fixture)
         if fixture == tile.fixture then return true end
         
         if fixture:getCategory() == PC_PLANK then
@@ -128,11 +131,19 @@ end
 
 function Tilemap:build(tile, position)
 
-    if not self:is_present(position) then
-        if self:is_present(Vector2(position.x, position.y - 1)) or position.y == 1 then
+    if self:is_present(position) then
+        return false
+    end
+    if position.y == 1 or self:is_present(Vector2(position.x, position.y - 1)) then
+        local max = 1
+        if tile:is(Block) then
+            max = 3
+        end
+        if position.y <= max or (self:is_present(Vector2(position.x - 1, position.y - max)) and self:is_present(Vector2(position.x + 1, position.y - max))) then
             self:place(tile, position)
             return true
         end
+        game.timer:start(1, function() ui.hint:show("There is not enough support!") end)
     end
     return false
 end
