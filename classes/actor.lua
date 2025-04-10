@@ -164,7 +164,7 @@ function Actor:move(dt)
     end
 
     velocity.x = math.clamp(velocity.x, -self.max_speed, self.max_speed)
-    velocity.y = math.clamp(velocity.y, -self.max_speed * 4, self.max_speed * 4)
+    -- velocity.y = math.clamp(velocity.y, -self.max_speed * 4, self.max_speed * 4)
     self.body:setLinearVelocity(velocity.x, velocity.y)
 
     self.body:applyLinearImpulse((acceleration - friction) * self.mass * dt, 0)

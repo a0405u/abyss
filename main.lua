@@ -51,7 +51,7 @@ function love.update(dt)
 
     input.update(dt)
 
-    if not game.paused then
+    if dt < 1 and not game.paused then
         game:update(dt)
     end
 

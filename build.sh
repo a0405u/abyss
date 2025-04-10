@@ -21,3 +21,4 @@ cp main.lua src/
 
 rm -rf build
 npx love.js src build -m 1280000000 -t abyss -c
+cp release/theme/love.css build/theme/love.css

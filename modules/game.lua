@@ -12,7 +12,7 @@ function game:load()
     self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
     self.map = Map()
 
-    self.player = Actor(Vector2(game.map.size.x / 6, 2))
+    self.player = Actor(Vector2(self.map.size.x / 6, self.map.size.y))
     self.camera = Camera(self.player.position)
     self.economy = Economy()
 
