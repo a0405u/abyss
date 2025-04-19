@@ -18,8 +18,7 @@ function game:load()
 
     self.tools = {
         plank = ToolPlank(),
-        block = ToolBlock(),
-        soil = ToolSoil(),
+        tile = ToolTile(),
         building = ToolBuilding()
     }
     self.tool = self.tools.plank
@@ -58,9 +57,10 @@ function game:draw()
 end
 
 
-function game:set_tool(tool)
+function game:set_tool(tool, ...)
 
     self.tool = tool
+    self.tool:activate(...)
 end
 
 

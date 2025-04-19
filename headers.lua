@@ -57,8 +57,7 @@ Gib = require "classes/gib"
 
 Tool = require "classes/tools/tool"
 ToolPlank = require "classes.tools.toolplank"
-ToolBlock = require "classes.tools.toolblock"
-ToolSoil = require "classes.tools.toolsoil"
+ToolTile = require "classes.tools.tooltile"
 ToolBuilding = require "classes.tools.toolbuilding"
 
 Block = require "classes.tiles.block"

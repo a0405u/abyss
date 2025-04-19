@@ -12,23 +12,20 @@ function ui.load()
         plank = Button(left, Vector2(36, 46), sprites.ui.icons.plank, nil, nil,
             function() game:set_tool(game.tools.plank) end),
         block = Button(left, Vector2(73, 46), sprites.ui.icons.block, nil, nil,
-            function() game:set_tool(game.tools.block) end),
+            function() game:set_tool(game.tools.tile, Block()) end),
         soil = Button(left, Vector2(36, 83), sprites.ui.icons.soil, nil, nil,
-            function() game:set_tool(game.tools.soil) end),
+            function() game:set_tool(game.tools.tile, Soil()) end),
         mine = Button(left, Vector2(73, 83), sprites.ui.icons.mine, nil, nil,
             function()
-                game:set_tool(game.tools.building) 
-                game.tool:activate(Mine())
+                game:set_tool(game.tools.building, Mine())
             end),
         windmill = Button(left, Vector2(36, 120), sprites.ui.icons.windmill, nil, nil,
         function()
-            game:set_tool(game.tools.building) 
-            game.tool:activate(Windmill())
+            game:set_tool(game.tools.building, Windmill())
         end),
         sawmill = Button(left, Vector2(73, 120), sprites.ui.icons.sawmill, nil, nil,
         function()
-            game:set_tool(game.tools.building) 
-            game.tool:activate(Sawmill())
+            game:set_tool(game.tools.building, Sawmill())
         end),
         -- house = Button(left, Vector2(73, 83), sprites.ui.icons.house, nil, true,
             -- function() game:set_tool(game.tools.house) end),

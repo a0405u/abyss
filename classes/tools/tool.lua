@@ -21,4 +21,10 @@ function Tool:draw()
 
 end
 
+
+function Tool:activate()
+
+end
+
+
 return Tool

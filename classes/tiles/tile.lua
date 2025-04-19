@@ -12,6 +12,7 @@ function Tile:init(sprite, size)
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y))
     self.fixture:setCategory(PC_BLOCK)
     self.body:setUserData(self)
+    self.cost = COST_BLOCK
 end
 
 
