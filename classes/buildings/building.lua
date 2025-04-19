@@ -87,7 +87,7 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
         normalimpulse = normalimpulse * 4
     end
     if b:getCategory() == PC_GROUND then
-        game.timer:start(1, function() ui.hint:show("The ground seems unstable, buildings need support!") end)
+        ui.hint:queue("The ground seems unstable, buildings need support!")
         self.update = function(dt) self:destroy(Vector2(contact.position)) end
     end
     if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then

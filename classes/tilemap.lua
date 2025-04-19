@@ -143,7 +143,7 @@ function Tilemap:build(tile, position)
             self:place(tile, position)
             return true
         end
-        game.timer:start(1, function() ui.hint:show("There is not enough support!") end)
+        ui.hint:queue("There is not enough support!")
     end
     return false
 end

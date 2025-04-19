@@ -24,9 +24,7 @@ function game:load()
     self.tool = self.tools.plank
     ui.left.buttons.plank:activate(true)
     self.map.tilemap:add_hill(Vector2(10, 1))
-    self.timer = Timer(function () 
-        ui.hint:show("You've fallen into the deep abyss, find a way to get out...")
-        end, 1, true)
+    self.timer = Timer()
 end
 
 
@@ -39,7 +37,7 @@ function game:update(dt)
     self.camera:update(dt)
     self.economy:update(dt)
     self.tool:update(dt)
-    ui:update(dt)
+    ui.update(dt)
     if self.player.position.y > self.map.size.y then
         game:ending()
     end
@@ -70,20 +68,6 @@ function game:activate(position)
 end
 
 
-function game:build_plank(position)
-
-    if self.economy:has(COST_PLANK) then
-        self.economy:take(COST_PLANK)
-        local plank = Plank(position)
-        self.map:add(plank)
-        return plank
-    else
-        game.timer:start(1, function() ui.hint:show("You don't have enough resources!") end)
-    end
-    return false
-end
-
-
 function game:build_block(block, cost, position)
 
     local tilemap_position = self.map.tilemap:get_position(position)
@@ -94,7 +78,7 @@ function game:build_block(block, cost, position)
                 return true
             end
         else
-            game.timer:start(1, function() ui.hint:show("You don't have enough resources!") end)
+            ui.hint:queue("You don't have enough resources!")
         end
     end
     return false
@@ -179,7 +163,7 @@ function game:start()
     screen.show(screen.game)
     
     audio.stop(sound.logo)
-    -- ui.hint:show("You've fallen into the deep abyss, find a way to get out...")
+    ui.hint:queue("You've fallen into the deep abyss, find a way to get out...")
     -- audio.play(sound.start)
 end
 

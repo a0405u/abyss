@@ -8,11 +8,25 @@ function ToolPlank:init()
 end
 
 
+function ToolPlank:build(position)
+
+    if game.economy:has(COST_PLANK) then
+        game.economy:take(COST_PLANK)
+        local plank = Plank(position)
+        game.map:add(plank)
+        return plank
+    else
+        ui.hint:queue("You don't have enough resources!")
+    end
+    return false
+end
+
+
 function ToolPlank:use(position)
 
     if not self.plank then
         if game.player:in_range(position, game.player.range) then
-            self.plank = game:build_plank(position)
+            self.plank = self:build(position)
             if self.plank then
                 audio.play(sound.select)
             end

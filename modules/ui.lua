@@ -87,17 +87,26 @@ function ui.load()
         self.food.value = math.floor(game.economy.food.value)
     end
 
+
     hint.position = Vector2(151, 10 - font.small:getHeight() / 2)
     hint.limit = screen.width - 154 - 151
     hint.text = ""
     hint.last = 0
     hint.time = 0
+    hint.timer = Timer()
+
 
     function hint:show(text, time)
         self.text = text
         self.time = time or 10
         self.last = love.timer.getTime()
         audio.play(sound.hint)
+    end
+
+
+    function hint:queue(text, time, delay)
+        delay = delay or 1
+        self.timer:start(delay, function() ui.hint:show(text, time) end)
     end
 
 
@@ -109,6 +118,12 @@ function ui.load()
         if a > 0 then
             ui.print(self.text, self.position, self.limit, "center", nil, a)
         end
+    end
+
+
+    function hint:update(dt)
+
+        self.timer:update(dt)
     end
 
 
@@ -153,6 +168,7 @@ end
 function ui.update(dt)
     ui.mouse:update(dt)
     ui.economy:update(dt)
+    ui.hint:update(dt)
 end
 
 
