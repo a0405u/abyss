@@ -41,17 +41,6 @@ function Mouse:pressed(x, y, button, istouch, presses)
 
     if button == 1 then
         game:activate(position)
-
-        if game.player:in_range(position, game.player.range * 2) then
-
-            if self.building then
-                self.building:activate()
-                self.building = nil
-                return
-            end
-        else
-            -- game.player.sphere.show(game.player.range * 2)
-        end
         return
     end
     if button == 2 then

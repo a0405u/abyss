@@ -36,7 +36,7 @@ function love.draw()
     screen.reset()
 
     love.graphics.clear(color.black)
-    
+
     screen.draw()
     debug.draw()
 
