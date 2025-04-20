@@ -10,11 +10,11 @@ function Nail:init(position, a, b, fixed)
         b = b
     }
     if a.nails then 
-        a.nails[self] = self 
+        a.nails[self] = self
         a.nailed = true
     end
     if b.nails then 
-        b.nails[self] = self 
+        b.nails[self] = self
         b.nailed = true
     end
     self.strength = NAIL_STRENGTH
@@ -29,7 +29,7 @@ end
 
 
 function Nail:destroy()
-    self.joint:destroy()
+    if not self.joint:isDestroyed() then self.joint:destroy() end
     if self.objects.a.nails then self.objects.a.nails[self] = nil end
     if self.objects.b.nails then self.objects.b.nails[self] = nil end
     self.parent:remove(self)

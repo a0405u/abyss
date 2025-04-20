@@ -99,27 +99,31 @@ function Plank:make_gib(position, rotation, length)
     local gib = Plank(position, rotation, length)
     gib:activate()
     gib:unfreeze()
-    gib:add_nail(position)
     gib:set_type(Type.gib, gib.sprite.animations.gib)
     gib.frozen = false
     gib.body:setFixedRotation(false)
     gib.body:setAwake(true)
     self.parent:add(gib)
+    return gib
 end
 
 
 function Plank:destroy(point)
 
-    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
-    for key, nail in pairs(self.nails) do
-        nail:destroy()
+    local gibs = {}
+    if self.length > 2 then
+        table.insert(gibs, self:make_gib(self.position:getCopy(), self.rotation, self.length / 2))
+        table.insert(gibs, self:make_gib(self.point:getCopy(), math.pi + self.rotation, self.length / 2))
     end
     self.body:destroy()
-    if self.length > 2 then
-        self:make_gib(self.position:getCopy(), self.rotation, self.length / 2)
-        self:make_gib(self.point:getCopy(), math.pi + self.rotation, self.length / 2)
+    for key, nail in pairs(self.nails) do
+        for i, gib in ipairs(gibs) do
+            gib:add_nail(nail.position)
+        end
+        nail:destroy()
     end
     self.parent:remove(self)
+    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
 end
 
 
