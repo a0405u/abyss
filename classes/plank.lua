@@ -95,14 +95,15 @@ function Plank:activate()
 end
 
 
-function Plank:make_gib(position, rotation, length)
-    local gib = Plank(position, rotation, length)
+function Plank:make_gib(position, rotation, length, velocity)
+    local gib = Plank(position, rotation, length, velocity)
     gib:activate()
     gib:unfreeze()
     gib:set_type(Type.gib, gib.sprite.animations.gib)
     gib.frozen = false
     gib.body:setFixedRotation(false)
     gib.body:setAwake(true)
+    gib.body:setLinearVelocity(velocity:get())
     self.parent:add(gib)
     return gib
 end
@@ -112,8 +113,8 @@ function Plank:destroy(point)
 
     local gibs = {}
     if self.length > 2 then
-        table.insert(gibs, self:make_gib(self.position:getCopy(), self.rotation, self.length / 2))
-        table.insert(gibs, self:make_gib(self.point:getCopy(), math.pi + self.rotation, self.length / 2))
+        gibs[1] = self:make_gib(self.position:getCopy(), self.rotation, self.length / 2, Vector(self.body:getLinearVelocity()))
+        gibs[2] = self:make_gib(self.point:getCopy(), math.pi + self.rotation, self.length / 2, Vector(self.body:getLinearVelocity()))
     end
     self.body:destroy()
     for key, nail in pairs(self.nails) do
@@ -154,7 +155,7 @@ function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
         self:unfreeze()
     end
     if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(contact.position) end
+        self.update = function(dt) self:destroy(contact.position, normalimpulse) end
     end
 end
 

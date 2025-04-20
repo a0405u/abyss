@@ -7,6 +7,7 @@ function ToolHand:init()
     self.object = nil
     self.joint = nil
     self.range = game.player.range * 2
+    self.force = MOUSE_PULL_FORCE * ((DEBUG and 16) or 1)
 end
 
 
@@ -26,7 +27,7 @@ function ToolHand:use(position)
             if object:is(Plank) or object:is(Gib) then
                 self.object = object
                 self.joint = love.physics.newMouseJoint(self.object.body, ui.mouse.position.map:get())
-                self.joint:setMaxForce(MOUSE_PULL_FORCE)
+                self.joint:setMaxForce(self.force)
                 break
             end
         end
