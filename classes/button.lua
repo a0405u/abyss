@@ -10,7 +10,7 @@ function Button:init(parent, position, icon, size, disabled, on_click)
     self.sprite = sprites.ui.button:instantiate()
     self.icon = icon:instantiate() or sprites.ui.icons.empty:instantiate()
     self.on_click = on_click
-    self.size = size or self.sprite.size:clone()
+    self.size = size or self.sprite.size:getCopy()
     self:set("idle")
     self.disabled = disabled
 

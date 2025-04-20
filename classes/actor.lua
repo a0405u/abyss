@@ -1,8 +1,8 @@
 --- @class Actor
 --- @field name string|nil
 --- @field sprite Sprite
---- @field position Vector2
---- @field velocity Vector2
+--- @field position Vector
+--- @field velocity Vector
 --- @field direction number
 --- @field look_direction number
 --- @field health number
@@ -17,15 +17,15 @@ function Actor:init(position, name, sprite, args)
     self.name = name or nil
     self.sprite = sprites.player:instantiate()
     self.mass = 70
-    self.position = position or Vector2()
-    self.size = Vector2(1.5, 1.75)
+    self.position = position or Vector()
+    self.size = Vector(1.5, 1.75)
     self.direction = 0.0
     self.moving = false
     self.on_floor = false
     self.acceleration = args.acceleration or 18
     self.max_speed = args.max_speed or 16
     self.friction = args.friction or 64
-    self.normal = Vector2()
+    self.normal = Vector()
     self.look_direction = 1
     self.jump_impulse =  JUMP * self.mass * ((DEBUG and 2) or 1)
     self.health = args.health or 3
@@ -93,7 +93,7 @@ end
 function Actor:in_range(position, range)
 
     range = range or self.range
-    if Vector2(self.position.x - position.x, self.position.y - position.y):length() > range then
+    if #Vector(self.position.x - position.x, self.position.y - position.y) > range then
         return false
     end
     return true
@@ -104,7 +104,7 @@ function Actor:set_direction(direction)
 
     self.direction = direction
     self.look_direction = direction
-    self.sprite.scale = Vector2(self.look_direction, 1)
+    self.sprite.scale = Vector(self.look_direction, 1)
 end
 
 
@@ -139,8 +139,8 @@ end
 
 function Actor:move(dt)
 
-    local velocity = Vector2(self.body:getLinearVelocity())
-    local normal = velocity:normalized()
+    local velocity = Vector(self.body:getLinearVelocity())
+    local normal = velocity:getNormalized()
     local acceleration = self.direction * self.acceleration
     local friction = 0.0
 
@@ -169,14 +169,14 @@ function Actor:move(dt)
 
     self.body:applyLinearImpulse((acceleration - friction) * self.mass * dt, 0)
 
-    self.position = Vector2(self.body:getPosition())
+    self.position = Vector(self.body:getPosition())
     self.direction = 0
 end
 
 
 function Actor:jump()
 
-    local velocity = Vector2(self.body:getLinearVelocity())
+    local velocity = Vector(self.body:getLinearVelocity())
     if self:is_on_floor() and velocity.y <= 1 then
         audio.play(sound.jump)
         --self.velocity.y = self.velocity.y + self.jump_velocity

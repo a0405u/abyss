@@ -3,7 +3,7 @@ local Nail = class("Nail", Object)
 
 function Nail:init(position, a, b, fixed)
 
-    self.position = position or Vector2()
+    self.position = position or Vector()
     self.sprite = sprites.nail
     self.objects = {
         a = a,
@@ -38,7 +38,7 @@ end
 
 function Nail:update(dt)
 
-    if not self.fixed and Vector2(self.joint:getReactionForce(1)):length() > self.strength then
+    if not self.fixed and Vector(self.joint:getReactionForce(1)):getLength() > self.strength then
         self:destroy()
         return
     end

@@ -28,21 +28,22 @@ local Type = {
     }
 }
 
+
 function Plank:init(position, rotation, length, mass)
 
     self.type = Type.ghost
     self.sprite = sprites.plank:instantiate()
     self.sprite:set(self.sprite.animations.ghost)
-    self.position = position or Vector2()
+    self.position = position or Vector()
     self.rotation = rotation or 0.0
     self.length = length or 2
-    self.sprite.scale = Vector2(self.length / 5, 1)
+    self.sprite.scale = Vector(self.length / 5, 1)
     self.width = 0.75
     self.max_length = 8
-    self.point = Vector2(
+    self.point = Vector(
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
-    self.velocity = Vector2()
+    self.velocity = Vector()
     self.strength = PLANK_STRENGTH
     self.mass = mass or self.length * 5
     self.ghost = true
@@ -115,8 +116,8 @@ function Plank:destroy(point)
     end
     self.body:destroy()
     if self.length > 2 then
-        self:make_gib(self.position:clone(), self.rotation, self.length / 2)
-        self:make_gib(self.point:clone(), math.pi + self.rotation, self.length / 2)
+        self:make_gib(self.position:getCopy(), self.rotation, self.length / 2)
+        self:make_gib(self.point:getCopy(), math.pi + self.rotation, self.length / 2)
     end
     self.parent:remove(self)
 end
@@ -149,7 +150,7 @@ function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
         self:unfreeze()
     end
     if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+        self.update = function(dt) self:destroy(contact.position) end
     end
 end
 
@@ -174,36 +175,34 @@ end
 function Plank:add_nail(position)
 
     if (game.map.fixture:testPoint(position.x, position.y)) then
-        -- game.map:add(Nail(Vector2(position.x, position.y), game.map, self))
+        -- game.map:add(Nail(Vector(position.x, position.y), game.map, self))
         return
     else
-        game.world:queryBoundingBox(position.x - 1, position.y - 1, position.x + 1, position.y + 1, function(fixture)
+        local fixtures = game.map:get_fixtures(position)
 
-            if fixture == self.fixture then return true end
-            if fixture:testPoint(position.x, position.y) then
-                if fixture:getCategory() == PC_PLANK then
-                    game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self, false))
-                    return true
-                end
-                if fixture:getCategory() == PC_BLOCK then
-                    game.map:add(Nail(Vector2(position.x, position.y), fixture:getBody():getUserData(), self))
-                end
+        for i, fixture in ipairs(fixtures) do
+            if fixture == self.fixture then goto continue end
+            if fixture:getCategory() == PC_PLANK then
+                game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self, false))
+                goto continue
             end
-            return true
-        end)
+            if fixture:getCategory() == PC_BLOCK then
+                game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
+                goto continue
+            end
+            ::continue::
+        end
     end
 end
 
 
---- @param point Vector2
+--- @param point Vector
 function Plank:set_point(point)
-    local vector = Vector2(point.x - self.position.x, point.y - self.position.y)
-    local length = vector:length()
+    local vector = Vector(point.x - self.position.x, point.y - self.position.y)
+    local length = vector:getLength()
     if length > self.max_length then
-        local normal = vector:normalized()
         self.length = self.max_length
-        normal:mult(self.length)
-        normal:add(self.position)
+        local normal = (vector:getNormalized() * self.length) + self.position
         self.point = normal
     else
         self.length = length
@@ -211,19 +210,19 @@ function Plank:set_point(point)
     end
     self.rotation = math.atan2(vector.y, vector.x)
     self.body:setAngle(self.rotation)
-    self.sprite.scale = Vector2(self.length / 5, 1)
+    self.sprite.scale = Vector(self.length / 5, 1)
 end
 
 
 function Plank:update(dt)
 
     if self.ghost then
-        return
+        -- return
     end
     self.position.x, self.position.y = self.body:getPosition()
     self.rotation = self.body:getAngle()
     
-    self.point = Vector2(
+    self.point = Vector(
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
     self.timer:update(dt)
@@ -235,7 +234,7 @@ function Plank:draw()
     color.reset()
     local origin = game.map:get_draw_position(self.position)
     local point = game.map:get_draw_position(self.point)
-    self.sprite:draw(self.type.dl, origin, -self.rotation, Vector2(self.sprite.scale.x, sign(math.cos(self.rotation))))
+    self.sprite:draw(self.type.dl, origin, -self.rotation, Vector(self.sprite.scale.x, sign(math.cos(self.rotation))))
     -- color.set(self.type.color)
     -- love.graphics.setLineWidth(3)
     -- love.graphics.line(origin.x, origin.y, point.x, point.y)
@@ -244,10 +243,10 @@ function Plank:draw()
     -- color.set(color.blue)
     -- if not self.ghost then
     --     local x1, y1, x2, y2, x3, y3, x4, y4 = self.body:getFixtures()[1]:getShape():getPoints()
-    --     local v1 = game.map:get_draw_position(Vector2(self.position.x + x1, self.position.y + y1))
-    --     local v2 = game.map:get_draw_position(Vector2(self.position.x + x2, self.position.y + y2))
-    --     local v3 = game.map:get_draw_position(Vector2(self.position.x + x3, self.position.y + y3))
-    --     local v4 = game.map:get_draw_position(Vector2(self.position.x + x4, self.position.y + y4))
+    --     local v1 = game.map:get_draw_position(Vector(self.position.x + x1, self.position.y + y1))
+    --     local v2 = game.map:get_draw_position(Vector(self.position.x + x2, self.position.y + y2))
+    --     local v3 = game.map:get_draw_position(Vector(self.position.x + x3, self.position.y + y3))
+    --     local v4 = game.map:get_draw_position(Vector(self.position.x + x4, self.position.y + y4))
     --     love.graphics.polygon("line", v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, v4.x, v4.y)
     -- end
 end

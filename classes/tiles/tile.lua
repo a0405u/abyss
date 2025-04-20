@@ -5,9 +5,9 @@ local Tile = class("Tile", Object)
 function Tile:init(sprite, size)
 
     self.map = nil
-    self.position = Vector2()
+    self.position = Vector()
     self.sprite = sprite or sprites.tile
-    self.size = size or Vector2(TILESIZE, TILESIZE)
+    self.size = size or Vector(TILESIZE, TILESIZE)
     self.body = love.physics.newBody(game.world, 0, 0, "static")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y))
     self.fixture:setCategory(PC_BLOCK)

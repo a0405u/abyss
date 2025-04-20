@@ -8,12 +8,12 @@ local Sprite = class("Sprite")
 function Sprite:init(image, data, size, scale, offset, parent)
 
     self.image = image
-    self.scale = scale or Vector2(1, 1)
+    self.scale = scale or Vector(1, 1)
     self.parent = parent or nil
 
     if data then
-        self.size = size or Vector2(data.meta.size.w / #data.frames, data.meta.size.h)
-        self.offset = offset or Vector2(self.size.x / 2, self.size.y / 2)
+        self.size = size or Vector(data.meta.size.w / #data.frames, data.meta.size.h)
+        self.offset = offset or Vector(self.size.x / 2, self.size.y / 2)
 
         if data.layers then
             self.data = data
@@ -32,7 +32,7 @@ function Sprite:init(image, data, size, scale, offset, parent)
         else
             self.animations = {}
             for i, tag in ipairs(self.data.tags) do
-                local offset = Vector2(self.size.x * tag.from, 0)
+                local offset = Vector(self.size.x * tag.from, 0)
                 local count = tag.to - tag.from + 1
                 local frames = Animation.get_frames(self.image, self.size, offset, count)
                 local durations = {}
@@ -44,8 +44,8 @@ function Sprite:init(image, data, size, scale, offset, parent)
             self.animation = self.animations[self.data.tags[1].name]
         end
     else
-        self.size = size or Vector2(image:getWidth(), image:getHeight())
-        self.offset = offset or Vector2(self.size.x / 2, self.size.y / 2)
+        self.size = size or Vector(image:getWidth(), image:getHeight())
+        self.offset = offset or Vector(self.size.x / 2, self.size.y / 2)
         self.animations = {idle = Animation(image)}
         self.animation = self.animations.idle
     end
@@ -65,20 +65,20 @@ function Sprite:set(animation, play)
 end
 
 --- @param dl number
---- @param position Vector2|nil
+--- @param position Vector|nil
 --- @param rotation number|nil
---- @param scale Vector2|nil
---- @param offset Vector2|nil
+--- @param scale Vector|nil
+--- @param offset Vector|nil
 function Sprite:draw(dl, position, rotation, scale, offset, c, a)
 
     scale = scale or self.scale
     offset = offset or self.offset
-    position = position or Vector2()
+    position = position or Vector()
     c = c or color.white
     a = a or 1
     screen.layer:queue(dl, function()
         color.set(c, a)
-        self.animation:draw(Vector2(position.x, position.y), rotation, scale, offset)
+        self.animation:draw(Vector(position.x, position.y), rotation, scale, offset)
         color.reset()
     end)
 end

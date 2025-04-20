@@ -4,8 +4,8 @@ local Camera = class("Camera")
 
 function Camera:init(position, offset)
 
-    self.position = position or Vector2()
-    self.offset = offset or Vector2()
+    self.position = position or Vector()
+    self.offset = offset or Vector()
     self.draw_position = self.position
     self.canvas = canvas.screen.camera
 end

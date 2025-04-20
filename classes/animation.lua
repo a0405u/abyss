@@ -8,7 +8,7 @@ local Animation = class("Animation")
 function Animation:init(image, frames, durations, on_loop, parent)
     assert(image, "No image provided for Animation!")
     
-    if frames == nil then frames = Animation.get_frames(image, Vector2(image:getHeight(), image:getHeight()), Vector2(0, 0), image:getWidth() / image:getHeight()) end
+    if frames == nil then frames = Animation.get_frames(image, Vector(image:getHeight(), image:getHeight()), Vector(0, 0), image:getWidth() / image:getHeight()) end
     if durations == nil then durations = 1 end
     if (type(durations) == "number") then
         local duration = durations

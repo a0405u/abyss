@@ -2,19 +2,19 @@ local Mouse = class("Mouse")
 
 --- @class Mouse
 --- @field sprite Sprite
---- @field position Vector2
+--- @field position Vector
 
 --- @param sprite Sprite
---- @param position Vector2|nil
+--- @param position Vector|nil
 --- @param visible boolean|nil
 function Mouse:init(sprite, visible, position)
 
     self.sprite = sprite
     self.visible = visible or true
     self.position = {
-        window = position or Vector2(0, 0),
-        screen = Vector2(0, 0),
-        map = Vector2(0, 0)
+        window = position or Vector(0, 0),
+        screen = Vector(0, 0),
+        map = Vector(0, 0)
     }
     self.plank = nil
 end
@@ -44,6 +44,7 @@ function Mouse:pressed(x, y, button, istouch, presses)
         return
     end
     if button == 2 then
+        game.hand:use(position)
     end
 end
 
@@ -57,6 +58,10 @@ function Mouse:released(x, y, button, istouch, presses)
     if ui_button then
         ui_button:release()
         return
+    end
+
+    if button == 2 then
+        game.hand:use(position)
     end
 end
 
@@ -84,13 +89,13 @@ end
 
 function Mouse:get_screen_position(x, y)
 
-    return Vector2(math.floor(x / screen.scale), math.floor(y / screen.scale))
+    return Vector(math.floor(x / screen.scale), math.floor(y / screen.scale))
 end
 
 
 function Mouse:normalize_to_camera(position)
 
-    return Vector2(position.x - game.camera.position.x, position.y)
+    return Vector(position.x - game.camera.position.x, position.y)
 end
 
 

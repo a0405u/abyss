@@ -3,16 +3,16 @@
 --- @field map Map
 local game = {}
 
+
 function game:load()
-    
+
     self.state = "intro"
     self.paused = true
 
     self.world = love.physics.newWorld(0.0, -GRAVITY)
     self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
     self.map = Map()
-
-    self.player = Actor(Vector2(self.map.size.x / 6, self.map.size.y))
+    self.player = Actor(Vector(self.map.size.x / 6, DEBUG and 2 or self.map.size.y))
     self.camera = Camera(self.player.position)
     self.economy = Economy()
 
@@ -22,8 +22,9 @@ function game:load()
         building = ToolBuilding()
     }
     self.tool = self.tools.plank
+    self.hand = ToolHand()
     ui.left.buttons.plank:activate(true)
-    self.map.tilemap:add_hill(Vector2(10, 1))
+    self.map.tilemap:add_hill(Vector(10, 1))
     self.timer = Timer()
 end
 
@@ -37,6 +38,7 @@ function game:update(dt)
     self.camera:update(dt)
     self.economy:update(dt)
     self.tool:update(dt)
+    self.hand:update(dt)
     ui.update(dt)
     if self.player.position.y > self.map.size.y then
         game:ending()
@@ -84,6 +86,7 @@ function game:build_block(block, cost, position)
     return false
 end
 
+
 function game:spawn_building(position, building)
 
     if self.map.tilemap:is_present(self.map.tilemap:get_position(position)) then
@@ -112,6 +115,7 @@ function beginContact(a, b, contact)
     end
 end
 
+
 function endContact(a, b, contact)
 
     if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
@@ -129,6 +133,7 @@ function endContact(a, b, contact)
     end
 end
 
+
 function preSolve(a, b, contact)
 
     if b:getCategory() == PC_PLANK then
@@ -137,11 +142,12 @@ function preSolve(a, b, contact)
     end
 end
 
+
 function postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
     local cache = {
-        position = Vector2(contact:getPositions()),
-        normal = Vector2(contact:getNormal()),
+        position = Vector(contact:getPositions()),
+        normal = Vector(contact:getNormal()),
     }
     local object_a, object_b = a:getBody():getUserData(), b:getBody():getUserData()
 
@@ -161,7 +167,7 @@ function game:start()
     self.state = "game"
     self.paused = false
     screen.show(screen.game)
-    
+
     audio.stop(sound.logo)
     ui.hint:queue("You've fallen into the deep abyss, find a way to get out...")
     -- audio.play(sound.start)

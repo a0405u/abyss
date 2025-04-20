@@ -4,7 +4,7 @@ local Explosion = class("Explosion", Object)
 function Explosion:init(position, size, parent)
 
     Explosion.super:init(parent)
-    self.position = position or Vector2()
+    self.position = position or Vector()
     self.sprite = sprites.explosion:instantiate(self)
     self.sprite.animation.on_loop = function () self:on_animation_end() end
 

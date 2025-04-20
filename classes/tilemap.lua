@@ -4,9 +4,9 @@ local Tilemap = class("Tilemap", Object)
 
 function Tilemap:init(position, size, tile_size)
 
-    self.position = position or Vector2()
-    self.size = size or Vector2(TILESIZE, TILESIZE)
-    self.tile_size = tile_size or Vector2(4, 4)
+    self.position = position or Vector()
+    self.size = size or Vector(TILESIZE, TILESIZE)
+    self.tile_size = tile_size or Vector(4, 4)
     self.tile = {}
     for x = 1, self.size.x do
         self.tile[x] = {}
@@ -17,7 +17,7 @@ end
 function Tilemap:line(block, position, count)
 
     for i = 1, count do
-        self:place(block:instantiate(), Vector2(position.x + i - 1, position.y))
+        self:place(block:instantiate(), Vector(position.x + i - 1, position.y))
     end
 end
 
@@ -30,14 +30,14 @@ function Tilemap:add_hill(position)
     game.map:add(Drawable(world_position, sprites.hillbg, DL_HILL_BG))
     game.map:add(Drawable(world_position, sprites.hill, DL_HILL))
 
-    self:line(Tile(), Vector2(position.x + 8, 1), 11)
-    self:line(Tile(), Vector2(position.x + 9, 2), 10)
-    self:line(Tile(), Vector2(position.x + 10, 3), 8)
-    self:line(Tile(), Vector2(position.x + 12, 4), 6)
-    self:line(Tile(), Vector2(position.x + 12, 5), 5)
-    self:line(Tile(), Vector2(position.x + 12, 6), 5)
-    self:line(Tile(), Vector2(position.x + 13, 7), 3)
-    self:line(Tile(), Vector2(position.x + 14, 8), 2)
+    self:line(Tile(), Vector(position.x + 8, 1), 11)
+    self:line(Tile(), Vector(position.x + 9, 2), 10)
+    self:line(Tile(), Vector(position.x + 10, 3), 8)
+    self:line(Tile(), Vector(position.x + 12, 4), 6)
+    self:line(Tile(), Vector(position.x + 12, 5), 5)
+    self:line(Tile(), Vector(position.x + 12, 6), 5)
+    self:line(Tile(), Vector(position.x + 13, 7), 3)
+    self:line(Tile(), Vector(position.x + 14, 8), 2)
 end
 
 
@@ -110,10 +110,10 @@ function Tilemap:place(tile, position)
         if fixture:getCategory() == PC_PLANK then
             local plank = fixture:getBody():getUserData()
             if self:is_in_tile(plank.position, position) then
-                game.map:add(Nail(Vector2(plank.position.x, plank.position.y), fixture:getBody():getUserData(), tile))
+                game.map:add(Nail(Vector(plank.position.x, plank.position.y), fixture:getBody():getUserData(), tile))
             end
             if self:is_in_tile(plank.point, position) then
-                game.map:add(Nail(Vector2(plank.point.x, plank.point.y), fixture:getBody():getUserData(), tile))
+                game.map:add(Nail(Vector(plank.point.x, plank.point.y), fixture:getBody():getUserData(), tile))
             end
             return true
         end
@@ -134,12 +134,12 @@ function Tilemap:build(tile, position)
     if self:is_present(position) then
         return false
     end
-    if position.y == 1 or self:is_present(Vector2(position.x, position.y - 1)) then
+    if position.y == 1 or self:is_present(Vector(position.x, position.y - 1)) then
         local max = 1
         if tile:is(Block) then
             max = 3
         end
-        if position.y <= max or (self:is_present(Vector2(position.x - 1, position.y - max)) and self:is_present(Vector2(position.x + 1, position.y - max))) then
+        if position.y <= max or (self:is_present(Vector(position.x - 1, position.y - max)) and self:is_present(Vector(position.x + 1, position.y - max))) then
             self:place(tile, position)
             return true
         end
@@ -158,7 +158,7 @@ end
 
 function Tilemap:get_position(position)
 
-    return Vector2(
+    return Vector(
         math.floor((position.x - self.position.x) / self.tile_size.x) + 1,
         math.floor((position.y - self.position.y) / self.tile_size.y) + 1
         )
@@ -167,7 +167,7 @@ end
 
 function Tilemap:get_world_position(position)
 
-    return Vector2(
+    return Vector(
         self.tile_size.x / 2 + self.position.x + (position.x - 1) * self.tile_size.x, 
         self.tile_size.y / 2 + self.position.y + (position.y - 1) * self.tile_size.y)
 end

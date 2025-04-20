@@ -4,7 +4,7 @@ local Building = class("Building", Object)
 
 function Building:init(position, rotation, sprite, colliders)
 
-    self.position = position or Vector2()
+    self.position = position or Vector()
     self.rotation = rotation or 0.0
     self.sprite = sprite:instantiate() or sprites.building:instantiate()
     self.colliders = colliders or sprite.data.slices
@@ -68,11 +68,11 @@ function Building:destroy(position)
 
     audio.play(sound.destroy, 0.75 + math.random() * 0.75)
     self.body:destroy()
-    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
-    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
-    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
-    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
-    self:make_gib(self.position:clone(), math.random(), Vector2((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:getCopy(), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:getCopy(), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:getCopy(), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:getCopy(), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.position:getCopy(), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
     self.parent:remove(self)
 end
 
@@ -88,10 +88,10 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
     end
     if b:getCategory() == PC_GROUND then
         ui.hint:queue("The ground seems unstable, buildings need support!")
-        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+        self.update = function(dt) self:destroy(Vector(contact.position)) end
     end
     if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+        self.update = function(dt) self:destroy(Vector(contact.position)) end
     end
 end
 

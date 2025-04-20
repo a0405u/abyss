@@ -44,7 +44,7 @@ end
 function Gib:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 
     if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector2(contact.position)) end
+        self.update = function(dt) self:destroy(Vector(contact.position)) end
     end
 end
 

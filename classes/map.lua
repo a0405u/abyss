@@ -18,13 +18,13 @@ function Map:init()
     self.ground = {
         height = 2
     }
-    self.tilemap = Tilemap(Vector2(0, self.ground.height), Vector2(64, 64))
+    self.tilemap = Tilemap(Vector(0, self.ground.height), Vector(64, 64))
     self.body = love.physics.newBody(game.world, self.size.x / 2, self.size.y / 2, "static")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, - self.size.y / 2 + self.ground.height / 2, self.size.x, self.ground.height))
     self.fixture:setCategory(PC_GROUND)
     self.left_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(-self.size.x, 0, self.size.x, self.size.y))
     self.right_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, 0, self.size.x, self.size.y))
-    self.background = Drawable(Vector2(54, 48), sprites.background, DL_BACKGROUND)
+    self.background = Drawable(Vector(54, 48), sprites.background, DL_BACKGROUND)
 end
 
 
@@ -37,7 +37,7 @@ end
 
 function Map:draw()
 
-    local position = self:get_draw_position(Vector2(self.size.x, self.ground.height))
+    local position = self:get_draw_position(Vector(self.size.x, self.ground.height))
     color.set(color.darkest)
     love.graphics.line(0, position.y, position.x, position.y)
     color.reset()
@@ -55,20 +55,105 @@ end
 
 function Map:get_scaled_vector(vector)
 
-    return Vector2(vector.x * self.scale, vector.y * self.scale)
+    return Vector(vector.x * self.scale, vector.y * self.scale)
 end
 
---- @param position Vector2
+--- @param position Vector
 function Map:get_draw_position(position)
 
-    return Vector2(self.position.x + position.x * self.scale, self.position.y + (self.size.y - position.y) * self.scale)
+    return Vector(self.position.x + position.x * self.scale, self.position.y + (self.size.y - position.y) * self.scale)
 end
 
 
---- @param position Vector2
+--- @param position Vector
 function Map:get_position(position)
 
-    return Vector2((position.x - self.position.x) / self.scale, self.size.y - (position.y - self.position.y) / self.scale)
+    return Vector((position.x - self.position.x) / self.scale, self.size.y - (position.y - self.position.y) / self.scale)
+end
+
+
+--- @param position Vector
+function Map:get_objects_of_class(position, class)
+
+    local objects = {}
+
+    game.world:queryBoundingBox(position.x - 1, position.y - 1, position.x + 1, position.y + 1, function(fixture)
+
+        if fixture:testPoint(position.x, position.y) then
+            local object = fixture:getBody():getUserData()
+            if object and object:is(class) then table.insert(objects, object) end
+        end
+        return true
+    end)
+    return objects
+end
+
+
+--- @param position Vector
+function Map:get_objects(position)
+
+        local objects = {}
+
+        game.world:queryBoundingBox(position.x - 1, position.y - 1, position.x + 1, position.y + 1, function(fixture)
+
+            if fixture:testPoint(position.x, position.y) then
+                local object = fixture:getBody():getUserData()
+                if object then table.insert(objects, object) end
+            end
+            return true
+        end)
+        return objects
+end
+
+
+--- @param position Vector
+--- @param size number 
+function Map:get_objects_in_box(position, size)
+
+    size = size or 2
+    local objects = {}
+
+    game.world:queryBoundingBox(position.x - size / 2, position.y - size / 2, position.x + size / 2, position.y + size / 2, function(fixture)
+
+        if fixture:testPoint(position.x, position.y) then
+            local object = fixture:getBody():getUserData()
+            if object then table.insert(objects, object) end
+        end
+        return true
+    end)
+    return objects
+end
+
+
+--- @param position Vector
+function Map:get_fixtures(position)
+
+    local fixtures = {}
+
+    game.world:queryBoundingBox(position.x - 1, position.y - 1, position.x + 1, position.y + 1, function(fixture)
+
+        if fixture:testPoint(position.x, position.y) then
+            table.insert(fixtures, fixture)
+        end
+        return true
+    end)
+    return fixtures
+end
+
+
+--- @param position Vector
+--- @param size number 
+function Map:get_fixtures_in_box(position, size)
+
+    size = size or 2
+    local fixtures = {}
+
+    game.world:queryBoundingBox(position.x - size / 2, position.y - size / 2, position.x + size / 2, position.y + size / 2, function(fixture)
+
+        table.insert(fixtures, fixture)
+        return true
+    end)
+    return fixtures
 end
 
 

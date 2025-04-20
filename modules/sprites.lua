@@ -23,13 +23,13 @@ end
 
 function sprites.load_spritesheet(image)
 
-    Animation.get_frames(image, Vector2(image:getHeight(), image:getHeight()), Vector2(0, 0), image:getWidth() / image:getHeight())
+    Animation.get_frames(image, Vector(image:getHeight(), image:getHeight()), Vector(0, 0), image:getWidth() / image:getHeight())
 end
 
 
 function sprites.load()
 
-    sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector2(0, 0))
+    sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector(0, 0))
     sprites.cursor = load_from_file("sprites/cursor")
     sprites.hand = load_from_file("sprites/hand")
     sprites.item_frame = load_from_file("sprites/item_frame")
@@ -64,7 +64,7 @@ function sprites.load()
     }
     
     sprites.player = load_from_file("sprites/player")
-    sprites.plank = load_from_file("sprites/plank", nil, nil, Vector2(14, 7))
+    sprites.plank = load_from_file("sprites/plank", nil, nil, Vector(14, 7))
     sprites.nail = load_from_file("sprites/nail")
     
     sprites.gib = {
@@ -87,8 +87,8 @@ function sprites.load()
     sprites.block = load_from_file("sprites/block")
     sprites.soil = load_from_file("sprites/soil")
     
-    sprites.hill = load_from_file("sprites/hill", nil, nil, Vector2(0, 320))
-    sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector2(0, 320))
+    sprites.hill = load_from_file("sprites/hill", nil, nil, Vector(0, 320))
+    sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector(0, 320))
     sprites.background = load_from_file("sprites/background")
     
     sprites.building = load_from_file("sprites/house_1")

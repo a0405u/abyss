@@ -80,7 +80,7 @@ end
 
 function screen.logo.draw()
 
-    sprites.screen.logo:draw(DL_UI, Vector2(screen.width / 2, screen.height / 2))
+    sprites.screen.logo:draw(DL_UI, Vector(screen.width / 2, screen.height / 2))
     if screen.time > 3 then
         screen.state = screen.game
         game:start()
@@ -94,7 +94,7 @@ function screen.game.draw()
 end
 
 function screen.ending.draw()
-    ui.print("You managed to get out.", Vector2(0, screen.height / 2), screen.width, "center")
+    ui.print("You managed to get out.", Vector(0, screen.height / 2), screen.width, "center")
 end
 
 

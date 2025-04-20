@@ -17,8 +17,9 @@ function ToolPlank:build(position)
         return plank
     else
         ui.hint:queue("You don't have enough resources!")
+        audio.play(sound.deny)
     end
-    return false
+    return nil, {}
 end
 
 
@@ -26,7 +27,7 @@ function ToolPlank:use(position)
 
     if not self.plank then
         if game.player:in_range(position, game.player.range) then
-            self.plank = self:build(position)
+            self.plank, self.objects = self:build(position)
             if self.plank then
                 audio.play(sound.select)
             end
