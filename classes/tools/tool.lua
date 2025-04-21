@@ -27,4 +27,9 @@ function Tool:activate()
 end
 
 
+function Tool:secondary()
+
+end
+
+
 return Tool

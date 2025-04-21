@@ -22,9 +22,13 @@ local Type = {
         strength = PLANK_STRENGTH / 4
     },
 	ghost = {
-        category = PC_GIB,
+        category = PC_GHOST,
         color = color.purple,
-        dl = DL_GHOST
+        dl = DL_GHOST,
+        group = 12,
+        mask = PC_PLANK,
+        filter = {1, 0, 0},
+        density = 1,
     }
 }
 
@@ -39,7 +43,8 @@ function Plank:init(position, rotation, length, mass)
     self.length = length or 2
     self.sprite.scale = Vector(self.length / 5, 1)
     self.width = 0.75
-    self.max_length = 8
+    self.min_length = LN_PLANK_MIN
+    self.max_length = LN_PLANK_MAX
     self.point = Vector(
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
@@ -47,21 +52,19 @@ function Plank:init(position, rotation, length, mass)
     self.strength = PLANK_STRENGTH
     self.mass = mass or self.length * 5
     self.ghost = true
-    self.frozen = true
+    -- self.frozen = true
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.body:setUserData(self)
     self.body:setAngle(self.rotation)
-    self.body:setFixedRotation(true)
-    self.body:setActive(false)
+    -- self.body:setFixedRotation(true)
+    -- self.body:setActive(false)
     -- self.body:setSleepingAllowed(false)
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
+    self.fixture:setCategory(PC_PLANK)
+    self:set_type(Type.ghost, self.sprite.animations.ghost)
     self.nails = {}
     self.nailed = false
     self.timer = Timer()
-end
-
-
-function Plank:build()
-
 end
 
 
@@ -75,12 +78,10 @@ end
 
 function Plank:activate()
 
-    if self.length < 1 then
-        self:destroy()
-        return false
-    end
-
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), 28)
+    self.body:setLinearVelocity(0, 0)
+    self.body:setAngularVelocity(0)
+    self.fixture:destroy()
+    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
     self.fixture:setCategory(PC_PLANK)
     self.ghost = false
     self.body:setActive(true)
@@ -109,7 +110,7 @@ function Plank:make_gib(position, rotation, length, velocity)
 end
 
 
-function Plank:destroy(point)
+function Plank:destroy(point, impulse)
 
     local gibs = {}
     if self.length > 2 then
@@ -119,7 +120,9 @@ function Plank:destroy(point)
     self.body:destroy()
     for key, nail in pairs(self.nails) do
         for i, gib in ipairs(gibs) do
-            gib:add_nail(nail.position)
+            if gib.fixture:testPoint(nail.position:get()) then
+                gib:add_nail(nail.position)
+            end
         end
         nail:destroy()
     end
@@ -164,8 +167,12 @@ function Plank:set_type(type, animation)
     self.type = type
     self.fixture:setCategory(PC_PLANK, type.category)
     if type.mask then self.fixture:setMask(type.mask) else self.fixture:setMask() end
+    if animation then self.sprite:set(animation) end
     self.strength = type.strength or PLANK_STRENGTH
-    self.sprite:set(animation)
+    self.fixture:setDensity(type.density or DS_PLANK)
+    self.body:resetMassData()
+    self.fixture:setGroupIndex(type.group or 0)
+    if type.filter then self.fixture:setFilterData(type.filter[1], type.filter[2], type.filter[3]) end
 end
 
 
@@ -201,21 +208,18 @@ function Plank:add_nail(position)
 end
 
 
---- @param point Vector
-function Plank:set_point(point)
-    local vector = Vector(point.x - self.position.x, point.y - self.position.y)
-    local length = vector:getLength()
-    if length > self.max_length then
-        self.length = self.max_length
-        local normal = (vector:getNormalized() * self.length) + self.position
-        self.point = normal
-    else
-        self.length = length
-        self.point = point
-    end
-    self.rotation = math.atan2(vector.y, vector.x)
-    self.body:setAngle(self.rotation)
+function Plank:set_length(length)
+    
+    length = math.clamp(length, self.min_length, self.max_length)
+    self.length = length
     self.sprite.scale = Vector(self.length / 5, 1)
+end
+
+
+function Plank:set_angle(angle)
+
+    self.rotation = angle
+    self.body:setAngle(self.rotation)
 end
 
 
@@ -238,7 +242,7 @@ function Plank:draw()
 
     color.reset()
     local origin = game.map:get_draw_position(self.position)
-    local point = game.map:get_draw_position(self.point)
+    -- local point = game.map:get_draw_position(self.point)
     self.sprite:draw(self.type.dl, origin, -self.rotation, Vector(self.sprite.scale.x, sign(math.cos(self.rotation))))
     -- color.set(self.type.color)
     -- love.graphics.setLineWidth(3)

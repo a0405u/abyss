@@ -45,6 +45,7 @@ function Mouse:pressed(x, y, button, istouch, presses)
     end
     if button == 2 then
         game.hand:use(position)
+        game.tool:secondary()
     end
 end
 
