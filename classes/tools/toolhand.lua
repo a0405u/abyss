@@ -7,7 +7,7 @@ function ToolHand:init()
     self.object = nil
     self.joint = nil
     self.range = game.player.range * 2
-    self.force = HAND_PULL_FORCE * ((DEBUG and 16) or 1)
+    self.force = HAND_PULL_FORCE -- * ((DEBUG and 16) or 1)
 end
 
 
