@@ -11,6 +11,7 @@ function ToolPlank:init()
     self.range = RNG_PLANK_TOOL * ((DEBUG and 8) or 1)
     self.force = MOUSE_PULL_FORCE -- * ((DEBUG and 16) or 1)
     self.surface = nil
+    self.point = Vector()
 end
 
 
@@ -119,12 +120,22 @@ function ToolPlank:update(dt)
         self.plank:set_angle(vector:getAngle())
         local length = vector:getLength()
         self.plank:set_length(length)
-    end
 
-    local fixtures = game.map:get_fixtures(ui.mouse.position.map)
-    for i, fixture in ipairs(fixtures) do
-        local category = fixture:getCategory()
-        if fixture ~= (self.plank and self.plank.fixture) then
+        self.point = self.plank.point
+        local fixtures = game.map:get_fixtures(self.point)
+        for i, fixture in ipairs(fixtures) do
+            local category = fixture:getCategory()
+            if fixture ~= self.plank.fixture then
+                if category == PC_PLANK or category == PC_BLOCK then
+                    self.surface = fixture:getBody():getUserData()
+                end
+            end
+        end
+    else
+        self.point = ui.mouse.position.map
+        local fixtures = game.map:get_fixtures(ui.mouse.position.map)
+        for i, fixture in ipairs(fixtures) do
+            local category = fixture:getCategory()
             if category == PC_PLANK or category == PC_BLOCK then
                 self.surface = fixture:getBody():getUserData()
             end
@@ -144,7 +155,7 @@ function ToolPlank:draw()
         end)
     end
     if self.surface then
-        local x, y = game.map:get_draw_position(ui.mouse.position.map):get()
+        local x, y = game.map:get_draw_position(self.point):get()
         screen.layer:queue(DL_UI, function ()
             color.set(color.dark)
             love.graphics.circle("line", x, y, 6)

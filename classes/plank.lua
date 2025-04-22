@@ -213,6 +213,9 @@ function Plank:set_length(length)
     length = math.clamp(length, self.min_length, self.max_length)
     self.length = length
     self.sprite.scale = Vector(self.length / 5, 1)
+    self.point = Vector(
+        math.cos(self.rotation) * self.length + self.position.x,
+        math.sin(self.rotation) * self.length + self.position.y)
 end
 
 
