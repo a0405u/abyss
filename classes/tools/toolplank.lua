@@ -10,6 +10,7 @@ function ToolPlank:init()
     self.object = nil
     self.range = RNG_PLANK_TOOL * ((DEBUG and 8) or 1)
     self.force = MOUSE_PULL_FORCE -- * ((DEBUG and 16) or 1)
+    self.surface = nil
 end
 
 
@@ -47,12 +48,13 @@ function ToolPlank:use(position)
                 -- self.joint:setFrequency(MOUSE_FREQUENCY)
                 local fixtures = game.map:get_fixtures(self.plank.position)
                 local body = game.map.body
-                for i, fixture in ipairs(fixtures) do
-                    if fixture ~= self.plank.fixture and fixture:getCategory() == PC_PLANK then
-                        body = fixture:getBody()
-                        break
-                    end
-                end
+                -- for i, fixture in ipairs(fixtures) do
+                    -- if fixture ~= self.plank.fixture and fixture:getCategory() == PC_PLANK then
+                        -- body = fixture:getBody()
+                        -- break
+                    -- end
+                -- end
+                if self.surface then body = self.surface.body end
                 self.weld = love.physics.newRevoluteJoint(self.plank.body, body, self.plank.position:get())
             end
         else
@@ -98,6 +100,8 @@ end
 
 function ToolPlank:update(dt)
 
+    self.surface = nil
+
     if self.plank then
         -- self.plank:set_point(ui.mouse.position.map)
         if not game.player:in_range(self.plank.position, self.range * 2) then
@@ -115,7 +119,16 @@ function ToolPlank:update(dt)
         self.plank:set_angle(vector:getAngle())
         local length = vector:getLength()
         self.plank:set_length(length)
-        return
+    end
+
+    local fixtures = game.map:get_fixtures(ui.mouse.position.map)
+    for i, fixture in ipairs(fixtures) do
+        local category = fixture:getCategory()
+        if fixture ~= (self.plank and self.plank.fixture) then
+            if category == PC_PLANK or category == PC_BLOCK then
+                self.surface = fixture:getBody():getUserData()
+            end
+        end
     end
 end
 
@@ -128,6 +141,13 @@ function ToolPlank:draw()
         screen.layer:queue(DL_UI, function ()
             color.set(color.darkest)
             love.graphics.line(x1, y1, x2, y2)
+        end)
+    end
+    if self.surface then
+        local x, y = game.map:get_draw_position(ui.mouse.position.map):get()
+        screen.layer:queue(DL_UI, function ()
+            color.set(color.dark)
+            love.graphics.circle("line", x, y, 6)
         end)
     end
 end
