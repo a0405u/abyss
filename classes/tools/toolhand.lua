@@ -6,6 +6,8 @@ function ToolHand:init()
 
     self.object = nil
     self.joint = nil
+    self.position = Vector()
+    self.point = Vector()
     self.range = game.player.range * 2
     self.force = HAND_PULL_FORCE -- * ((DEBUG and 16) or 1)
 end
@@ -20,7 +22,7 @@ function ToolHand:use(position)
         return
     end
 
-    if game.player:in_range(position, game.player.range) then
+    if game.player:in_range(position, self.range) then
         local objects = game.map:get_objects(position)
 
         for i, object in ipairs(objects) do
@@ -32,7 +34,7 @@ function ToolHand:use(position)
             end
         end
     else
-        game.player.sphere.show(game.player.range)
+        game.player.sphere.show(self.range)
         audio.play(sound.deny)
     end
 end
@@ -46,9 +48,13 @@ function ToolHand:update(dt)
             self.object = nil
             return
         end
+        local x1, y1, x2, y2 = self.joint:getAnchors()
+        self.position = Vector(x1, y1)
+        self.point = Vector(x2, y2)
         local position = ui.mouse.position.map
         if not game.player:in_range(position, self.range) then
             position = (position - game.player.position):getNormalized() * self.range + game.player.position
+            game.player.sphere.show(self.range)
         end
             self.joint:setTarget(position:get())
     end
@@ -57,6 +63,17 @@ end
 
 function ToolHand:draw()
 
+    if self.joint then
+        local x1, y1 = game.map:get_draw_position(self.point):get()
+        local x2, y2 = game.map:get_draw_position(self.position):get()
+        local x3, y3 = game.map:get_draw_position(ui.mouse.position.map):get()
+        screen.layer:queue(DL_UI, function ()
+            color.set(color.darkest)
+            love.graphics.line(x2, y2, x3, y3)
+            color.set(color.dark)
+            love.graphics.line(x1, y1, x2, y2)
+        end)
+    end
 end
 
 

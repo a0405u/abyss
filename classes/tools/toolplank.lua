@@ -108,6 +108,7 @@ function ToolPlank:update(dt)
         local position = ui.mouse.position.map
         if not game.player:in_range(position, self.range * 2) then
             position = (position - game.player.position):getNormalized() * self.range * 2 + game.player.position
+            game.player.sphere.show(self.range * 2)
         end
         self.joint:setTarget(position:get())
         local vector = position - self.plank.position
@@ -121,6 +122,14 @@ end
 
 function ToolPlank:draw()
 
+    if self.plank then
+        local x1, y1 = game.map:get_draw_position(self.plank.point):get()
+        local x2, y2 = game.map:get_draw_position(ui.mouse.position.map):get()
+        screen.layer:queue(DL_UI, function ()
+            color.set(color.darkest)
+            love.graphics.line(x1, y1, x2, y2)
+        end)
+    end
 end
 
 return ToolPlank
