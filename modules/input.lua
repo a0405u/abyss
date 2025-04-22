@@ -36,6 +36,10 @@ function love.keypressed(key, scancode, isrepeat)
     if key == "=" then
         screen.zoom(1)
     end
+
+    if key == "f" then
+        screen.switch_fullscreen()
+    end
 end
 
 

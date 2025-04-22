@@ -18,9 +18,13 @@ function config:load()
         title = "abyss",
         filtermode = "nearest",
         linestyle = "rough",
+        os_mouse_visibility = false,
+    }
+
+    self.window = {
+        title = "abyss",
         borderless = true,
         fullscreen = false,
-        os_mouse_visibility = false,
     }
     
     self.audio = {

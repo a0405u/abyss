@@ -3,9 +3,9 @@ local canvas = {}
 function canvas.load()
 
     canvas.screen = {
-        main = love.graphics.newCanvas(screen.width, screen.height),
-        window = love.graphics.newCanvas(screen.width, screen.height),
-        camera = love.graphics.newCanvas(screen.width, screen.height),
+        main = love.graphics.newCanvas(screen.size.x, screen.size.y),
+        window = love.graphics.newCanvas(screen.size.x, screen.size.y),
+        camera = love.graphics.newCanvas(screen.size.x, screen.size.y),
     }
 end
 

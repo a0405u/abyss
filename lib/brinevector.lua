@@ -46,6 +46,9 @@ else
   VECTORTYPE = "table"
 end
 
+--- @class Vector
+--- @field x number
+--- @field y number
 local Vector = {}
 setmetatable(Vector,Vector)
 

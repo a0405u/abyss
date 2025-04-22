@@ -11,8 +11,8 @@ function Map:init()
     }
     self.scale = 4
     self.size = {
-        x = screen.width / self.scale,
-        y = screen.height / self.scale
+        x = screen.size.x / self.scale,
+        y = screen.size.y / self.scale
     }
     self.objects = {}
     self.ground = {

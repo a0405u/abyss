@@ -9,7 +9,7 @@ function debug.draw()
         s = s .. n .. ": " .. debug.variables[n] .. "\n"
     end
 
-    love.graphics.printf(s, font.small, 0, 8, screen.width, "right")
+    love.graphics.printf(s, font.small, 0, 8, screen.size.y, "right")
 end
 
 

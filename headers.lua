@@ -11,6 +11,7 @@ json = require "lib/json"
 
 Signal = require "lib/signal"
 Vector = require "lib/brinevector"
+Window = require "classes/window"
 Queue = require "classes/queue"
 Deque = require "classes/deque"
 Timer = require "classes/timer"

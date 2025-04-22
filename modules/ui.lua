@@ -46,7 +46,7 @@ function ui.load()
 
     function right:draw()
 
-        self.sprite:draw(DL_UI, Vector(screen.width - self.sprite.size.x / 2, self.sprite.size.y / 2))
+        self.sprite:draw(DL_UI, Vector(screen.size.x - self.sprite.size.x / 2, self.sprite.size.y / 2))
     end
 
 
@@ -89,7 +89,7 @@ function ui.load()
 
 
     hint.position = Vector(151, 10 - font.small:getHeight() / 2)
-    hint.limit = screen.width - 154 - 151
+    hint.limit = screen.size.x - 154 - 151
     hint.text = ""
     hint.last = 0
     hint.time = 0

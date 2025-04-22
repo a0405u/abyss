@@ -13,6 +13,7 @@ function love.load(args)
     input.load()
     color.load(config.theme.palette)
     screen.load()
+    window = Window(screen.size * screen.scale)
     canvas.load()
     audio.load()
     sound.load()
@@ -42,7 +43,7 @@ function love.draw()
 
     love.graphics.setCanvas()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(canvas.screen.main, 0, 0, 0, screen.scale, screen.scale)
+    love.graphics.draw(canvas.screen.main, screen.position.x, screen.position.y, 0, screen.scale, screen.scale)
 
 end
 
