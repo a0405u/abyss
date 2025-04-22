@@ -52,15 +52,16 @@ function Plank:init(position, rotation, length, mass)
     self.strength = PLANK_STRENGTH
     self.mass = mass or self.length * 5
     self.ghost = true
-    -- self.frozen = true
+    self.frozen = false
+
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.body:setUserData(self)
     self.body:setAngle(self.rotation)
-    -- self.body:setFixedRotation(true)
-    -- self.body:setActive(false)
     -- self.body:setSleepingAllowed(false)
+
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
     self.fixture:setCategory(PC_PLANK)
+    
     self:set_type(Type.ghost, self.sprite.animations.ghost)
     self.nails = {}
     self.nailed = false
@@ -69,17 +70,16 @@ end
 
 
 function Plank:place()
-    if self:activate() then
+    if self:activate(true) then
         self:add_nail(self.point)
         self:add_nail(self.position)
     end
 end
 
 
-function Plank:activate()
+function Plank:activate(frozen)
 
-    self.body:setLinearVelocity(0, 0)
-    self.body:setAngularVelocity(0)
+    self:set_frozen(frozen)
     self.fixture:destroy()
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
     self.fixture:setCategory(PC_PLANK)
@@ -91,7 +91,7 @@ function Plank:activate()
     else
         self:set_type(Type.platform, self.sprite.animations.platform)
     end
-    self.timer:start(3, function() self:unfreeze() end)
+    self.timer:start(3, function() self:set_frozen(false) end)
     return true
 end
 
@@ -99,11 +99,8 @@ end
 function Plank:make_gib(position, rotation, length, velocity)
     local gib = Plank(position, rotation, length, velocity)
     gib:activate()
-    gib:unfreeze()
+    gib:set_frozen(false)
     gib:set_type(Type.gib, gib.sprite.animations.gib)
-    gib.frozen = false
-    gib.body:setFixedRotation(false)
-    gib.body:setAwake(true)
     gib.body:setLinearVelocity(velocity:get())
     self.parent:add(gib)
     return gib
@@ -134,7 +131,7 @@ end
 function Plank:endcontact(a, b, contact)
 
     if self.frozen then
-        self:unfreeze()
+        self:set_frozen(false)
     end
 end
 
@@ -154,13 +151,14 @@ end
 
 
 function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
-    if self.frozen and (b:getCategory() ~= PC_PLANK or not self.nailed) then
-        self:unfreeze()
+    if self.frozen then -- and b:getCategory() ~= PC_PLANK then
+        self:set_frozen(false)
     end
     if normalimpulse > self.strength then
         self.update = function(dt) self:destroy(contact.position, normalimpulse) end
     end
 end
+
 
 function Plank:set_type(type, animation)
 
@@ -176,11 +174,15 @@ function Plank:set_type(type, animation)
 end
 
 
-function Plank:unfreeze()
+function Plank:set_frozen(frozen)
 
-    self.frozen = false
-    self.body:setFixedRotation(false)
-    self.body:setAwake(true)
+    self.frozen = frozen or false
+    if (self.frozen) then
+        self.body:setLinearVelocity(0, 0)
+        self.body:setAngularVelocity(0)
+    end
+    self.body:setFixedRotation(self.frozen)
+    self.body:setAwake(not self.frozen)
 end
 
 

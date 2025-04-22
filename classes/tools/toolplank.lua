@@ -156,9 +156,9 @@ function ToolPlank:draw()
     end
     if self.surface then
         local x, y = game.map:get_draw_position(self.point):get()
-        screen.layer:queue(DL_UI, function ()
+        screen.layer:queue(DL_UI_MOUSE, function ()
             color.set(color.dark)
-            love.graphics.circle("line", x, y, 6)
+            love.graphics.circle("line", x, y, 3.7)
         end)
     end
 end
