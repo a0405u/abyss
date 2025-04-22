@@ -60,6 +60,12 @@ function screen.reset()
 end
 
 
+function screen.zoom(value)
+    screen.scale = screen.scale + value
+    love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, {borderless = config.screen.borderless})
+end
+
+
 function screen.setCanvas(canvas)
 
     love.graphics.setCanvas(canvas)

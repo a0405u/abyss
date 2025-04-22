@@ -28,6 +28,14 @@ function love.keypressed(key, scancode, isrepeat)
         game:load()
         game:start()
     end
+
+    if key == "-" then
+        screen.zoom(-1)
+    end
+
+    if key == "=" then
+        screen.zoom(1)
+    end
 end
 
 
