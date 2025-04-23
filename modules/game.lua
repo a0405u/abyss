@@ -139,7 +139,12 @@ function preSolve(a, b, contact)
 
     if b:getCategory() == PC_PLANK then
         b:getBody():getUserData():presolve(b, a, contact)
-        return
+    end
+    if a:getCategory() == PC_GROUND then
+        a:getBody():getUserData():presolve(a, b, contact)
+    end
+    if b:getCategory() == PC_GROUND then
+        b:getBody():getUserData():presolve(b, a, contact)
     end
 end
 

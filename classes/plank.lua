@@ -240,6 +240,13 @@ function Plank:update(dt)
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
     self.timer:update(dt)
+
+    if self.position.y <= -4 then
+        audio.play(sound.sink, 0.75 + math.random() * 0.75)
+        self.body:destroy()
+        self.parent:remove(self)
+        ui.hint:queue("The ground seems unstable, planks need support!")
+    end
 end
 
 

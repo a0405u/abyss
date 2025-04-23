@@ -1,6 +1,13 @@
+--- @class Timer
+--- @field time number
+--- @field left number
+--- @field action function
+--- @field active boolean
 local Timer = class("Timer")
 
-
+--- @param action function
+--- @param time number | nil
+---@param active boolean | nil
 function Timer:init(action, time, active)
 
     self.time = time or 1

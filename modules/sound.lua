@@ -3,25 +3,34 @@ local sound = {}
 
 function sound.load()
 
-    sound.jump = love.audio.newSource("sounds/playerstepforest.wav", "static")
-    sound.land = love.audio.newSource("sounds/screen.wav", "static")
-    sound.deny = love.audio.newSource("sounds/enemystep.wav", "static")
-    sound.pick = love.audio.newSource("sounds/select.wav", "static")
-    sound.build = love.audio.newSource("sounds/dooropen.wav", "static")
-    sound.select = love.audio.newSource("sounds/pick.wav", "static")
-    sound.collide = love.audio.newSource("sounds/playerstepground.wav", "static")
-    sound.destroy = love.audio.newSource("sounds/death.wav", "static")
-    sound.hint = love.audio.newSource("sounds/playerstepwater.wav", "static")
+    sound.jump = sound.from_file("sounds/playerstepforest.wav")
+    sound.land = sound.from_file("sounds/screen.wav")
+    sound.deny = sound.from_file("sounds/enemystep.wav")
+    sound.pick = sound.from_file("sounds/select.wav")
+    sound.build = sound.from_file("sounds/dooropen.wav")
+    sound.select = sound.from_file("sounds/pick.wav")
+    sound.collide = sound.from_file("sounds/playerstepground.wav")
+    sound.destroy = sound.from_file("sounds/death.wav")
+    sound.hint = sound.from_file("sounds/playerstepwater.wav")
+    sound.sink = sound.from_file("sounds/sinkd.wav", 0.5)
 
-    sound.logo = love.audio.newSource("sounds/logo.wav", "static")
-    sound.start = love.audio.newSource("sounds/start.wav", "static")
-    sound.screen = love.audio.newSource("sounds/screen.wav", "static")
-    sound.cycle = love.audio.newSource("sounds/cycle.wav", "static")
+    sound.logo = sound.from_file("sounds/logo.wav")
+    sound.start = sound.from_file("sounds/start.wav")
+    sound.screen = sound.from_file("sounds/screen.wav")
+    sound.cycle = sound.from_file("sounds/cycle.wav")
 
     sound.tip = {
-        show = love.audio.newSource("sounds/tipshow.wav", "static"),
-        hide = love.audio.newSource("sounds/tiphide.wav", "static")
+        show = sound.from_file("sounds/tipshow.wav"),
+        hide = sound.from_file("sounds/tiphide.wav"),
     }
+end
+
+
+function sound.from_file(filepath, volume)
+
+    local s = love.audio.newSource(filepath, "static")
+    s:setVolume(volume or 1)
+    return s
 end
 
 

@@ -25,6 +25,12 @@ function Building:update(dt)
     end
     self.position.x, self.position.y = self.body:getPosition()
     self.rotation = self.body:getAngle()
+    if self.position.y <= -4 then
+        audio.play(sound.sink, 0.75 + math.random() * 0.75)
+        self.body:destroy()
+        self.parent:remove(self)
+        ui.hint:queue("The ground seems unstable, buildings need support!")
+    end
 end
 
 
@@ -86,12 +92,14 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
     if contact.normal.y < 0.5 then
         normalimpulse = normalimpulse * 4
     end
-    if b:getCategory() == PC_GROUND then
-        ui.hint:queue("The ground seems unstable, buildings need support!")
-        self.update = function(dt) self:destroy(Vector(contact.position)) end
-    end
-    if b:getCategory() == PC_GROUND or b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector(contact.position)) end
+    -- if b:getCategory() == PC_GROUND then
+    --     ui.hint:queue("The ground seems unstable, buildings need support!")
+    --     self.update = function(dt) self:destroy(contact.position) end
+    --     return
+    -- end
+    if b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
+        self.update = function(dt) self:destroy(contact.position) end
+        return
     end
 end
 
