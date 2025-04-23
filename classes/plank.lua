@@ -244,6 +244,9 @@ function Plank:update(dt)
     if self.position.y <= -4 then
         audio.play(sound.sink, 0.75 + math.random() * 0.75)
         self.body:destroy()
+        for key, nail in pairs(self.nails) do
+            nail:destroy()
+        end
         self.parent:remove(self)
         ui.hint:queue("The ground seems unstable, planks need support!")
     end
