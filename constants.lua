@@ -1,3 +1,6 @@
+VERSION = "1.1"
+DATE = "26.04.2025"
+AUTHORS = "a0405u and onhore for Ludum Dare 57"
 DEBUG = false
 
 GRAVITY = 9.8

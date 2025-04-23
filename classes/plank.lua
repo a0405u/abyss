@@ -1,4 +1,5 @@
---- @class Plank: Object
+--- @class Plank : Object
+--- @field position Vector
 local Plank = class("Plank", Object)
 
 ---@class Type
@@ -32,7 +33,10 @@ local Type = {
     }
 }
 
-
+--- @param position Vector | nil
+---@param rotation number | nil
+---@param length number | nil
+---@param mass number | nil
 function Plank:init(position, rotation, length, mass)
 
     self.type = Type.ghost

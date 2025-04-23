@@ -110,6 +110,8 @@ end
 function screen.logo.draw()
 
     sprites.screen.logo:draw(DL_UI, Vector(screen.size.x / 2, screen.size.y / 2))
+    love.graphics.setColor(color.darkest)
+    love.graphics.printf(string.format("abyss %s, %s, %s", VERSION, DATE, AUTHORS), font.small, 0, screen.size.y - font.small:getHeight() - 2, screen.size.x, "center")
     if screen.time > 3 then
         screen.state = screen.game
         game:start()

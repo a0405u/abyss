@@ -28,6 +28,7 @@ function ToolHand:use(position)
         for i, object in ipairs(objects) do
             if object:is(Plank) or object:is(Gib) then
                 self.object = object
+                if self.object.frozen then self.object:set_frozen(false) end
                 self.joint = love.physics.newMouseJoint(self.object.body, ui.mouse.position.map:get())
                 self.joint:setMaxForce(self.force)
                 break
