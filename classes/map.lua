@@ -1,7 +1,7 @@
+--- @class Map : Object
+--- @field tilemap Tilemap
 local Map = class("Map", Object)
 
---- @class Map
---- @field tilemap Tilemap
 function Map:init()
 
     Object.init(self)
@@ -167,10 +167,11 @@ function Map:get_fixtures_in_box(position, size)
     return fixtures
 end
 
-
+--- @param a love.Fixture
+--- @param b love.Fixture
+--- @param contact love.Contact
 function Map:presolve(a, b, contact)
     if b:getCategory() == PC_PLAYER then return end
-
     contact:setRestitution(RST_GROUND)
 end
 

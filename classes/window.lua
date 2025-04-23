@@ -25,7 +25,10 @@ function Window:set_mode(size, fullscreen, borderless)
 
     if fullscreen ~= nil then self.fullscreen = fullscreen end
     if borderless ~= nil then self.borderless = borderless end
-    if self.fullscreen then size = Vector(love.window.getDesktopDimensions()) end
+    if self.fullscreen then 
+        size = Vector(love.window.getDesktopDimensions()) 
+        if self.size.x == size.x and self.size.y == size.y then return end
+        end
     self.size = size or self.size
     love.window.setMode(self.size.x, self.size.y, {fullscreen = self.fullscreen, borderless = self.borderless})
 end

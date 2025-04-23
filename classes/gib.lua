@@ -1,7 +1,10 @@
 --- @class Gib: Drawable
 local Gib = class("Gib", Drawable)
 
-
+--- @param position Vector
+---@param rotation number | nil
+---@param sprite Sprite | nil
+---@param dl number | nil
 function Gib:init(position, rotation, sprite, dl)
 
     sprite = sprite or sprites.gib[math.random(1, #sprites.gib)]
@@ -24,7 +27,7 @@ end
 function Gib:draw()
 
     local position = game.map:get_draw_position(self.position)
-    self.sprite:draw(DL_GIB, position, -self.rotation, nil, nil, c, a)
+    self.sprite:draw(DL_GIB, position, -self.rotation, nil, nil, nil, nil)
 end
 
 
@@ -44,12 +47,12 @@ end
 function Gib:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 
     if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(Vector(contact.position)) end
+        self.update = function(dt) self:destroy(contact.position) end
     end
 end
 
 
-function Gib:destroy()
+function Gib:destroy(position)
 
     audio.play(sound.destroy, 0.75 + math.random() * 0.75)
     self.body:destroy()

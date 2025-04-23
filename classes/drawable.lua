@@ -1,9 +1,16 @@
 --- @class Drawable: Object
+--- @field position Vector
+--- @field sprite Sprite
+--- @field dl number
 local Drawable = class("Drawable", Object)
 
-
+--- @param position Vector
+---@param sprite Sprite
+---@param dl number
 function Drawable:init(position, sprite, dl)
+    assert(position, "No position on Drawable!")
     assert(sprite, "No sprite on Drawable!")
+    assert(dl, "No drawing layer on Drawable!")
 
     self.position = position
     self.sprite = sprite

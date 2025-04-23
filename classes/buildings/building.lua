@@ -1,4 +1,4 @@
---- @class Building: Object
+--- @class Building : Object
 local Building = class("Building", Object)
 
 
@@ -40,7 +40,7 @@ function Building:draw()
     local position = game.map:get_draw_position(self.position)
     -- local c = color.white
     -- local a = (self.ghost and 0.4) or 1
-    self.sprite:draw(DL_BUILDING, position, -self.rotation, nil, nil, c, a)
+    self.sprite:draw(DL_BUILDING, position, -self.rotation, nil, nil, nil, nil)
 end
 
 

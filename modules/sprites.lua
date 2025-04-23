@@ -1,7 +1,7 @@
 local sprites = {}
 
 --- @param filepath string
---- @return love.Image
+--- @return Sprite
 local function load_from_file(filepath, size, scale, offset)
 
     local image = love.graphics.newImage(filepath .. ".png")
