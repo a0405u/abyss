@@ -55,15 +55,30 @@ function screen.reset()
 end
 
 
-function screen.zoom(value)
-    screen.scale = screen.scale + value
+function screen.zoom(amount)
+    screen.scale = screen.scale + amount
+    window:set_mode(screen.size * screen.scale)
+    screen.position = screen.calculate_position()
+end
+
+
+function screen.set_scale(scale)
+
+    screen.scale = scale
     window:set_mode(screen.size * screen.scale)
     screen.position = screen.calculate_position()
 end
 
 
 function screen.switch_fullscreen()
-    window:set_mode(screen.size * screen.scale, not love.window.getFullscreen())
+    local fullscreen = not love.window.getFullscreen()
+    if fullscreen then
+        local x, y = love.window.getDesktopDimensions()
+        screen.scale = math.floor(math.min(x / screen.size.x, y / screen.size.y))
+    else
+        screen.scale = config.screen.scale
+    end
+    window:set_mode(screen.size * screen.scale, fullscreen)
     screen.position = screen.calculate_position()
 end
 
