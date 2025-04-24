@@ -41,6 +41,7 @@ function Mouse:pressed(x, y, button, istouch, presses)
 
     if button == 1 then
         game:activate(position)
+        game.hand:stop()
         return
     end
     if button == 2 then
@@ -62,7 +63,7 @@ function Mouse:released(x, y, button, istouch, presses)
     end
 
     if button == 2 then
-        game.hand:use(position)
+        game.hand:stop()
     end
 end
 

@@ -1,16 +1,24 @@
 --- @class ToolPlank
+--- @field plank Plank | nil
+--- @field weld love.Joint | nil
+--- @field range number
+--- @field force number
+--- @field surface Plank | Block | nil
+--- @field origin Map | Plank | Block | nil
+--- @field point Vector
 local ToolPlank = class("ToolPlank", Tool)
 
 
 function ToolPlank:init()
 
     self.plank = nil
-    self.joint = nil
+    -- self.joint = nil
     self.weld = nil
-    self.object = nil
+    self.support = nil
     self.range = RNG_PLANK_TOOL * ((DEBUG and 8) or 1)
-    self.force = MOUSE_PULL_FORCE -- * ((DEBUG and 16) or 1)
+    self.force = HAND_PULL_FORCE -- * ((DEBUG and 16) or 1)
     self.surface = nil
+    self.origin = nil
     self.point = Vector()
 end
 
@@ -43,20 +51,18 @@ function ToolPlank:use(position)
             self.plank = self:build(position)
             if self.plank then
                 audio.play(sound.select)
-                self.joint = love.physics.newMouseJoint(self.plank.body, self.plank.point:get())
-                self.joint:setMaxForce(self.force)
+                -- self.joint = love.physics.newMouseJoint(self.plank.body, self.plank.point:get())
+                -- self.joint:setMaxForce(self.force)
                 -- self.joint:setDampingRatio(MOUSE_DAMPING)
                 -- self.joint:setFrequency(MOUSE_FREQUENCY)
-                local fixtures = game.map:get_fixtures(self.plank.position)
-                local body = game.map.body
-                -- for i, fixture in ipairs(fixtures) do
-                    -- if fixture ~= self.plank.fixture and fixture:getCategory() == PC_PLANK then
-                        -- body = fixture:getBody()
-                        -- break
-                    -- end
-                -- end
-                if self.surface then body = self.surface.body end
-                self.weld = love.physics.newRevoluteJoint(self.plank.body, body, self.plank.position:get())
+                self.origin = game.map
+                if self.surface then self.origin = self.surface end
+                if self.origin:is(Plank) and self.origin:is_nailed() then
+                    -- self.surface:set_frozen(true)
+                    self.support = love.physics.newMouseJoint(self.origin.body, position.x, position.y)
+                    self.support:setMaxForce(self.force)
+                end
+                self.weld = love.physics.newRevoluteJoint(self.plank.body, self.origin.body, self.plank.position:get())
             end
         else
             game.player.sphere.show(self.range)
@@ -64,10 +70,13 @@ function ToolPlank:use(position)
         end
     else
         self:place()
-        self.joint:destroy()
-        self.joint = nil
+        -- self.joint:destroy()
+        -- self.joint = nil
         if not self.weld:isDestroyed() then
             self.weld:destroy()
+        end
+        if self.origin:is(Plank) then
+            self.origin:set_frozen(false)
         end
         self.weld = nil
         self.plank = nil
@@ -78,13 +87,17 @@ end
 
 function ToolPlank:deny()
 
-    self.joint:destroy()
-    self.joint = nil
+    -- self.joint:destroy()
+    -- self.joint = nil
     if not self.weld:isDestroyed() then
         self.weld:destroy()
     end
+    if self.support then
+        if not self.support:isDestroyed() then self.support:destroy() end
+        self.support = nil
+    end
     self.weld = nil
-    self.plank.body:destroy()
+    if not self.plank.body:isDestroyed() then self.plank.body:destroy() end
     self.plank.parent:remove(self.plank)
     self.plank = nil
     audio.play(sound.deny)
@@ -104,42 +117,51 @@ function ToolPlank:update(dt)
     self.surface = nil
 
     if self.plank then
-        -- self.plank:set_point(ui.mouse.position.map)
+        if self.plank.body:isDestroyed() then return self:deny() end
         if not game.player:in_range(self.plank.position, self.range * 2) then
             self:deny()
             game.player.sphere.show(self.range * 2)
             return
+        end
+        if self.support then
+            if not self.support:isDestroyed() then
+                -- self.support:setTarget(self.plank.position:get())
+            else
+                self.support = nil
+            end
         end
         local position = ui.mouse.position.map
         if not game.player:in_range(position, self.range * 2) then
             position = (position - game.player.position):getNormalized() * self.range * 2 + game.player.position
             game.player.sphere.show(self.range * 2)
         end
-        self.joint:setTarget(position:get())
         local vector = position - self.plank.position
         self.plank:set_angle(vector:getAngle())
         local length = vector:getLength()
         self.plank:set_length(length)
-
+        -- local drag_position = self.plank.position + vector * (length - self.plank.length)
+        -- self.joint:setTarget(drag_position:get())
         self.point = self.plank.point
-        local fixtures = game.map:get_fixtures(self.point)
-        for i, fixture in ipairs(fixtures) do
-            local category = fixture:getCategory()
-            if fixture ~= self.plank.fixture then
-                if category == PC_PLANK or category == PC_BLOCK then
-                    self.surface = fixture:getBody():getUserData()
-                end
-            end
+        if self.plank.length == length then
+            self:update_surface(self.point)
         end
     else
         self.point = ui.mouse.position.map
-        local fixtures = game.map:get_fixtures(ui.mouse.position.map)
-        for i, fixture in ipairs(fixtures) do
-            local category = fixture:getCategory()
-            if category == PC_PLANK or category == PC_BLOCK then
-                self.surface = fixture:getBody():getUserData()
-            end
-        end
+        self:update_surface(self.point)
+    end
+end
+
+
+function ToolPlank:update_surface(position)
+
+    local fixtures = game.map:get_fixtures(position)
+    for i, fixture in ipairs(fixtures) do
+        local category = fixture:getCategory()
+        if self.plank and fixture == self.plank.fixture then goto continue end
+        if category ~= PC_PLANK and category ~= PC_BLOCK then goto continue end
+        self.surface = fixture:getBody():getUserData()
+        do break end
+        ::continue::
     end
 end
 

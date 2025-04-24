@@ -68,13 +68,14 @@ function Plank:init(position, rotation, length, mass)
     
     self:set_type(Type.ghost, self.sprite.animations.ghost)
     self.nails = {}
-    self.nailed = false
     self.timer = Timer()
+    self.visible = true
 end
 
 
 function Plank:place()
     if self:activate(true) then
+        self:set_frozen(false)
         self:add_nail(self.point)
         self:add_nail(self.position)
     end
@@ -164,6 +165,15 @@ function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 end
 
 
+function Plank:is_nailed()
+
+    for key, nail in pairs(self.nails) do
+        return true
+    end
+    return false
+end
+
+
 function Plank:set_type(type, animation)
 
     self.type = type
@@ -181,9 +191,10 @@ end
 function Plank:set_frozen(frozen)
 
     self.frozen = frozen or false
-    if (self.frozen) then
+    if self.frozen then
         self.body:setLinearVelocity(0, 0)
         self.body:setAngularVelocity(0)
+        self.timer:stop()
     end
     self.body:setFixedRotation(self.frozen)
     self.body:setAwake(not self.frozen)
@@ -259,6 +270,7 @@ end
 
 function Plank:draw()
 
+    if not self.visible then return end
     color.reset()
     local origin = game.map:get_draw_position(self.position)
     -- local point = game.map:get_draw_position(self.point)

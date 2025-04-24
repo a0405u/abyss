@@ -15,13 +15,6 @@ end
 
 function ToolHand:use(position)
 
-    if self.object then
-        self.object = nil
-        self.joint:destroy()
-        self.joint = nil
-        return
-    end
-
     if game.player:in_range(position, self.range) then
         local objects = game.map:get_objects(position)
 
@@ -38,6 +31,14 @@ function ToolHand:use(position)
         game.player.sphere.show(self.range)
         audio.play(sound.deny)
     end
+end
+
+
+function ToolHand:stop()
+
+    self.object = nil
+    if self.joint then self.joint:destroy() end
+    self.joint = nil
 end
 
 
