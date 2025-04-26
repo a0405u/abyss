@@ -39,6 +39,7 @@ function sprites.load()
         right = load_from_file("sprites/ui_right", nil, nil, Vector()),
         button = load_from_file("sprites/button", nil, nil, Vector()),
         button_small = load_from_file("sprites/button_small", nil, nil, Vector()),
+        button_top = load_from_file("sprites/button_top", nil, nil, Vector()),
         icons = {
             empty = load_from_file("sprites/icon_empty"),
             plank = load_from_file("sprites/icon_plank"),
@@ -60,6 +61,7 @@ function sprites.load()
             soil = load_from_file("sprites/icon_small_soil"),
             wheat = load_from_file("sprites/icon_small_wheat"),
             hammer = load_from_file("sprites/icon_small_hammer"),
+            support = load_from_file("sprites/icon_small_support"),
         },
     }
     
@@ -98,12 +100,24 @@ function sprites.load()
     sprites.block = {
         load_from_file("sprites/block"),
         load_from_file("sprites/blockb"),
-        load_from_file("sprites/blockc")
+        load_from_file("sprites/blockc"),
+        load_from_file("sprites/blockd"),
+        load_from_file("sprites/blocke"),
     }
     sprites.soil = {
         load_from_file("sprites/soil"),
         load_from_file("sprites/soilb"),
         load_from_file("sprites/soilc")
+    }
+    sprites.support = {
+        load_from_file("sprites/support"),
+        load_from_file("sprites/supportb"),
+        load_from_file("sprites/supportc")
+    }
+    sprites.support_up = {
+        load_from_file("sprites/support_up"),
+        load_from_file("sprites/support_upb"),
+        load_from_file("sprites/support_upc")
     }
     sprites.wheat = {
         load_from_file("sprites/wheat"),

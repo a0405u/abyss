@@ -44,6 +44,7 @@ INCOME_WINDMILL = {wood = 0, stone = 0, food = 0.6}
 COST_PLANK = {wood = 10, stone = 0, food = 0}
 COST_BLOCK = {wood = 10, stone = 20, food = 0}
 COST_SOIL = {wood = 0, stone = 10, food = 20}
+COST_SUPPORT = {wood = 20, stone = 20, food = 0}
 COST_WHEAT = {wood = 0, stone = 0, food = 30}
 COST_TREE = {wood = 30, stone = 0, food = 0}
 COST_HOUSE = {wood = 0, stone = 10, food = 10}
@@ -68,6 +69,7 @@ PC_WALL = 13
 
 -- DRAWING LAYERS
 DL_BACKGROUND = 2
+DL_SUPPORT = 3
 DL_HILL_BG = 4
 DL_BEAM = 10
 DL_BUILDING = 15

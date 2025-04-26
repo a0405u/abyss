@@ -17,8 +17,8 @@ function ui:init()
         function() game:set_tool(game.tools.plank, Plank.Type.beam) end),
         wall = Button(Vector(19, 47), sprites.ui.button_small, sprites.ui.icons_small.wall, nil, nil,
         function() game:set_tool(game.tools.plank, Plank.Type.wall) end),
-        hammer = Button(Vector(37, 47), sprites.ui.button_small, sprites.ui.icons_small.hammer, nil, nil,
-        function() game:set_tool(game.tools.hammer) end),
+        support = Button(Vector(37, 47), sprites.ui.button_small, sprites.ui.icons_small.support, nil, nil,
+        function() game:set_tool(game.tools.tile, Support()) end),
         block = Button(Vector(56, 29), sprites.ui.button_small, sprites.ui.icons_small.block, nil, nil,
         function() game:set_tool(game.tools.tile, Block()) end),
         soil = Button(Vector(74, 29), sprites.ui.button_small, sprites.ui.icons_small.soil, nil, nil,
@@ -39,6 +39,9 @@ function ui:init()
         function() game:set_tool(game.tools.building, Sawmill()) end),
         temple = Button(Vector(56, 140), sprites.ui.button, sprites.ui.icons.temple, nil, true,
         function() game:set_tool(game.tools.building, Sawmill()) end),
+
+        hammer = Button(Vector(109, 0), sprites.ui.button_top, sprites.ui.icons_small.hammer, nil, nil,
+        function() game:set_tool(game.tools.hammer) end),
     }
 
     for key, button in pairs(self.left.buttons) do

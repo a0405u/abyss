@@ -12,7 +12,7 @@ function sound.load()
     sound.collide = sound.from_file("sounds/playerstepground.wav")
     sound.destroy = sound.from_file("sounds/death.wav")
     sound.hint = sound.from_file("sounds/playerstepwater.wav")
-    sound.sink = sound.from_file("sounds/sinkd.wav", 0.5)
+    sound.sink = sound.from_file("sounds/sinkd.wav", 0.4)
 
     sound.logo = sound.from_file("sounds/logo.wav")
     sound.start = sound.from_file("sounds/start.wav")

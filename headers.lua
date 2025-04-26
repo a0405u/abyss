@@ -67,6 +67,7 @@ ToolHammer = require "classes.tools.toolhammer"
 
 Block = require "classes.tiles.block"
 Soil = require "classes.tiles.soil"
+Support = require "classes.tiles.support"
 Wheat = require "classes.tiles.wheat"
 Tree = require "classes.tiles.tree"
 

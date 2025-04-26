@@ -145,7 +145,7 @@ function Tilemap:build(tile, position)
         local t = self.tile[position.x][position.y]
         if t:is(Wheat) or t:is(Tree) then
             t:destroy()
-        else
+        elseif not (t:is(Support) and (tile:is(Block) or tile:is(Soil))) then
             return false
         end
     end
@@ -158,17 +158,15 @@ function Tilemap:build(tile, position)
         ui.hint:queue("It can grow only on Soil!")
         return false
     end
-    if position.y == 1 or tile_under then
-        local max = 1
-        if tile:is(Block) then
-            max = 3
+    tile:place(self, position)
+    if tile:is_stable() then
+        if tile:is(Support) and tile_under and tile_under:is(Support) then
+            tile_under.sprite = sprites.support[math.random(#sprites.support)]:instantiate()
         end
-        if position.y <= max or (self:is_present(Vector(position.x - 1, position.y - max)) and self:is_present(Vector(position.x + 1, position.y - max))) then
-            self:place(tile, position)
-            return true
-        end
-        ui.hint:queue("There is not enough support!")
+        self:place(tile, position)
+        return true
     end
+    ui.hint:queue("There is not enough support!")
     return false
 end
 
