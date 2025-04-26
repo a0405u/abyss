@@ -3,7 +3,7 @@ local Support = class("Support", Tile)
 
 
 function Support:init()
-    Tile.init(self, sprites.support_up[math.random(#sprites.support_up)])
+    Tile.init(self, sprites.support[math.random(#sprites.support)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
     self.fixture:setSensor(true)
@@ -11,6 +11,7 @@ function Support:init()
     self.solid = false
     self.cost = COST_SUPPORT
     self.dl = DL_SUPPORT
+    self.sprite:set(self.sprite.animations.top)
 end
 
 
@@ -19,6 +20,22 @@ function Support:instantiate()
     return Support()
 end
 
+
+function Support:update_position()
+
+    local tile_under = self.map.tile[self.position.x][self.position.y - 1]
+    local tile_over = self.map.tile[self.position.x][self.position.y + 1]
+    if tile_over and tile_over:is(Support) then
+        self.sprite:set(self.sprite.animations.middle)
+    else
+        self.sprite:set(self.sprite.animations.top)
+    end
+    if self.position.y > 1 and (not tile_under or not tile_under.support) then
+        self.sprite:set(self.sprite.animations.arch)
+    end
+end
+
+
 function Support:is_stable()
 
     if Tile.is_stable(self) then
@@ -26,6 +43,12 @@ function Support:is_stable()
         local tile = self.map.tile[self.position.x - 1][self.position.y - 3]
         if not tile or not tile.support then return false end
         local tile = self.map.tile[self.position.x + 1][self.position.y - 3]
+        if not tile or not tile.support then return false end
+        return true
+    else
+        local tile = self.map.tile[self.position.x - 1][self.position.y]
+        if not tile or not tile.support then return false end
+        local tile = self.map.tile[self.position.x + 1][self.position.y]
         if not tile or not tile.support then return false end
         return true
     end

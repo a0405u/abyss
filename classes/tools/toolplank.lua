@@ -115,6 +115,7 @@ function ToolPlank:deny()
     if not self.plank.body:isDestroyed() then self.plank.body:destroy() end
     self.plank.parent:remove(self.plank)
     self.plank = nil
+    self.origin = nil
     audio.play(sound.deny)
 end
 

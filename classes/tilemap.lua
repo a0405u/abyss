@@ -66,7 +66,21 @@ function Tilemap:is_in_tile(position, tile)
 end
 
 
-function Tilemap:find(from, to, type)
+function Tilemap:get_tiles(from, to)
+
+    local tiles = {}
+    for x = from.x, to.x do
+        for y = from.y, to.y do
+            local tile = self.tile[x][y]
+            if tile then
+                table.insert(tiles, tile)
+            end
+        end
+    end
+    return tiles
+end
+
+function Tilemap:get_tiles_of_type(from, to, type)
 
     local tiles = {}
     for x = from.x, to.x do
@@ -128,6 +142,10 @@ function Tilemap:place(tile, position, indestructible)
     tile:place(self, position)
     tile.indestructible = indestructible
 
+    for i, t in ipairs(self:get_tiles(Vector(position.x - 1, position.y - 1), Vector(position.x + 1, position.y + 1))) do
+        t:update_position()
+    end
+
     local world_position = self:get_world_position(position)
     game.world:queryBoundingBox(world_position.x - self.tile_size.x / 2, world_position.y - self.tile_size.y / 2, world_position.x + self.tile_size.x / 2, world_position.y + self.tile_size.y / 2, function(fixture)
         if fixture == tile.fixture then return true end
@@ -175,9 +193,6 @@ function Tilemap:build(tile, position)
     end
     tile:place(self, position)
     if tile:is_stable() then
-        if tile:is(Support) and tile_under and tile_under:is(Support) then
-            tile_under.sprite = sprites.support[math.random(#sprites.support)]:instantiate()
-        end
         self:place(tile, position)
         return true
     end
@@ -193,6 +208,11 @@ function Tilemap:remove(position)
     local tile = self.tile[position.x][position.y]
     if not tile or tile.indestructible then return end
     tile:destroy()
+
+    for i, t in ipairs(self:get_tiles(Vector(position.x - 1, position.y - 1), Vector(position.x + 1, position.y + 1))) do
+        t:update_position()
+    end
+    
     time:delay(function()
         self:check_stability(Vector(position.x, position.y + 1))
     end, 0.5)

@@ -114,11 +114,6 @@ function sprites.load()
         load_from_file("sprites/supportb"),
         load_from_file("sprites/supportc")
     }
-    sprites.support_up = {
-        load_from_file("sprites/support_up"),
-        load_from_file("sprites/support_upb"),
-        load_from_file("sprites/support_upc")
-    }
     sprites.wheat = {
         load_from_file("sprites/wheat"),
         load_from_file("sprites/wheatb")
