@@ -65,6 +65,7 @@ ToolTile = require "classes.tools.tooltile"
 ToolBuilding = require "classes.tools.toolbuilding"
 ToolHammer = require "classes.tools.toolhammer"
 
+Container = require "classes.tiles.container"
 Block = require "classes.tiles.block"
 Soil = require "classes.tiles.soil"
 Support = require "classes.tiles.support"

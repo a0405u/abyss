@@ -150,7 +150,7 @@ function Plank:presolve(a, b, contact)
         local x, y = contact:getPositions()
         local nx, ny = contact:getNormal()
         local c1, c2 = self.fixture:getCategory()
-        if (c2 == PC_PLATFORM and ny > -0.5) or c2 == PC_BEAM then
+        if (c2 == PC_PLATFORM and (ny > -0.5 or game.player.down)) or c2 == PC_BEAM then
             contact:setEnabled(false)
             return true
         end

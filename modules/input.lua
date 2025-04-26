@@ -8,6 +8,10 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 
+    if key == config.input.down then
+        game.player.down = true
+    end
+
     if key == config.input.back then
         if DEBUG then love.event.quit() end
     end
@@ -44,6 +48,10 @@ end
 
 
 function love.keyreleased(key)
+
+    if key == config.input.down then
+        game.player.down = false
+    end
 
     if screen.state == screen.game then
 

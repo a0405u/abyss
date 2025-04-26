@@ -31,6 +31,7 @@ function Actor:init(position, name, sprite, args)
     self.health = args.health or 3
     self.range = 8 * ((DEBUG and 8) or 1)
     self.floor_count = 0
+    self.down = false
 
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, self.size.y / 2, self.size.x, self.size.y), 26)
