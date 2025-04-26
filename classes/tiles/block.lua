@@ -3,7 +3,7 @@ local Block = class("Block", Tile)
 
 
 function Block:init()
-    Tile.init(self, sprites.block)
+    Tile.init(self, sprites.block[math.random(3)])
     self.cost = COST_BLOCK
 end
 

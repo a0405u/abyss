@@ -1,5 +1,7 @@
 require "headers"
 
+local G = {}
+
 function love.load(args)
 
     if args then
@@ -18,7 +20,7 @@ function love.load(args)
     audio.load()
     sound.load()
     sprites.load()
-    ui.load()
+    ui = UI()
     game:load()
 
     if not DEBUG then

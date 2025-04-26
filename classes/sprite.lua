@@ -58,6 +58,11 @@ function Sprite:instantiate(parent)
 end
 
 
+function Sprite:get_size()
+    return self.size:getCopy()
+end
+
+
 function Sprite:set(animation, play)
 
     self.animation = animation
@@ -71,9 +76,9 @@ end
 --- @param offset Vector|nil
 function Sprite:draw(dl, position, rotation, scale, offset, c, a)
 
+    position = position or Vector()
     scale = scale or self.scale
     offset = offset or self.offset
-    position = position or Vector()
     c = c or color.white
     a = a or 1
     screen.layer:queue(dl, function()

@@ -19,13 +19,14 @@ function game:load()
     self.tools = {
         plank = ToolPlank(),
         tile = ToolTile(),
-        building = ToolBuilding()
+        building = ToolBuilding(),
+        hammer = ToolHammer()
     }
     self.tool = self.tools.plank
     self.hand = ToolHand()
-    ui.left.buttons.plank:activate(true)
     self.map.tilemap:add_hill(Vector(10, 1))
     self.timer = Timer()
+    ui.left.buttons.platform:activate(true)
 end
 
 
@@ -39,7 +40,7 @@ function game:update(dt)
     self.economy:update(dt)
     self.tool:update(dt)
     self.hand:update(dt)
-    ui.update(dt)
+    ui:update(dt)
     if self.player.position.y > self.map.size.y then
         game:ending()
     end
@@ -108,11 +109,11 @@ function beginContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:begincontact(a, b, contact)
+        game.player:beginfloorcontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:begincontact(a, b, contact)
+        game.player:beginfloorcontact(b, a, contact)
     end
 end
 
@@ -126,11 +127,11 @@ function endContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endcontact(a, b, contact)
+        game.player:endfloorcontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endcontact(b, a, contact)
+        game.player:endfloorcontact(b, a, contact)
     end
 end
 

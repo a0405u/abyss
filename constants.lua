@@ -36,14 +36,16 @@ BASE_WOOD  = 160
 BASE_STONE = 80
 BASE_FOOD  = 40
 
-INCOME_MINE = {wood = 0, stone = 0.5, food = 0}
-INCOME_SAWMILL = {wood = 2, stone = 0, food = 0}
-INCOME_WINDMILL = {wood = 0, stone = 0, food = 1}
-INCOME_HOUSE = {wood = 0.2, stone = 0.2, food = 0.2}
+INCOME_HOUSE = {wood = 0.1, stone = 0.1, food = 0.1}
+INCOME_MINE = {wood = 0, stone = 0.6, food = 0}
+INCOME_SAWMILL = {wood = 0.6, stone = 0, food = 0}
+INCOME_WINDMILL = {wood = 0, stone = 0, food = 0.6}
 
 COST_PLANK = {wood = 10, stone = 0, food = 0}
 COST_BLOCK = {wood = 10, stone = 20, food = 0}
 COST_SOIL = {wood = 0, stone = 10, food = 20}
+COST_WHEAT = {wood = 0, stone = 0, food = 30}
+COST_TREE = {wood = 30, stone = 0, food = 0}
 COST_HOUSE = {wood = 0, stone = 10, food = 10}
 COST_WINDMILL = {wood = 20, stone = 10, food = 10}
 COST_SAWMILL = {wood = 10, stone = 10, food = 20}
@@ -53,7 +55,7 @@ COST_TOWNHALL = {wood = 40, stone = 20, food = 40}
 -- PHYSYCS CO
 PC_PLAYER = 2
 PC_PLANK = 3
-PC_COLUMN = 4
+PC_BEAM = 4
 PC_PLATFORM = 5
 PC_BUILDING = 6
 PC_GIB = 7
@@ -62,19 +64,23 @@ PC_PLAYER_FLOOR_BOX = 9
 PC_BLOCK = 10
 PC_GROUND = 11
 PC_GHOST = 12
+PC_WALL = 13
 
 -- DRAWING LAYERS
 DL_BACKGROUND = 2
 DL_HILL_BG = 4
-DL_COLUMN = 10
+DL_BEAM = 10
 DL_BUILDING = 15
+DL_WALL = 18
 DL_PLATFORM = 20
 DL_GIB = 25
 DL_NAIL = 26
 DL_TILE = 27
 DL_HILL = 28
+DL_TREE = 30
 DL_PLAYER = 90
 DL_GROUND = 92
+DL_WHEAT = 94
 DL_GHOST = 95
 
 DL_UI = 100

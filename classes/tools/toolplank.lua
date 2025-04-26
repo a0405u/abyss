@@ -20,6 +20,13 @@ function ToolPlank:init()
     self.surface = nil
     self.origin = nil
     self.point = Vector()
+    self.type = nil
+end
+
+--- @param type PlankType
+function ToolPlank:activate(type)
+
+    self.type = type
 end
 
 
@@ -40,7 +47,14 @@ end
 
 function ToolPlank:place()
 
-    self.plank:place()
+    if self.plank:activate(true) then
+        self.plank:set_frozen(false)
+        self.plank:add_nail(self.plank.position)
+        if self.surface then
+            self.plank:add_nail(self.plank.point)
+        end
+        self.plank:set_type(self.type)
+    end
 end
 
 
@@ -80,6 +94,7 @@ function ToolPlank:use(position)
         end
         self.weld = nil
         self.plank = nil
+        self.origin = nil
         audio.play(sound.build)
     end
 end
@@ -181,6 +196,13 @@ function ToolPlank:draw()
         screen.layer:queue(DL_UI_MOUSE, function ()
             color.set(color.dark)
             love.graphics.circle("line", x, y, 3.7)
+        end)
+    end
+    if self.origin and self.origin:is(Plank) then
+        local position = game.map:get_draw_position(Vector(self.weld:getAnchors()))
+        screen.layer:queue(DL_UI_MOUSE, function ()
+            color.set(color.dark)
+            love.graphics.circle("line", position.x, position.y, 1.5)
         end)
     end
 end

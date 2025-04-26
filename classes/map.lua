@@ -17,6 +17,7 @@ function Map:init()
     self.objects = {}
     self.ground = {
         height = 2,
+        drawable = Drawable(Vector(60, 2.25), sprites.ground, DL_GROUND),
         -- timer = Timer(function () self.body:setActive(not self.body:isActive()) self.ground.timer:restart() end, 0.2, true)
     }
     self.tilemap = Tilemap(Vector(0, self.ground.height), Vector(64, 64))
@@ -47,11 +48,12 @@ function Map:draw()
         love.graphics.rectangle("fill", 0, position.y, position.x, position.y)
         color.reset()
     end)
-    screen.layer:queue(DL_BACKGROUND, function()
-        color.set(color.darkest)
-        love.graphics.line(0, position.y, position.x, position.y)
-        color.reset()
-    end)
+    -- screen.layer:queue(DL_BACKGROUND, function()
+    --     color.set(color.darkest)
+    --     love.graphics.line(0, position.y, position.x, position.y)
+    --     color.reset()
+    -- end)
+    self.ground.drawable:draw()
     self.background:draw()
     Object.draw(self)
     self.tilemap:draw()

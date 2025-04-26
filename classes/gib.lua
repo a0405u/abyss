@@ -21,6 +21,12 @@ function Gib:update(dt)
 
     self.position.x, self.position.y = self.body:getPosition()
     self.rotation = self.body:getAngle()
+
+    if self.position.y <= -4 then
+        audio.play(sound.sink, 0.75 + math.random() * 0.75)
+        self.body:destroy()
+        self.parent:remove(self)
+    end
 end
 
 

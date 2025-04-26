@@ -1,73 +1,81 @@
---- @class Button
-local Button = class("Button")
+--- @class Button : UIElement
+--- @field icon Sprite
+local Button = class("Button", UIElement)
 
+--- @param position Vector
+--- @param sprite Sprite | nil
+--- @param icon Sprite | nil
+--- @param size Vector | nil
+--- @param disabled boolean | nil
+--- @param on_click function | nil
+--- @param parent CanvasArea | nil
+function Button:init(position, sprite, icon, size, disabled, on_click, parent, activate)
 
-function Button:init(parent, position, icon, size, disabled, on_click)
-
-    assert(parent, "No parent in Button!")
-    self.parent = parent
-    self.position = position
-    self.sprite = sprites.ui.button:instantiate()
-    self.icon = icon:instantiate() or sprites.ui.icons.empty:instantiate()
+    UIElement.init(self, sprite or sprites.ui.button, DL_UI_BUTTON, position, size, disabled, parent)
+    self.icon = icon and icon:instantiate() or sprites.ui.icons.empty:instantiate()
     self.on_click = on_click
-    self.size = size or self.sprite.size:getCopy()
-    self:set("idle")
-    self.disabled = disabled
-
-    if self.disabled then self:disable() end
+    self:set_state("idle")
+    if disabled then self:set_state("disabled") end
+    if activate then self:activate(true) end
 end
 
 
-function Button:set(state)
+function Button:press(position, button)
+
+    if UIElement.press(self, position, button) == self then
+        self:set_state("press")
+        return self
+    end
+end
+
+
+function Button:release(position, button)
+
+    if self.disabled then return end
+    if UIElement.release(self, position, button) == self then
+        if self.state == "press" then
+            self:activate()
+        end
+        return self
+    end
+    self:set_state("idle")
+end
+
+
+function Button:set_state(state)
 
     self.state = state
     self.sprite:set(self.sprite.animations[state])
 end
 
 
+function Button:disable()
+
+    self.disabled = true
+    self:set_state("disabled")
+end
+
+
 function Button:enable()
 
-    self:set("idle")
-end
-
-
-function Button:disable()
-    self:set("disabled")
-end
-
-function Button:press()
-    if not self.disabled then
-        self:set("press")
-    end
-end
-
-
-function Button:release()
-    if self.state == "press" then
-        self:activate()
-    end
+    self.disabled = false
+    self:set_state("idle")
 end
 
 
 function Button:activate(silent)
 
     if not silent then audio.play(sound.select) end
-    if self.parent.active then 
-        self.parent.active:deactivate()
-    end
+    if self.parent.active then self.parent.active:deactivate() end
     self.parent.active = self
-    self:set("active")
+    self:set_state("active")
     self:on_click()
 end
 
 
 function Button:deactivate()
 
-    self:set("idle")
-end
-
-
-function Button:update(dt)
+    self:set_state("idle")
 end
 
 
@@ -75,17 +83,7 @@ function Button:draw()
 
     self.sprite:draw(DL_UI_BUTTON, self.position)
     local alpha = (self.disabled and 0.4) or 1
-    self.icon:draw(DL_UI_ICON, self.position, nil, nil, nil, nil, alpha)
-end
-
-
-function Button:is_inside(position)
-
-    return
-        position.x > self.position.x - self.size.x / 2 and
-        position.x < self.position.x + self.size.x / 2 and
-        position.y > self.position.y - self.size.y / 2 and
-        position.y < self.position.y + self.size.y / 2
+    self.icon:draw(DL_UI_ICON, self.position + self.sprite.size / 2, nil, nil, nil, nil, alpha)
 end
 
 

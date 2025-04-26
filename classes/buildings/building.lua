@@ -53,7 +53,7 @@ function Building:place(position)
         local h = collider.keys[1].bounds.h / game.map.scale
         self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, h / 2, w, h), DS_BUILDING)
         self.fixture:setCategory(PC_BUILDING)
-        self.fixture:setMask(PC_PLAYER, PC_COLUMN)
+        self.fixture:setMask(PC_PLAYER, PC_BEAM)
     end
     self.ghost = false
     self.sprite:set(self.sprite.animations.idle)

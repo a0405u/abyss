@@ -1,54 +1,53 @@
-local ui = {}
-local left = {}
-local right = {}
+--- @class UI : CanvasArea
+local ui = class("UI", CanvasArea)
 local economy = {}
 local hint = {}
 
-function ui.load()
 
+function ui:init()
 
-    left.sprite = sprites.ui.left
-    left.buttons = {
-        plank = Button(left, Vector(36, 46), sprites.ui.icons.plank, nil, nil,
-            function() game:set_tool(game.tools.plank) end),
-        block = Button(left, Vector(73, 46), sprites.ui.icons.block, nil, nil,
-            function() game:set_tool(game.tools.tile, Block()) end),
-        soil = Button(left, Vector(36, 83), sprites.ui.icons.soil, nil, nil,
-            function() game:set_tool(game.tools.tile, Soil()) end),
-        mine = Button(left, Vector(73, 83), sprites.ui.icons.mine, nil, nil,
-            function()
-                game:set_tool(game.tools.building, Mine())
-            end),
-        windmill = Button(left, Vector(36, 120), sprites.ui.icons.windmill, nil, nil,
-        function()
-            game:set_tool(game.tools.building, Windmill())
-        end),
-        sawmill = Button(left, Vector(73, 120), sprites.ui.icons.sawmill, nil, nil,
-        function()
-            game:set_tool(game.tools.building, Sawmill())
-        end),
-        -- house = Button(left, Vector(73, 83), sprites.ui.icons.house, nil, true,
-            -- function() game:set_tool(game.tools.house) end),
-        -- townhall = Button(left, Vector(73, 120), sprites.ui.icons.townhall, nil, true,
-            -- function() game:set_tool(game.tools.townhall) end),
+    CanvasArea.init(self, Vector(0, 0), screen.size)
+
+    self.left = UIElement(sprites.ui.left, DL_UI, Vector(0, 0))
+
+    self.left.buttons = {
+        platform = Button(Vector(19, 29), sprites.ui.button_small, sprites.ui.icons_small.platform, nil, nil,
+        function() game:set_tool(game.tools.plank, Plank.Type.platform) end),
+        beam = Button(Vector(37, 29), sprites.ui.button_small, sprites.ui.icons_small.beam, nil, nil,
+        function() game:set_tool(game.tools.plank, Plank.Type.beam) end),
+        wall = Button(Vector(19, 47), sprites.ui.button_small, sprites.ui.icons_small.wall, nil, nil,
+        function() game:set_tool(game.tools.plank, Plank.Type.wall) end),
+        hammer = Button(Vector(37, 47), sprites.ui.button_small, sprites.ui.icons_small.hammer, nil, nil,
+        function() game:set_tool(game.tools.hammer) end),
+        block = Button(Vector(56, 29), sprites.ui.button_small, sprites.ui.icons_small.block, nil, nil,
+        function() game:set_tool(game.tools.tile, Block()) end),
+        soil = Button(Vector(74, 29), sprites.ui.button_small, sprites.ui.icons_small.soil, nil, nil,
+        function() game:set_tool(game.tools.tile, Soil()) end),
+        wheat = Button(Vector(56, 47), sprites.ui.button_small, sprites.ui.icons_small.wheat, nil, nil,
+        function() game:set_tool(game.tools.tile, Wheat()) end),
+        tree = Button(Vector(74, 47), sprites.ui.button_small, sprites.ui.icons_small.trees, nil, nil,
+        function() game:set_tool(game.tools.tile, Tree()) end),
+        house = Button(Vector(19, 66), sprites.ui.button, sprites.ui.icons.house, nil, nil,
+        function() game:set_tool(game.tools.building, House()) end),
+        mine = Button(Vector(56, 66), sprites.ui.button, sprites.ui.icons.mine, nil, nil,
+        function() game:set_tool(game.tools.building, Mine()) end),
+        windmill = Button(Vector(19, 103), sprites.ui.button, sprites.ui.icons.windmill, nil, nil,
+        function() game:set_tool(game.tools.building, Windmill()) end),
+        sawmill = Button(Vector(56, 103), sprites.ui.button, sprites.ui.icons.sawmill, nil, nil,
+        function() game:set_tool(game.tools.building, Sawmill()) end),
+        townhall = Button(Vector(19, 140), sprites.ui.button, sprites.ui.icons.townhall, nil, true,
+        function() game:set_tool(game.tools.building, Sawmill()) end),
+        temple = Button(Vector(56, 140), sprites.ui.button, sprites.ui.icons.temple, nil, true,
+        function() game:set_tool(game.tools.building, Sawmill()) end),
     }
 
-
-    function left:draw()
-
-        self.sprite:draw(DL_UI, Vector(self.sprite.size.x / 2, self.sprite.size.y / 2))
-        for key, button in pairs(self.buttons) do
-            button:draw()
-        end
+    for key, button in pairs(self.left.buttons) do
+        self.left:add(button)
     end
+    self:add(self.left)
 
-    right.sprite = sprites.ui.right
-
-    function right:draw()
-
-        self.sprite:draw(DL_UI, Vector(screen.size.x - self.sprite.size.x / 2, self.sprite.size.y / 2))
-    end
-
+    local right = UIElement(sprites.ui.right, DL_UI, Vector(screen.size.x - sprites.ui.right.size.x, 0))
+    self:add(right)
 
     economy.position = Vector(16, 10)
     economy.limit = 16
@@ -70,7 +69,7 @@ function ui.load()
     function economy:draw_resource(resource, position)
 
         resource.icon:draw(DL_UI_ICON, position)
-        ui.print(resource.value, Vector(position.x + economy.text.x, position.y + economy.text.y), economy.limit)
+        ui:print(resource.value, Vector(position.x + economy.text.x, position.y + economy.text.y), economy.limit)
     end
 
     function economy:draw()
@@ -116,7 +115,7 @@ function ui.load()
         local a = hint.time - delta
 
         if a > 0 then
-            ui.print(self.text, self.position, self.limit, "center", nil, a)
+            ui:print(self.text, self.position, self.limit, "center", nil, a)
         end
     end
 
@@ -128,25 +127,13 @@ function ui.load()
 
 
     ui.mouse = Mouse(sprites.mouse, screen.scale)
-    ui.left = left
     ui.right = right
     ui.economy = economy
     ui.hint = hint
 end
 
 
-function ui.get_button(position)
-
-    for key, button in pairs(left.buttons) do
-        if not button then return end
-        if (button:is_inside(position)) then
-            return button
-        end
-    end
-end
-
-
-function ui.print(text, position, limit, align, dl, a)
+function ui:print(text, position, limit, align, dl, a)
 
     screen.layer:queue(dl or DL_UI_TEXT, function ()
         color.set(color.text, a)
@@ -156,16 +143,17 @@ function ui.print(text, position, limit, align, dl, a)
 end
 
 
-function ui.draw()
+function ui:draw()
+    CanvasArea.draw(self)
     ui.mouse:draw()
-    ui.left:draw()
-    ui.right:draw()
+    -- ui.left:draw()
+    -- ui.right:draw()
     ui.economy:draw()
     ui.hint:draw()
 end
 
 
-function ui.update(dt)
+function ui:update(dt)
     ui.mouse:update(dt)
     ui.economy:update(dt)
     ui.hint:update(dt)

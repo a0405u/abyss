@@ -13,6 +13,8 @@ function Tile:init(sprite, size)
     self.fixture:setCategory(PC_BLOCK)
     self.body:setUserData(self)
     self.cost = COST_BLOCK
+    self.dl = nil
+    self.indestructible = nil
 end
 
 
@@ -39,8 +41,27 @@ end
 function Tile:draw(position)
 
     position = position or self.map:get_draw_position(self.position)
-    self.sprite:draw(DL_TILE, position)
+    self.sprite:draw(self.dl or DL_TILE, position)
 end
 
+function Tile:make_gib(position, rotation, velocity)
+
+    local gib = Gib(position, rotation)
+    game.map:add(gib)
+    gib:place()
+    gib.body:setLinearVelocity(velocity.x, velocity.y)
+end
+
+function Tile:destroy(position)
+
+    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    self.body:destroy()
+    self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
+    self.map.tile[self.position.x][self.position.y] = nil
+end
 
 return Tile

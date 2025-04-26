@@ -46,6 +46,7 @@ function Object:add(child)
 
     self.children[child] = child
     child:set(self)
+    return child
 end
 
 

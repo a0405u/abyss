@@ -2,25 +2,34 @@
 --- @field position Vector
 local Plank = class("Plank", Object)
 
----@class Type
-local Type = {
+---@class PlankType
+local PlankType = {
     platform = {
         category = PC_PLATFORM,
         color = color.dark,
-        dl = DL_PLATFORM
+        dl = DL_PLATFORM,
+        animation = "platform",
     },
-	column = {
-        category = PC_COLUMN,
+    wall = {
+        category = PC_WALL,
+        color = color.dark,
+        dl = DL_WALL,
+        animation = "wall",
+    },
+	beam = {
+        category = PC_BEAM,
         color = color.darkest,
         mask = {PC_PLAYER, PC_BUILDING},
-        dl = DL_COLUMN
+        dl = DL_BEAM,
+        animation = "beam",
     },
 	gib = {
         category = PC_GIB,
         color = color.purple,
         -- mask = PC_GIB,
         dl = DL_GIB,
-        strength = PLANK_STRENGTH / 4
+        strength = PLANK_STRENGTH / 4,
+        animation = "gib",
     },
 	ghost = {
         category = PC_GHOST,
@@ -30,8 +39,11 @@ local Type = {
         mask = PC_PLANK,
         filter = {1, 0, 0},
         density = 1,
+        animation = "ghost",
     }
 }
+
+Plank.Type = PlankType
 
 --- @param position Vector | nil
 ---@param rotation number | nil
@@ -39,7 +51,7 @@ local Type = {
 ---@param mass number | nil
 function Plank:init(position, rotation, length, mass)
 
-    self.type = Type.ghost
+    self.type = PlankType.ghost
     self.sprite = sprites.plank:instantiate()
     self.sprite:set(self.sprite.animations.ghost)
     self.position = position or Vector()
@@ -66,19 +78,10 @@ function Plank:init(position, rotation, length, mass)
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
     self.fixture:setCategory(PC_PLANK)
     
-    self:set_type(Type.ghost, self.sprite.animations.ghost)
+    self:set_type(PlankType.ghost, self.sprite.animations.ghost)
     self.nails = {}
     self.timer = Timer()
     self.visible = true
-end
-
-
-function Plank:place()
-    if self:activate(true) then
-        self:set_frozen(false)
-        self:add_nail(self.point)
-        self:add_nail(self.position)
-    end
 end
 
 
@@ -91,11 +94,11 @@ function Plank:activate(frozen)
     self.ghost = false
     self.body:setActive(true)
 
-    if (math.abs(self.rotation) > math.pi / 6 and math.abs(self.rotation) < 5 * math.pi / 6) then
-        self:set_type(Type.column, self.sprite.animations.column)
-    else
-        self:set_type(Type.platform, self.sprite.animations.platform)
-    end
+    -- if (math.abs(self.rotation) > math.pi / 6 and math.abs(self.rotation) < 5 * math.pi / 6) then
+    --     self:set_type(PlankType.beam, self.sprite.animations.beam)
+    -- else
+    --     self:set_type(PlankType.platform, self.sprite.animations.platform)
+    -- end
     self.timer:start(3, function() self:set_frozen(false) end)
     return true
 end
@@ -105,7 +108,7 @@ function Plank:make_gib(position, rotation, length, velocity)
     local gib = Plank(position, rotation, length, velocity)
     gib:activate()
     gib:set_frozen(false)
-    gib:set_type(Type.gib, gib.sprite.animations.gib)
+    gib:set_type(PlankType.gib, gib.sprite.animations.gib)
     gib.body:setLinearVelocity(velocity:get())
     self.parent:add(gib)
     return gib
@@ -147,7 +150,7 @@ function Plank:presolve(a, b, contact)
         local x, y = contact:getPositions()
         local nx, ny = contact:getNormal()
         local c1, c2 = self.fixture:getCategory()
-        if ny > -0.5 or c2 == PC_COLUMN then
+        if (c2 == PC_PLATFORM and ny > -0.5) or c2 == PC_BEAM then
             contact:setEnabled(false)
             return true
         end
@@ -174,12 +177,12 @@ function Plank:is_nailed()
 end
 
 
-function Plank:set_type(type, animation)
+function Plank:set_type(type)
 
     self.type = type
     self.fixture:setCategory(PC_PLANK, type.category)
     if type.mask then self.fixture:setMask(type.mask) else self.fixture:setMask() end
-    if animation then self.sprite:set(animation) end
+    if type.animation then self.sprite:set(self.sprite.animations[type.animation]) end
     self.strength = type.strength or PLANK_STRENGTH
     self.fixture:setDensity(type.density or DS_PLANK)
     self.body:resetMassData()

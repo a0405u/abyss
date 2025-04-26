@@ -3,7 +3,7 @@ local Soil = class("Soil", Tile)
 
 
 function Soil:init()
-    Tile.init(self, sprites.soil)
+    Tile.init(self, sprites.soil[math.random(3)])
     self.cost = COST_SOIL
 end
 

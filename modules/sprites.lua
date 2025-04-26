@@ -35,9 +35,10 @@ function sprites.load()
     sprites.item_frame = load_from_file("sprites/item_frame")
     
     sprites.ui = {
-        left = load_from_file("sprites/ui_left"),
-        right = load_from_file("sprites/ui_right"),
-        button = load_from_file("sprites/button"),
+        left = load_from_file("sprites/ui_left", nil, nil, Vector()),
+        right = load_from_file("sprites/ui_right", nil, nil, Vector()),
+        button = load_from_file("sprites/button", nil, nil, Vector()),
+        button_small = load_from_file("sprites/button_small", nil, nil, Vector()),
         icons = {
             empty = load_from_file("sprites/icon_empty"),
             plank = load_from_file("sprites/icon_plank"),
@@ -49,7 +50,17 @@ function sprites.load()
             mine = load_from_file("sprites/icon_mine"),
             sawmill = load_from_file("sprites/icon_sawmill"),
             windmill = load_from_file("sprites/icon_windmill"),
-        }
+        },
+        icons_small = {
+            platform = load_from_file("sprites/icon_small_platform"),
+            beam = load_from_file("sprites/icon_small_beam"),
+            wall = load_from_file("sprites/icon_small_wall"),
+            trees = load_from_file("sprites/icon_small_trees"),
+            block = load_from_file("sprites/icon_small_block"),
+            soil = load_from_file("sprites/icon_small_soil"),
+            wheat = load_from_file("sprites/icon_small_wheat"),
+            hammer = load_from_file("sprites/icon_small_hammer"),
+        },
     }
     
     sprites.icon = {
@@ -84,11 +95,29 @@ function sprites.load()
     
     sprites.tile = load_from_file("sprites/tile")
     sprites.tile_ghost = load_from_file("sprites/tile_ghost")
-    sprites.block = load_from_file("sprites/block")
-    sprites.soil = load_from_file("sprites/soil")
+    sprites.block = {
+        load_from_file("sprites/block"),
+        load_from_file("sprites/blockb"),
+        load_from_file("sprites/blockc")
+    }
+    sprites.soil = {
+        load_from_file("sprites/soil"),
+        load_from_file("sprites/soilb"),
+        load_from_file("sprites/soilc")
+    }
+    sprites.wheat = {
+        load_from_file("sprites/wheat"),
+        load_from_file("sprites/wheatb")
+    }
+    sprites.tree = {
+        load_from_file("sprites/tree_1"),
+        load_from_file("sprites/tree_2"),
+        load_from_file("sprites/tree_3")
+    }
     
     sprites.hill = load_from_file("sprites/hill", nil, nil, Vector(0, 320))
     sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector(0, 320))
+    sprites.ground = load_from_file("sprites/ground")
     sprites.background = load_from_file("sprites/background")
     
     sprites.building = load_from_file("sprites/house_1")
@@ -99,6 +128,7 @@ function sprites.load()
     sprites.townhall = load_from_file("sprites/townhall")
     sprites.temple = load_from_file("sprites/temple")
     
+    sprites.null = load_from_file("sprites/null")
 end
 
 return sprites

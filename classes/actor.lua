@@ -185,14 +185,20 @@ function Actor:jump()
 end
 
 
-function Actor:begincontact(a, b, contact)
-    
+function Actor:beginfloorcontact(a, b, contact)
+
+    for i, mask in ipairs{b:getMask()} do
+        if mask == PC_PLAYER then return end
+    end
     self.floor_count = math.max(0, self.floor_count + 1)
 end
 
 
-function Actor:endcontact(a, b, contact)
+function Actor:endfloorcontact(a, b, contact)
 
+    for i, mask in ipairs{b:getMask()} do
+        if mask == PC_PLAYER then return end
+    end
     self.floor_count = math.max(0, self.floor_count - 1)
 end
 

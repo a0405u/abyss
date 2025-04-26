@@ -17,6 +17,7 @@ function Mouse:init(sprite, visible, position)
         map = Vector(0, 0)
     }
     self.plank = nil
+    self.button = nil
 end
 
 
@@ -32,10 +33,9 @@ end
 function Mouse:pressed(x, y, button, istouch, presses)
 
     local position = self:get_map_position(x, y)
-    local ui_button = ui.get_button(self:get_screen_position(x, y))
-
-    if ui_button then
-        ui_button:press()
+    local pressed = ui:press(self:get_screen_position(x, y), button)
+    if pressed and pressed:is(Button) then
+        self.button = pressed
         return
     end
 
@@ -54,11 +54,11 @@ end
 function Mouse:released(x, y, button, istouch, presses)
 
     local position = self:get_map_position(x, y)
-
-    local ui_button = ui.get_button(self:get_screen_position(x, y))
-
-    if ui_button then
-        ui_button:release()
+    local screen_position = self:get_screen_position(x, y)
+    local released = ui:release(screen_position, button)
+    if self.button and released ~= self.button then
+        self.button:release(screen_position)
+        self.button = nil
         return
     end
 
