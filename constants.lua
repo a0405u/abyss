@@ -53,6 +53,9 @@ COST_SAWMILL = {wood = 10, stone = 10, food = 20}
 COST_MINE = {wood = 20, stone = 10, food = 30}
 COST_TOWNHALL = {wood = 40, stone = 20, food = 40}
 
+MLT_TREE = 0.5
+MLT_WHEAT = 0.5
+
 -- PHYSYCS CO
 PC_PLAYER = 2
 PC_PLANK = 3
@@ -71,6 +74,7 @@ PC_WALL = 13
 DL_BACKGROUND = 2
 DL_SUPPORT = 3
 DL_HILL_BG = 4
+DL_TREE = 8
 DL_BEAM = 10
 DL_BUILDING = 15
 DL_WALL = 18
@@ -79,7 +83,6 @@ DL_GIB = 25
 DL_NAIL = 26
 DL_TILE = 27
 DL_HILL = 28
-DL_TREE = 30
 DL_PLAYER = 90
 DL_GROUND = 92
 DL_WHEAT = 94

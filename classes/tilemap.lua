@@ -66,6 +66,21 @@ function Tilemap:is_in_tile(position, tile)
 end
 
 
+function Tilemap:find(from, to, type)
+
+    local tiles = {}
+    for x = from.x, to.x do
+        for y = from.y, to.y do
+            local tile = self.tile[x][y]
+            if tile and tile:is(type) then
+                table.insert(tiles, tile)
+            end
+        end
+    end
+    return tiles
+end
+
+
 function Tilemap:check_any(position, rule)
 
     for dy = -1, 1 do
