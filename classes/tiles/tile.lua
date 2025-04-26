@@ -15,6 +15,7 @@ function Tile:init(sprite, size)
     self.cost = COST_BLOCK
     self.dl = nil
     self.indestructible = nil
+    self.support = true
     self.solid = true
 end
 
@@ -43,7 +44,7 @@ function Tile:is_stable()
 
     if self.position.y == 1 then return true end
     local tile = self.map.tile[self.position.x][self.position.y - 1]
-    if tile and tile.solid then
+    if tile and tile.support then
         return true
     end
     return false
@@ -79,6 +80,11 @@ function Tile:destroy(position)
     self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
     self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
     self.map.tile[self.position.x][self.position.y] = nil
+end
+
+function Tile:remove()
+    self.body:destroy()
+    self = nil
 end
 
 return Tile

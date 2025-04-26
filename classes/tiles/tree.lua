@@ -9,6 +9,7 @@ function Tree:init()
     self.fixture:setSensor(true)
 
     self.solid = false
+    self.support = false
     self.cost = COST_TREE
     self.dl = DL_TREE
 end

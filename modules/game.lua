@@ -91,7 +91,8 @@ end
 
 function game:spawn_building(position, building)
 
-    if self.map.tilemap:is_present(self.map.tilemap:get_position(position)) then
+    local tile = self.map.tilemap:get_tile(position)
+    if tile and tile.solid then
         return false
     end
     building:place(position)

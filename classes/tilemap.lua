@@ -128,7 +128,7 @@ function Tilemap:place(tile, position, indestructible)
             return true
         end
 
-        if fixture:getCategory() == PC_BUILDING then
+        if tile.solid and fixture:getCategory() == PC_BUILDING then
             local building = fixture:getBody():getUserData()
             building:destroy(world_position)
             return true
@@ -166,6 +166,7 @@ function Tilemap:build(tile, position)
         self:place(tile, position)
         return true
     end
+    tile:remove()
     ui.hint:queue("There is not enough support!")
     return false
 end
@@ -204,29 +205,43 @@ function Tilemap:get_box(tile_position)
     return position.x - self.tile_size.x, position.y - self.tile_size.y, position.x + self.tile_size.x, position.y + self.tile_size.y
 end
 
-
-function Tilemap:get_position(position)
+--- Get tile position by world position
+--- @param world_position Vector
+--- @return Vector
+function Tilemap:get_position(world_position)
 
     return Vector(
-        math.floor((position.x - self.position.x) / self.tile_size.x) + 1,
-        math.floor((position.y - self.position.y) / self.tile_size.y) + 1
+        math.floor((world_position.x - self.position.x) / self.tile_size.x) + 1,
+        math.floor((world_position.y - self.position.y) / self.tile_size.y) + 1
         )
 end
 
-
-function Tilemap:get_world_position(position)
+--- Get world position by tile position
+--- @param tile_position Vector
+--- @return Vector
+function Tilemap:get_world_position(tile_position)
 
     return Vector(
-        self.tile_size.x / 2 + self.position.x + (position.x - 1) * self.tile_size.x, 
-        self.tile_size.y / 2 + self.position.y + (position.y - 1) * self.tile_size.y)
+        self.tile_size.x / 2 + self.position.x + (tile_position.x - 1) * self.tile_size.x, 
+        self.tile_size.y / 2 + self.position.y + (tile_position.y - 1) * self.tile_size.y)
 end
 
+--- Get draw position by tile position
+--- @param tile_position Vector
+--- @return Vector
+function Tilemap:get_draw_position(tile_position)
 
-function Tilemap:get_draw_position(position)
-
-    return game.map:get_draw_position(self:get_world_position(position))
+    return game.map:get_draw_position(self:get_world_position(tile_position))
 end
 
+--- Get tile by world position
+--- @param world_position Vector
+--- @return Tile | nil
+function Tilemap:get_tile(world_position)
+    local position = self:get_position(world_position)
+    if not self.tile[position.x] then return nil end
+    return self.tile[position.x][position.y]
+end
 
 function Tilemap:update(dt)
 

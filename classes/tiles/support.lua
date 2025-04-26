@@ -8,6 +8,7 @@ function Support:init()
     self.fixture:setMask(PC_PLAYER)
     self.fixture:setSensor(true)
 
+    self.solid = false
     self.cost = COST_SUPPORT
     self.dl = DL_SUPPORT
 end
@@ -23,9 +24,9 @@ function Support:is_stable()
     if Tile.is_stable(self) then
         if self.position.y <= 3 then return true end
         local tile = self.map.tile[self.position.x - 1][self.position.y - 3]
-        if not tile or not tile.solid then return false end
+        if not tile or not tile.support then return false end
         local tile = self.map.tile[self.position.x + 1][self.position.y - 3]
-        if not tile or not tile.solid then return false end
+        if not tile or not tile.support then return false end
         return true
     end
     return false

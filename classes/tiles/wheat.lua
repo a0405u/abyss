@@ -9,6 +9,7 @@ function Wheat:init()
     self.fixture:setSensor(true)
     
     self.solid = false
+    self.support = false
     self.cost = COST_WHEAT
     self.dl = DL_WHEAT
 end
