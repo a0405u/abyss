@@ -5,15 +5,16 @@
 --- @field active boolean
 local Timer = class("Timer")
 
---- @param action function
+--- @param action function | nil
 --- @param time number | nil
 ---@param active boolean | nil
-function Timer:init(action, time, active)
+function Timer:init(action, time, active, continuous)
 
     self.time = time or 1
     self.left = self.time
 
-    self.action = action
+    self.action = action or function() end
+    self.continuous = continuous or false
 
     self.active = active or false
 end
@@ -37,6 +38,9 @@ function Timer:timeout()
 
     self.active = false
     self:action()
+    if self.continuous then
+        self:restart()
+    end
 end
 
 

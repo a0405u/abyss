@@ -11,11 +11,13 @@ function ToolHammer:use(position)
 
     local objects = game.map:get_objects(position)
     for i, object in ipairs(objects) do
-        if (object:is(Plank) or object:is(Tile) or object:is(Building) or object:is(Gib)) and not object.indestructible then
+        if (object:is(Plank) or object:is(Building) or object:is(Gib)) and not object.indestructible then
             object:destroy()
             return
         end
     end
+    local tile_position = game.map.tilemap:get_position(position)
+    game.map.tilemap:remove(tile_position)
 end
 
 

@@ -1,6 +1,6 @@
 require "headers"
 
-local G = {}
+G = {}
 
 function love.load(args)
 
@@ -12,6 +12,7 @@ function love.load(args)
 
     config:load()
     love.physics.setMeter(config.physics.scale)
+    time = Time()
     input.load()
     color.load(config.theme.palette)
     screen.load()
@@ -52,6 +53,7 @@ end
 
 function love.update(dt)
 
+    time:update(dt)
     input.update(dt)
 
     if dt < 1 and not game.paused then

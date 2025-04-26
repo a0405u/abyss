@@ -6,7 +6,9 @@ function Wheat:init()
     Tile.init(self, sprites.wheat[math.random(2)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
+    self.fixture:setSensor(true)
     
+    self.solid = false
     self.cost = COST_WHEAT
     self.dl = DL_WHEAT
 end

@@ -41,12 +41,12 @@ function Tilemap:add_hill(position)
     self:line(Tile(), Vector(position.x + 13, 7), 3, true)
     self:line(Tile(), Vector(position.x + 14, 8), 2, true)
     self:place(Wheat(), Vector(position.x + 10, 4))
-    self:place(Soil(), Vector(position.x + 10, 3))
-    self:place(Soil(), Vector(position.x + 11, 3))
-    self:place(Soil(), Vector(position.x + 17, 4))
-    self:place(Soil(), Vector(position.x + 12, 6))
-    self:place(Soil(), Vector(position.x + 14, 8))
-    self:place(Soil(), Vector(position.x + 15, 8))
+    self:place(Soil(), Vector(position.x + 10, 3), true)
+    self:place(Soil(), Vector(position.x + 11, 3), true)
+    self:place(Soil(), Vector(position.x + 17, 4), true)
+    self:place(Soil(), Vector(position.x + 12, 6), true)
+    self:place(Soil(), Vector(position.x + 14, 8), true)
+    self:place(Soil(), Vector(position.x + 15, 8), true)
 end
 
 
@@ -107,10 +107,11 @@ function Tilemap:check(position, rule)
 end
 
 
-function Tilemap:place(tile, position)
+function Tilemap:place(tile, position, indestructible)
     position = position or tile.position
     self.tile[position.x][position.y] = tile
     tile:place(self, position)
+    tile.indestructible = indestructible
 
     local world_position = self:get_world_position(position)
     game.world:queryBoundingBox(world_position.x - self.tile_size.x / 2, world_position.y - self.tile_size.y / 2, world_position.x + self.tile_size.x / 2, world_position.y + self.tile_size.y / 2, function(fixture)
@@ -170,6 +171,33 @@ function Tilemap:build(tile, position)
     end
     return false
 end
+
+
+function Tilemap:remove(position)
+
+    local x, y = 0, 0
+    local tile = self.tile[position.x][position.y]
+    if not tile or tile.indestructible then return end
+    tile:destroy()
+    time:delay(function()
+        self:check_stability(Vector(position.x, position.y + 1))
+    end, 0.5)
+    time:delay(function() 
+        self:check_stability(Vector(position.x - 1, position.y + 1))
+    end, 0.5)
+    time:delay(function() 
+        self:check_stability(Vector(position.x + 1, position.y + 1))
+    end, 0.5)
+end
+
+
+function Tilemap:check_stability(position)
+    local tile = self.tile[position.x][position.y]
+    if tile and not tile:is_stable() then
+        self:remove(Vector(position.x, position.y))
+    end
+end
+
 
 --- @return number, number, number, number
 function Tilemap:get_box(tile_position)

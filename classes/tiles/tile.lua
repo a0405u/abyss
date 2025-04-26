@@ -15,6 +15,7 @@ function Tile:init(sprite, size)
     self.cost = COST_BLOCK
     self.dl = nil
     self.indestructible = nil
+    self.solid = true
 end
 
 
@@ -38,6 +39,17 @@ function Tile:update(dt)
 end
 
 
+function Tile:is_stable()
+
+    if self.position.y == 1 then return true end
+    local tile = self.map.tile[self.position.x][self.position.y - 1]
+    if tile and tile.solid then
+        return true
+    end
+    return false
+end
+
+
 function Tile:draw(position)
 
     position = position or self.map:get_draw_position(self.position)
@@ -55,6 +67,11 @@ end
 function Tile:destroy(position)
 
     audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    local joints = self.body:getJoints()
+    for i, joint in ipairs(joints) do
+        local nail = joint:getUserData()
+        nail:destroy()
+    end
     self.body:destroy()
     self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))
     self:make_gib(self.map:get_world_position(self.position), math.random(), Vector((math.random() - 0.5) * GIB_SPEED, (math.random() - 0.5) * GIB_SPEED))

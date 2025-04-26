@@ -23,6 +23,7 @@ function Nail:init(position, a, b, fixed)
     else
         self.joint = love.physics.newWeldJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
     end
+    self.joint:setUserData(self)
 end
 
 

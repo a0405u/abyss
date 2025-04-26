@@ -6,7 +6,9 @@ function Tree:init()
     Tile.init(self, sprites.tree[math.random(3)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
+    self.fixture:setSensor(true)
 
+    self.solid = false
     self.cost = COST_TREE
     self.dl = DL_TREE
 end
