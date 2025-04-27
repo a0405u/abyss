@@ -175,6 +175,8 @@ end
 function Map:presolve(a, b, contact)
     if b:getCategory() == PC_PLAYER then return end
     contact:setRestitution(RST_GROUND)
+    local body = b:getBody()
+    body:applyForce(0, - SAND_FORCE * body:getMass())
 end
 
 

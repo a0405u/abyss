@@ -85,7 +85,7 @@ function Tilemap:get_tiles_of_type(from, to, type)
     local tiles = {}
     for x = from.x, to.x do
         for y = from.y, to.y do
-            local tile = self.tile[x][y]
+            local tile = self.tile[x] and self.tile[x][y]
             if tile and tile:is(type) then
                 table.insert(tiles, tile)
             end

@@ -63,6 +63,19 @@ function sprites.load()
             hammer = load_from_file("sprites/icon_small_hammer"),
             support = load_from_file("sprites/icon_small_support"),
         },
+        preview = {
+            planks = load_from_file("sprites/preview_planks"),
+            block = load_from_file("sprites/preview_block"),
+            soil = load_from_file("sprites/preview_soil"),
+            support = load_from_file("sprites/preview_support"),
+            house = load_from_file("sprites/preview_house"),
+            mine = load_from_file("sprites/preview_mine"),
+            sawmill = load_from_file("sprites/preview_sawmill"),
+            windmill = load_from_file("sprites/preview_windmill"),
+            tree = load_from_file("sprites/preview_tree"),
+            wheat = load_from_file("sprites/preview_wheat"),
+            hammer = load_from_file("sprites/preview_hammer"),
+        }
     }
     
     sprites.icon = {

@@ -9,6 +9,7 @@ function ui:init()
     CanvasArea.init(self, Vector(0, 0), screen.size)
 
     self.left = UIElement(sprites.ui.left, DL_UI, Vector(0, 0))
+    self:add(self.left)
 
     self.left.buttons = {
         platform = Button(Vector(19, 29), sprites.ui.button_small, sprites.ui.icons_small.platform, nil, nil,
@@ -47,10 +48,125 @@ function ui:init()
     for key, button in pairs(self.left.buttons) do
         self.left:add(button)
     end
-    self:add(self.left)
 
     local right = UIElement(sprites.ui.right, DL_UI, Vector(screen.size.x - sprites.ui.right.size.x, 0))
     self:add(right)
+
+    right.name = "Platform"
+    right.description = ""
+    right.cost = COST_PLANK
+    right.preview = sprites.ui.preview.planks
+    right.set_tool = function(e, tool, ...)
+
+        if tool:is(ToolPlank) then
+            if tool.type == Plank.Type.platform then
+                e.name = "Platform"
+                e.description = "It can allow you to go one way."
+                e.cost = COST_PLANK
+                e.preview = sprites.ui.preview.planks
+                return
+            end
+            if tool.type == Plank.Type.beam then
+                e.name = "Beam"
+                e.description = "It can give you a bit of support."
+                e.cost = COST_PLANK
+                e.preview = sprites.ui.preview.planks
+                return
+            end
+            if tool.type == Plank.Type.wall then
+                e.name = "Wall"
+                e.description = "You could try to stop something with it."
+                e.cost = COST_PLANK
+                e.preview = sprites.ui.preview.planks
+                return
+            end
+        end
+        if tool:is(ToolTile) then
+            if tool.block:is(Block) then
+                e.name = "Block"
+                e.description = "It's hard and heavy."
+                e.cost = COST_BLOCK
+                e.preview = sprites.ui.preview.block
+                return
+            end
+            if tool.block:is(Support) then
+                e.name = "Support"
+                e.description = "It gives a bit of stability."
+                e.cost = COST_SUPPORT
+                e.preview = sprites.ui.preview.support
+                return
+            end
+            if tool.block:is(Soil) then
+                e.name = "Soil"
+                e.description = "It's moist and unstable."
+                e.cost = COST_SOIL
+                e.preview = sprites.ui.preview.soil
+                return
+            end
+            if tool.block:is(Tree) then
+                e.name = "Tree"
+                e.description = "It is warm but the leaves are falling."
+                e.cost = COST_TREE
+                e.preview = sprites.ui.preview.tree
+                return
+            end
+            if tool.block:is(Wheat) then
+                e.name = "Wheat"
+                e.description = "How can it grow in such darkness?"
+                e.cost = COST_WHEAT
+                e.preview = sprites.ui.preview.wheat
+                return
+            end
+        end
+        if tool:is(ToolBuilding) then
+            if tool.building:is(House) then
+                e.name = "House"
+                e.description = "There is no one to live here."
+                e.cost = COST_HOUSE
+                e.preview = sprites.ui.preview.house
+            end
+            if tool.building:is(Mine) then
+                e.name = "Mine"
+                e.description = "You could go even deeper."
+                e.cost = COST_MINE
+                e.preview = sprites.ui.preview.mine
+            end
+            if tool.building:is(Sawmill) then
+                e.name = "Sawmill"
+                e.description = "It could saw trees if you had some."
+                e.cost = COST_SAWMILL
+                e.preview = sprites.ui.preview.sawmill
+            end
+            if tool.building:is(Windmill) then
+                e.name = "Windmill"
+                e.description = "There is no wind in here."
+                e.cost = COST_WINDMILL
+                e.preview = sprites.ui.preview.windmill
+            end
+        end
+        if tool:is(ToolHammer) then
+            e.name = "Hammer"
+            e.description = "You won't be able to hurt anyone."
+            e.cost = COST_NONE
+            e.preview = sprites.ui.preview.hammer
+        end
+    end
+
+    right.draw = function(e)
+        UIElement.draw(e)
+
+        self:print(self.right.name, Vector(488, 72), 152, "center")
+        self:print(self.right.description, Vector(534, 94), 70, "left")
+
+        self.right.preview:draw(DL_UI_ICON, Vector(509, 112))
+
+        sprites.icon.wood:draw(DL_UI_ICON, Vector(622, 97))
+        self:print(self.right.cost.wood == 0 and "-" or self.right.cost.wood, Vector(488, 94), 126, "right")
+        sprites.icon.stone:draw(DL_UI_ICON, Vector(622, 113))
+        self:print(self.right.cost.stone == 0 and "-" or self.right.cost.stone, Vector(488, 110), 126, "right")
+        sprites.icon.food:draw(DL_UI_ICON, Vector(622, 129))
+        self:print(self.right.cost.food == 0 and "-" or self.right.cost.food, Vector(488, 126), 126, "right")
+    end
 
     economy.position = Vector(16, 10)
     economy.limit = 16

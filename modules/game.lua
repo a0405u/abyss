@@ -63,6 +63,7 @@ function game:set_tool(tool, ...)
 
     self.tool = tool
     self.tool:activate(...)
+    ui.right:set_tool(tool, ...)
 end
 
 
@@ -75,7 +76,7 @@ end
 function game:build_block(block, cost, position)
 
     local tilemap_position = self.map.tilemap:get_position(position)
-    if not self.map.tilemap:is_in_tile(self.player.position, tilemap_position) then
+    if not block.solid or not self.map.tilemap:is_in_tile(self.player.position, tilemap_position) then
         if self.economy:has(cost) then
             if self.map.tilemap:build(block, tilemap_position) then
                 self.economy:take(cost)
