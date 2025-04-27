@@ -71,17 +71,22 @@ function Map:get_scaled_vector(vector)
     return Vector(vector.x * self.scale, vector.y * self.scale)
 end
 
+--- Get Screen position from World position
 --- @param position Vector
 function Map:get_draw_position(position)
 
-    return Vector(self.position.x + position.x * self.scale, self.position.y + (self.size.y - position.y) * self.scale)
+    return Vector(
+        -- self.position.x + (position.x) * self.scale, 
+        self.position.x + (position.x - game.camera.position.x) * self.scale,
+        self.position.y + (self.size.y - position.y + game.camera.position.y) * self.scale
+    )
 end
 
-
+--- Get World position from Screen position
 --- @param position Vector
 function Map:get_position(position)
 
-    return Vector((position.x - self.position.x) / self.scale, self.size.y - (position.y - self.position.y) / self.scale)
+    return Vector((position.x - self.position.x) / self.scale + game.camera.position.x, self.size.y - (position.y - self.position.y) / self.scale + game.camera.position.y)
 end
 
 

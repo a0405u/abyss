@@ -41,9 +41,9 @@ function game:update(dt)
     self.tool:update(dt)
     self.hand:update(dt)
     ui:update(dt)
-    if self.player.position.y > self.map.size.y then
-        game:ending()
-    end
+    -- if self.player.position.y > self.map.size.y then
+    --     game:ending()
+    -- end
 end
 
 
