@@ -36,15 +36,34 @@ function Support:update_position()
 end
 
 
+function Support:check_support(position)
+    local left = self.map.tile[position.x - 1][position.y]
+    local tile = self.map.tile[position.x][position.y]
+    local right = self.map.tile[position.x + 1][position.y]
+    if tile and (tile:is(Block) or tile:is(Soil)) and
+        left and (left:is(Block) or left:is(Soil)) and
+        right and (right:is(Block) or right:is(Soil)) then
+        return true 
+    end
+    return false
+end
+
+
 function Support:is_stable()
 
     if Tile.is_stable(self) then
+
         if self.position.y <= 3 then return true end
-        local tile = self.map.tile[self.position.x - 1][self.position.y - 3]
-        if not tile or not tile.support then return false end
-        local tile = self.map.tile[self.position.x + 1][self.position.y - 3]
-        if not tile or not tile.support then return false end
-        return true
+
+        if self:check_support(Vector(self.position.x, self.position.y - 1)) then
+            return true
+        end
+        if self:check_support(Vector(self.position.x, self.position.y - 2)) then
+            return true
+        end
+        if self:check_support(Vector(self.position.x, self.position.y - 3)) then
+            return true
+        end
     else
         local tile = self.map.tile[self.position.x - 1][self.position.y]
         if not tile or not tile.support then return false end
