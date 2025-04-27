@@ -52,11 +52,12 @@ end
 
 
 function love.update(dt)
-
+    dt = math.min(dt, 0.0333)
+    
     time:update(dt)
     input.update(dt)
 
-    if dt < 1 and not game.paused then
+    if not game.paused then
         game:update(dt)
     end
 
