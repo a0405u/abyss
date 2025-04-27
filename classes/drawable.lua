@@ -23,10 +23,10 @@ function Drawable:update(dt)
 end
 
 
-function Drawable:draw()
+function Drawable:draw(position, camera_scale)
 
     -- print(game.map:get_draw_position(self.position).x, game.map:get_draw_position(self.position).y)
-    self.sprite:draw(self.dl, game.map:get_draw_position(self.position))
+    self.sprite:draw(self.dl, game.map:get_draw_position(position or self.position, camera_scale))
 end
 
 

@@ -24,7 +24,7 @@ function game:load()
     }
     self.tool = self.tools.plank
     self.hand = ToolHand()
-    self.map.tilemap:add_hill(Vector(10, 1))
+    self.map.tilemap:add_hill(Vector(16, 1))
     self.timer = Timer()
     ui.left.buttons.platform:activate(true)
 end

@@ -40,6 +40,7 @@ function Support:check_support(position)
     local left = self.map.tile[position.x - 1][position.y]
     local tile = self.map.tile[position.x][position.y]
     local right = self.map.tile[position.x + 1][position.y]
+    if tile and (tile:is(Block) or tile:is(Soil)) then return true end
     if tile and (tile:is(Block) or tile:is(Soil)) and
         left and (left:is(Block) or left:is(Soil)) and
         right and (right:is(Block) or right:is(Soil)) then

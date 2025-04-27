@@ -28,7 +28,7 @@ function Map:init()
     -- self.fixture:setRestitution(RST_GROUND)
     self.left_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(-self.size.x, self.size.y / 2, self.size.x, self.size.y))
     self.right_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y / 2, self.size.x, self.size.y))
-    self.background = Drawable(Vector(54, 48), sprites.background, DL_BACKGROUND)
+    self.background = Drawable(Vector(64, 48), sprites.background, DL_BACKGROUND)
 end
 
 
@@ -54,7 +54,7 @@ function Map:draw()
     --     color.reset()
     -- end)
     self.ground.drawable:draw()
-    self.background:draw()
+    self.background:draw(nil, 0.5)
     Object.draw(self)
     self.tilemap:draw()
 end
@@ -73,12 +73,12 @@ end
 
 --- Get Screen position from World position
 --- @param position Vector
-function Map:get_draw_position(position)
+function Map:get_draw_position(position, camera_scale)
 
     return Vector(
         -- self.position.x + (position.x) * self.scale, 
-        self.position.x + (position.x - game.camera.position.x) * self.scale,
-        self.position.y + (self.size.y - position.y + game.camera.position.y) * self.scale
+        self.position.x + (position.x - game.camera.position.x * (camera_scale or 1)) * self.scale,
+        self.position.y + (self.size.y - position.y + game.camera.position.y * (camera_scale or 1)) * self.scale
     )
 end
 

@@ -13,7 +13,8 @@ end
 
 function Camera:update(dt)
 
-    self.position.x = game.player.position.x - game.map.size.x / 2
+    -- self.position.x = game.player.position.x - game.map.size.x / 2
+    self.position.x = 0
     self.position.y = game.player.position.y - game.map.size.y / 2
     self.position.y = math.max(self.position.y, 0)
 end
