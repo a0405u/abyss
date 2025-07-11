@@ -9,7 +9,7 @@ local Mouse = class("Mouse")
 --- @param visible boolean|nil
 function Mouse:init(sprite, visible, position)
 
-    self.sprite = sprite
+    self.sprite = sprite or sprites.ui.mouse:instantiate()
     self.visible = visible or true
     self.position = {
         window = position or Vector(0, 0),

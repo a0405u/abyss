@@ -247,7 +247,7 @@ function ui:init()
     end
 
 
-    ui.mouse = Mouse(sprites.mouse, screen.scale)
+    ui.mouse = Mouse(sprites.ui.mouse, screen.scale)
     ui.right = right
     ui.economy = economy
     ui.hint = hint

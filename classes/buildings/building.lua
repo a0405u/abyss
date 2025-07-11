@@ -46,7 +46,9 @@ function Building:draw()
     self.sprite:draw(DL_BUILDING, position, -self.rotation, nil, nil, nil, nil)
 end
 
-
+--- Create collider bounding boxes from slices on a sprite
+--- @param slices table
+--- @return table
 function Building:load_colliders(slices)
 
     local colliders = {}
@@ -70,18 +72,14 @@ function Building:load_colliders(slices)
             collider.min.x + collider.size.x,
             collider.min.y + collider.size.y
         )
-        print("Sprt: ", self.sprite.size)
-        print("Min: ", collider.min * game.map.scale)
-        print("Cnt: ", collider.center * game.map.scale)
-        print("Max: ", collider.max * game.map.scale)
-        print("Size: ", collider.size * game.map.scale)
         table.insert(colliders, collider)
     end
 
     return colliders
 end
 
-
+--- Generate bounding box from colliders bounding boxes
+--- @return table 
 function Building:getBoundingBox()
 
     local bb = {}
@@ -100,7 +98,8 @@ function Building:getBoundingBox()
     return bb
 end
 
-
+--- Materialize building from its ghost state at given position
+--- @param position any
 function Building:place(position)
 
     if position then self.body:setPosition(position.x, position.y) end
