@@ -1,20 +1,20 @@
---- @class Mine: Building
-local Mine = class("Mine", Building)
+--- @class BuildingMine: Building
+local BuildingMine = class("BuildingMine", Building)
 
 
-function Mine:init(position, rotation)
+function BuildingMine:init(position, rotation)
 
-    Building.init(self, position, rotation, sprites.mine)
+    Building.init(self, position, rotation, sprites.buildings.mine)
     self.income = INCOME_MINE
     self.cost = COST_MINE
 end
 
 
-function Mine:update(dt)
+function BuildingMine:update(dt)
 
     Building.update(self, dt)
     game.economy:add(self.income, dt)
 end
 
 
-return Mine
+return BuildingMine

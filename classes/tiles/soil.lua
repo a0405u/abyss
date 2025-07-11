@@ -1,20 +1,20 @@
 --- @class Soil : Tile
-local Soil = class("Soil", Tile)
+local TileSoil = class("TileSoil", Tile)
 
 
-function Soil:init()
-    Tile.init(self, sprites.soil[math.random(#sprites.soil)])
+function TileSoil:init()
+    Tile.init(self, sprites.tiles.soil[math.random(#sprites.tiles.soil)])
     self.cost = COST_SOIL
 end
 
 
-function Soil:instantiate()
+function TileSoil:instantiate()
 
-    return Soil()
+    return TileSoil()
 end
 
 
-function Soil:check_support(position)
+function TileSoil:check_support(position)
     local left = self.map.tile[position.x - 1][position.y]
     local tile = self.map.tile[position.x][position.y]
     local right = self.map.tile[position.x + 1][position.y]
@@ -25,14 +25,14 @@ function Soil:check_support(position)
 end
 
 
-function Soil:is_stable()
+function TileSoil:is_stable()
 
     if Tile.is_stable(self) then
 
         if self.position.y <= 1 then return true end
 
         local tile = self.map.tile[self.position.x][self.position.y - 1]
-        if tile and tile:is(Support) then return true end
+        if tile and tile:is(TileSupport) then return true end
 
         if self:check_support(Vector(self.position.x, self.position.y - 1)) then
             return true
@@ -41,4 +41,4 @@ function Soil:is_stable()
     return false
 end
 
-return Soil
+return TileSoil

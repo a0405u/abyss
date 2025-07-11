@@ -1,19 +1,19 @@
 --- @class Container : Tile
-local Container = class("Container", Tile)
+local TileContainer = class("TileContainer", Tile)
 
 
-function Container:init()
+function TileContainer:init()
     Tile.init(self)
 end
 
 
-function Container:instantiate()
+function TileContainer:instantiate()
 
-    return Container()
+    return TileContainer()
 end
 
 
-function Container:is_stable()
+function TileContainer:is_stable()
 
     if Tile.is_stable(self) then
         if self.position.y <= 1 then return true end
@@ -26,4 +26,4 @@ function Container:is_stable()
     return false
 end
 
-return Container
+return TileContainer

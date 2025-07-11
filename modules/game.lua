@@ -111,11 +111,11 @@ function beginContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:beginfloorcontact(a, b, contact)
+        game.player:begincontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:beginfloorcontact(b, a, contact)
+        game.player:begincontact(b, a, contact)
     end
 end
 
@@ -129,11 +129,11 @@ function endContact(a, b, contact)
     end
     if a:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endfloorcontact(a, b, contact)
+        game.player:endcontact(a, b, contact)
     end
     if b:getCategory() == PC_PLAYER_FLOOR_BOX then
 
-        game.player:endfloorcontact(b, a, contact)
+        game.player:endcontact(b, a, contact)
     end
 end
 
@@ -154,10 +154,23 @@ end
 
 function postSolve(a, b, contact, normalimpulse, tangentimpulse)
 
+    local xa, ya, xb, yb = contact:getPositions();
+
+    -- Save contact to cache since it might be destroyed soon
     local cache = {
-        position = Vector(contact:getPositions()),
+        position = Vector(xa, ya),
+        secondary = xb and Vector(xb, yb) or nil, -- might be absent
         normal = Vector(contact:getNormal()),
     }
+
+    -- Compensate two-point contact impulse
+    if(xb or yb) then normalimpulse = normalimpulse * 2 end
+
+    -- if normalimpulse > 200 then 
+    --     print(normalimpulse, tangentimpulse)
+    --     print(xa, ya, xb, yb)
+    -- end
+
     local object_a, object_b = a:getBody():getUserData(), b:getBody():getUserData()
 
     if object_a and object_a.postsolve then

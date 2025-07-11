@@ -4,7 +4,7 @@ local ToolTile = class("ToolTile", Tool)
 
 function ToolTile:init()
 
-    self.ghost = sprites.tile_ghost
+    self.ghost = sprites.tiles.ghost
     self.block = nil
 end
 

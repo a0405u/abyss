@@ -32,21 +32,21 @@ function Tilemap:add_hill(position)
     game.map:add(Drawable(world_position, sprites.hillbg, DL_HILL_BG))
     game.map:add(Drawable(world_position, sprites.hill, DL_HILL))
 
-    self:line(Block(), Vector(position.x + 8, 1), 11, true)
-    self:line(Block(), Vector(position.x + 9, 2), 10, true)
-    self:line(Block(), Vector(position.x + 10, 3), 8, true)
-    self:line(Block(), Vector(position.x + 12, 4), 6, true)
-    self:line(Block(), Vector(position.x + 12, 5), 5, true)
-    self:line(Block(), Vector(position.x + 12, 6), 5, true)
-    self:line(Block(), Vector(position.x + 13, 7), 3, true)
-    self:line(Block(), Vector(position.x + 14, 8), 2, true)
-    self:place(Wheat(), Vector(position.x + 10, 4))
-    self:place(Soil(), Vector(position.x + 10, 3), true)
-    self:place(Soil(), Vector(position.x + 11, 3), true)
-    self:place(Soil(), Vector(position.x + 17, 4), true)
-    self:place(Soil(), Vector(position.x + 12, 6), true)
-    self:place(Soil(), Vector(position.x + 14, 8), true)
-    self:place(Soil(), Vector(position.x + 15, 8), true)
+    self:line(TileBlock(), Vector(position.x + 8, 1), 11, true)
+    self:line(TileBlock(), Vector(position.x + 9, 2), 10, true)
+    self:line(TileBlock(), Vector(position.x + 10, 3), 8, true)
+    self:line(TileBlock(), Vector(position.x + 12, 4), 6, true)
+    self:line(TileBlock(), Vector(position.x + 12, 5), 5, true)
+    self:line(TileBlock(), Vector(position.x + 12, 6), 5, true)
+    self:line(TileBlock(), Vector(position.x + 13, 7), 3, true)
+    self:line(TileBlock(), Vector(position.x + 14, 8), 2, true)
+    self:place(TileWheat(), Vector(position.x + 10, 4))
+    self:place(TileSoil(), Vector(position.x + 10, 3), true)
+    self:place(TileSoil(), Vector(position.x + 11, 3), true)
+    self:place(TileSoil(), Vector(position.x + 17, 4), true)
+    self:place(TileSoil(), Vector(position.x + 12, 6), true)
+    self:place(TileSoil(), Vector(position.x + 14, 8), true)
+    self:place(TileSoil(), Vector(position.x + 15, 8), true)
 end
 
 
@@ -176,15 +176,15 @@ function Tilemap:build(tile, position)
 
     if self:is_present(position) then
         local t = self.tile[position.x][position.y]
-        if t:is(Wheat) or t:is(Tree) then
+        if t:is(TileWheat) or t:is(TileTree) then
             t:destroy()
-        elseif not (t:is(Support) and (tile:is(Block) or tile:is(Soil))) then
+        elseif not (t:is(TileSupport) and (tile:is(TileBlock) or tile:is(TileSoil))) then
             return false
         end
     end
     local tile_under = self.tile[position.x][position.y - 1]
-    if tile:is(Wheat) or tile:is(Tree) then
-        if tile_under and tile_under:is(Soil) then
+    if tile:is(TileWheat) or tile:is(TileTree) then
+        if tile_under and tile_under:is(TileSoil) then
             self:place(tile, position)
             return true
         end

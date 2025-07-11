@@ -1,9 +1,9 @@
 --- @class Wheat : Tile
-local Wheat = class("Wheat", Tile)
+local TileWheat = class("TileWheat", Tile)
 
 
-function Wheat:init()
-    Tile.init(self, sprites.wheat[math.random(2)])
+function TileWheat:init()
+    Tile.init(self, sprites.tiles.wheat[math.random(#sprites.tiles.wheat)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
     self.fixture:setSensor(true)
@@ -15,10 +15,10 @@ function Wheat:init()
 end
 
 
-function Wheat:instantiate()
+function TileWheat:instantiate()
 
-    return Wheat()
+    return TileWheat()
 end
 
 
-return Wheat
+return TileWheat

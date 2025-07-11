@@ -175,7 +175,9 @@ function ToolPlank:update_surface(position)
         local category = fixture:getCategory()
         if self.plank and fixture == self.plank.fixture then goto continue end
         if category ~= PC_PLANK and category ~= PC_BLOCK then goto continue end
-        self.surface = fixture:getBody():getUserData()
+        local object = fixture:getBody():getUserData()
+        if object:is(Tile) and object.solid ~= true then goto continue end
+        self.surface = object
         do break end
         ::continue::
     end

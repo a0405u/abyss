@@ -165,6 +165,7 @@ function Actor:move(dt)
     end
 
     velocity.x = math.clamp(velocity.x, -self.max_speed, self.max_speed)
+    -- print(velocity.x, velocity.y)
     -- velocity.y = math.clamp(velocity.y, -self.max_speed * 4, self.max_speed * 4)
     self.body:setLinearVelocity(velocity.x, velocity.y)
 
@@ -186,7 +187,7 @@ function Actor:jump()
 end
 
 
-function Actor:beginfloorcontact(a, b, contact)
+function Actor:begincontact(a, b, contact)
 
     for i, mask in ipairs{b:getMask()} do
         if mask == PC_PLAYER then return end
@@ -195,12 +196,16 @@ function Actor:beginfloorcontact(a, b, contact)
 end
 
 
-function Actor:endfloorcontact(a, b, contact)
+function Actor:endcontact(a, b, contact)
 
     for i, mask in ipairs{b:getMask()} do
         if mask == PC_PLAYER then return end
     end
     self.floor_count = math.max(0, self.floor_count - 1)
+end
+
+function Actor:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+
 end
 
 

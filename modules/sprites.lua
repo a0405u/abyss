@@ -32,7 +32,6 @@ function sprites.load()
     sprites.mouse = load_from_file("sprites/mouse", nil, nil, Vector(0, 0))
     sprites.cursor = load_from_file("sprites/cursor")
     sprites.hand = load_from_file("sprites/hand")
-    sprites.item_frame = load_from_file("sprites/item_frame")
     
     sprites.ui = {
         left = load_from_file("sprites/ui_left", nil, nil, Vector()),
@@ -78,7 +77,7 @@ function sprites.load()
         }
     }
     
-    sprites.icon = {
+    sprites.resources = {
         wood = load_from_file("sprites/wood"),
         stone = load_from_file("sprites/stone"),
         food = load_from_file("sprites/food"),
@@ -93,6 +92,11 @@ function sprites.load()
     sprites.plank = load_from_file("sprites/plank", nil, nil, Vector(14, 7))
     sprites.nail = load_from_file("sprites/nail")
     
+    sprites.hill = load_from_file("sprites/hill", nil, nil, Vector(0, 320))
+    sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector(0, 320))
+    sprites.ground = load_from_file("sprites/ground")
+    sprites.background = load_from_file("sprites/background")
+
     sprites.gib = {
         load_from_file("sprites/gib/scrab_1"),
         load_from_file("sprites/gib/scrab_2"),
@@ -107,49 +111,49 @@ function sprites.load()
         load_from_file("sprites/gib/scrab_11"),
         load_from_file("sprites/gib/scrab_12")
     }
-    
-    sprites.tile = load_from_file("sprites/tile")
-    sprites.tile_ghost = load_from_file("sprites/tile_ghost")
-    sprites.block = {
-        load_from_file("sprites/block"),
-        load_from_file("sprites/blockb"),
-        load_from_file("sprites/blockc"),
-        load_from_file("sprites/blockd"),
-        load_from_file("sprites/blocke"),
+
+    sprites.tiles = {
+        tile = load_from_file("sprites/tile"),
+        ghost = load_from_file("sprites/tile_ghost"),
+        block = {
+            load_from_file("sprites/block"),
+            load_from_file("sprites/blockb"),
+            load_from_file("sprites/blockc"),
+            load_from_file("sprites/blockd"),
+            load_from_file("sprites/blocke"),
+        },
+        soil = {
+            load_from_file("sprites/soil"),
+            load_from_file("sprites/soilb"),
+            load_from_file("sprites/soilc")
+        },
+        support = {
+            load_from_file("sprites/support"),
+            load_from_file("sprites/supportb"),
+            load_from_file("sprites/supportc")
+        },
+        wheat = {
+            load_from_file("sprites/wheat"),
+            load_from_file("sprites/wheatb")
+        },
+        tree = {
+            load_from_file("sprites/tree_1"),
+            load_from_file("sprites/tree_2"),
+            load_from_file("sprites/tree_3")
+        }
     }
-    sprites.soil = {
-        load_from_file("sprites/soil"),
-        load_from_file("sprites/soilb"),
-        load_from_file("sprites/soilc")
+
+    sprites.buildings = {
+        house = load_from_file("sprites/house"),
+        mine = load_from_file("sprites/mine"),
+        windmill = load_from_file("sprites/windmill"),
+        sawmill = load_from_file("sprites/sawmill"),
+        townhall = load_from_file("sprites/townhall"),
+        temple = load_from_file("sprites/temple"),
+        block = load_from_file("sprites/block"),
+        soil = load_from_file("sprites/soil")
     }
-    sprites.support = {
-        load_from_file("sprites/support"),
-        load_from_file("sprites/supportb"),
-        load_from_file("sprites/supportc")
-    }
-    sprites.wheat = {
-        load_from_file("sprites/wheat"),
-        load_from_file("sprites/wheatb")
-    }
-    sprites.tree = {
-        load_from_file("sprites/tree_1"),
-        load_from_file("sprites/tree_2"),
-        load_from_file("sprites/tree_3")
-    }
-    
-    sprites.hill = load_from_file("sprites/hill", nil, nil, Vector(0, 320))
-    sprites.hillbg = load_from_file("sprites/hillbg", nil, nil, Vector(0, 320))
-    sprites.ground = load_from_file("sprites/ground")
-    sprites.background = load_from_file("sprites/background")
-    
-    sprites.building = load_from_file("sprites/house_1")
-    sprites.house = load_from_file("sprites/house")
-    sprites.mine = load_from_file("sprites/mine")
-    sprites.windmill = load_from_file("sprites/windmill")
-    sprites.sawmill = load_from_file("sprites/sawmill")
-    sprites.townhall = load_from_file("sprites/townhall")
-    sprites.temple = load_from_file("sprites/temple")
-    
+
     sprites.null = load_from_file("sprites/null")
 end
 

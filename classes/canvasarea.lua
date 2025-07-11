@@ -56,7 +56,7 @@ function CanvasArea:release(position, button)
     local released = self
     for key, child in pairs(self.children) do
         if not child.disabled and child:is_inside(position) then  
-            released = child:release(position, button) or pressed
+            released = child:release(position, button) or released
         end
     end
     return released

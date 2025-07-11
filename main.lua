@@ -1,6 +1,8 @@
 require "headers"
 
-G = {}
+G = {
+    dt = 0.0
+}
 
 function love.load(args)
 

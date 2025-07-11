@@ -1,18 +1,18 @@
---- @class Temple: Building
-local Temple = class("Temple", Building)
+--- @class BuildingTemple: Building
+local BuildingTemple = class("BuildingTemple", Building)
 
 
-function Temple:init(position, rotation)
+function BuildingTemple:init(position, rotation)
 
-    Building.init(self, position, rotation, sprites.temple)
+    Building.init(self, position, rotation, sprites.buildings.temple)
     game.temple = self
 end
 
 
-function Temple:update(dt)
+function BuildingTemple:update(dt)
 
     Building.update(self, dt)
 end
 
 
-return Temple
+return BuildingTemple

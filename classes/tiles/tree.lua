@@ -1,9 +1,9 @@
 --- @class Tree : Tile
-local Tree = class("Tree", Tile)
+local TileTree = class("TileTree", Tile)
 
 
-function Tree:init()
-    Tile.init(self, sprites.tree[math.random(3)])
+function TileTree:init()
+    Tile.init(self, sprites.tiles.tree[math.random(#sprites.tiles.tree)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
     self.fixture:setSensor(true)
@@ -15,10 +15,10 @@ function Tree:init()
 end
 
 
-function Tree:instantiate()
+function TileTree:instantiate()
 
-    return Tree()
+    return TileTree()
 end
 
 
-return Tree
+return TileTree

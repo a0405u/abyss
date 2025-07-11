@@ -1,20 +1,20 @@
 --- @class Block: Tile
-local Block = class("Block", Tile)
+local TileBlock = class("TileBlock", Tile)
 
 
-function Block:init()
-    Tile.init(self, sprites.block[math.random(#sprites.block)])
+function TileBlock:init()
+    Tile.init(self, sprites.tiles.block[math.random(#sprites.tiles.block)])
     self.cost = COST_BLOCK
 end
 
 
-function Block:instantiate()
+function TileBlock:instantiate()
 
-    return Block()
+    return TileBlock()
 end
 
 
-function Block:check_support(position)
+function TileBlock:check_support(position)
     local left = self.map.tile[position.x - 1][position.y]
     local tile = self.map.tile[position.x][position.y]
     local right = self.map.tile[position.x + 1][position.y]
@@ -25,14 +25,14 @@ function Block:check_support(position)
 end
 
 
-function Block:is_stable()
+function TileBlock:is_stable()
 
     if Tile.is_stable(self) then
 
         if self.position.y <= 2 then return true end
 
         local tile = self.map.tile[self.position.x][self.position.y - 1]
-        if tile and tile:is(Support) then return true end
+        if tile and tile:is(TileSupport) then return true end
 
         if self:check_support(Vector(self.position.x, self.position.y - 1)) then
             return true
@@ -46,4 +46,4 @@ function Block:is_stable()
 end
 
 
-return Block
+return TileBlock

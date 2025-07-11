@@ -6,7 +6,7 @@ function Tile:init(sprite, size)
 
     self.map = nil
     self.position = Vector()
-    self.sprite = sprite and sprite:instantiate() or sprites.tile:instantiate()
+    self.sprite = sprite and sprite:instantiate() or sprites.tiles.tile:instantiate()
     self.size = size or Vector(TILESIZE, TILESIZE)
     self.body = love.physics.newBody(game.world, 0, 0, "static")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y))

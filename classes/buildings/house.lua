@@ -1,20 +1,20 @@
---- @class House: Building
-local House = class("House", Building)
+--- @class BuildingHouse: Building
+local BuildingHouse = class("BuildingHouse", Building)
 
 
-function House:init(position, rotation)
+function BuildingHouse:init(position, rotation)
 
-    Building.init(self, position, rotation, sprites.house)
+    Building.init(self, position, rotation, sprites.buildings.house)
     self.income = INCOME_HOUSE
     self.cost = COST_HOUSE
 end
 
 
-function House:update(dt)
+function BuildingHouse:update(dt)
 
     Building.update(self, dt)
     game.economy:add(self.income, dt)
 end
 
 
-return House
+return BuildingHouse

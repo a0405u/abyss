@@ -19,27 +19,29 @@ function ui:init()
         wall = Button(Vector(19, 47), sprites.ui.button_small, sprites.ui.icons_small.wall, nil, nil,
         function() game:set_tool(game.tools.plank, Plank.Type.wall) end),
         support = Button(Vector(37, 47), sprites.ui.button_small, sprites.ui.icons_small.support, nil, nil,
-        function() game:set_tool(game.tools.tile, Support()) end),
-        block = Button(Vector(56, 29), sprites.ui.button_small, sprites.ui.icons_small.block, nil, nil,
-        function() game:set_tool(game.tools.tile, Block()) end),
+        function() game:set_tool(game.tools.tile, TileSupport()) end),
+        box = Button(Vector(56, 29), sprites.ui.button_small, sprites.ui.icons_small.block, nil, nil,
+        function() game:set_tool(game.tools.tile, TileBlock()) end),
         soil = Button(Vector(74, 29), sprites.ui.button_small, sprites.ui.icons_small.soil, nil, nil,
-        function() game:set_tool(game.tools.tile, Soil()) end),
+        function() game:set_tool(game.tools.tile, TileSoil()) end),
         wheat = Button(Vector(56, 47), sprites.ui.button_small, sprites.ui.icons_small.wheat, nil, nil,
-        function() game:set_tool(game.tools.tile, Wheat()) end),
+        function() game:set_tool(game.tools.tile, TileWheat()) end),
         tree = Button(Vector(74, 47), sprites.ui.button_small, sprites.ui.icons_small.trees, nil, nil,
-        function() game:set_tool(game.tools.tile, Tree()) end),
+        function() game:set_tool(game.tools.tile, TileTree()) end),
         house = Button(Vector(19, 66), sprites.ui.button, sprites.ui.icons.house, nil, nil,
-        function() game:set_tool(game.tools.building, House()) end),
+        function() game:set_tool(game.tools.building, BuildingHouse()) end),
         mine = Button(Vector(56, 66), sprites.ui.button, sprites.ui.icons.mine, nil, nil,
-        function() game:set_tool(game.tools.building, Mine()) end),
+        function() game:set_tool(game.tools.building, BuildingMine()) end),
         windmill = Button(Vector(19, 103), sprites.ui.button, sprites.ui.icons.windmill, nil, nil,
-        function() game:set_tool(game.tools.building, Windmill()) end),
+        function() game:set_tool(game.tools.building, BuildingWindmill()) end),
         sawmill = Button(Vector(56, 103), sprites.ui.button, sprites.ui.icons.sawmill, nil, nil,
-        function() game:set_tool(game.tools.building, Sawmill()) end),
+        function() game:set_tool(game.tools.building, BuildingSawmill()) end),
         townhall = Button(Vector(19, 140), sprites.ui.button, sprites.ui.icons.townhall, nil, true,
-        function() game:set_tool(game.tools.building, Sawmill()) end),
+        function() game:set_tool(game.tools.building, BuildingSawmill()) end),
+        -- box = Button(Vector(19, 140), sprites.ui.button, sprites.ui.icons.sawmill, nil, nil,
+        -- function() game:set_tool(game.tools.building, Box()) end),
         temple = Button(Vector(56, 140), sprites.ui.button, sprites.ui.icons.temple, nil, true,
-        function() game:set_tool(game.tools.building, Sawmill()) end),
+        function() game:set_tool(game.tools.building, BuildingSawmill()) end),
 
         hammer = Button(Vector(109, 0), sprites.ui.button_top, sprites.ui.icons_small.hammer, nil, nil,
         function() game:set_tool(game.tools.hammer) end),
@@ -82,35 +84,35 @@ function ui:init()
             end
         end
         if tool:is(ToolTile) then
-            if tool.block:is(Block) then
+            if tool.block:is(TileBlock) then
                 e.name = "Block"
                 e.description = "It's hard and heavy."
                 e.cost = COST_BLOCK
                 e.preview = sprites.ui.preview.block
                 return
             end
-            if tool.block:is(Support) then
+            if tool.block:is(TileSupport) then
                 e.name = "Support"
                 e.description = "It gives a bit of stability."
                 e.cost = COST_SUPPORT
                 e.preview = sprites.ui.preview.support
                 return
             end
-            if tool.block:is(Soil) then
+            if tool.block:is(TileSoil) then
                 e.name = "Soil"
                 e.description = "It's moist and unstable."
                 e.cost = COST_SOIL
                 e.preview = sprites.ui.preview.soil
                 return
             end
-            if tool.block:is(Tree) then
+            if tool.block:is(TileTree) then
                 e.name = "Tree"
                 e.description = "It is warm but the leaves are falling."
                 e.cost = COST_TREE
                 e.preview = sprites.ui.preview.tree
                 return
             end
-            if tool.block:is(Wheat) then
+            if tool.block:is(TileWheat) then
                 e.name = "Wheat"
                 e.description = "How can it grow in such darkness?"
                 e.cost = COST_WHEAT
@@ -119,25 +121,25 @@ function ui:init()
             end
         end
         if tool:is(ToolBuilding) then
-            if tool.building:is(House) then
+            if tool.building:is(BuildingHouse) then
                 e.name = "House"
                 e.description = "There is no one to live here."
                 e.cost = COST_HOUSE
                 e.preview = sprites.ui.preview.house
             end
-            if tool.building:is(Mine) then
+            if tool.building:is(BuildingMine) then
                 e.name = "Mine"
                 e.description = "You could go even deeper."
                 e.cost = COST_MINE
                 e.preview = sprites.ui.preview.mine
             end
-            if tool.building:is(Sawmill) then
+            if tool.building:is(BuildingSawmill) then
                 e.name = "Sawmill"
                 e.description = "It could saw trees if you had some."
                 e.cost = COST_SAWMILL
                 e.preview = sprites.ui.preview.sawmill
             end
-            if tool.building:is(Windmill) then
+            if tool.building:is(BuildingWindmill) then
                 e.name = "Windmill"
                 e.description = "There is no wind in here."
                 e.cost = COST_WINDMILL
@@ -160,11 +162,11 @@ function ui:init()
 
         self.right.preview:draw(DL_UI_ICON, Vector(509, 112))
 
-        sprites.icon.wood:draw(DL_UI_ICON, Vector(622, 97))
+        sprites.resources.wood:draw(DL_UI_ICON, Vector(622, 97))
         self:print(self.right.cost.wood == 0 and "-" or self.right.cost.wood, Vector(488, 94), 126, "right")
-        sprites.icon.stone:draw(DL_UI_ICON, Vector(622, 113))
+        sprites.resources.stone:draw(DL_UI_ICON, Vector(622, 113))
         self:print(self.right.cost.stone == 0 and "-" or self.right.cost.stone, Vector(488, 110), 126, "right")
-        sprites.icon.food:draw(DL_UI_ICON, Vector(622, 129))
+        sprites.resources.food:draw(DL_UI_ICON, Vector(622, 129))
         self:print(self.right.cost.food == 0 and "-" or self.right.cost.food, Vector(488, 126), 126, "right")
     end
 
@@ -173,15 +175,15 @@ function ui:init()
     economy.text = Vector(8, - font.small:getHeight() / 2)
     economy.spacing = 32
     economy.wood = {
-            icon = sprites.icon.wood,
+            icon = sprites.resources.wood,
             value = 0,
         }
     economy.stone = {
-            icon = sprites.icon.stone,
+            icon = sprites.resources.stone,
             value = 0,
         }
     economy.food = {
-            icon = sprites.icon.food,
+            icon = sprites.resources.food,
             value = 0,
         }
 

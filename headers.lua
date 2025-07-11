@@ -58,22 +58,29 @@ Plank = require "classes/plank"
 Nail = require "classes/nail"
 Gib = require "classes/gib"
 
-Tool = require "classes/tools/tool"
-ToolHand = require "classes.tools.toolhand"
-ToolPlank = require "classes.tools.toolplank"
-ToolTile = require "classes.tools.tooltile"
-ToolBuilding = require "classes.tools.toolbuilding"
-ToolHammer = require "classes.tools.toolhammer"
+-- Tools
 
-Container = require "classes.tiles.container"
-Block = require "classes.tiles.block"
-Soil = require "classes.tiles.soil"
-Support = require "classes.tiles.support"
-Wheat = require "classes.tiles.wheat"
-Tree = require "classes.tiles.tree"
+Tool = require "classes/tools/tool"
+ToolHand = require "classes.tools.hand"
+ToolPlank = require "classes.tools.plank"
+ToolTile = require "classes.tools.tile"
+ToolBuilding = require "classes.tools.building"
+ToolHammer = require "classes.tools.hammer"
+
+-- Tiles
+
+TileContainer = require "classes.tiles.container"
+TileBlock = require "classes.tiles.block"
+TileSoil = require "classes.tiles.soil"
+TileSupport = require "classes.tiles.support"
+TileWheat = require "classes.tiles.wheat"
+TileTree = require "classes.tiles.tree"
+
+-- Buildings
 
 Building = require "classes.buildings.building"
-House = require "classes.buildings.house"
-Mine = require "classes.buildings.mine"
-Windmill = require "classes.buildings.windmill"
-Sawmill = require "classes.buildings.sawmill"
+BuildingHouse = require "classes.buildings.house"
+BuildingMine = require "classes.buildings.mine"
+BuildingWindmill = require "classes.buildings.windmill"
+BuildingSawmill = require "classes.buildings.sawmill"
+BuildingBlock = require "classes.buildings.block"

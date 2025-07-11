@@ -78,7 +78,7 @@ function Plank:init(position, rotation, length, mass)
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
     self.fixture:setCategory(PC_PLANK)
     
-    self:set_type(PlankType.ghost, self.sprite.animations.ghost)
+    self:set_type(PlankType.ghost)
     self.nails = {}
     self.timer = Timer()
     self.visible = true
@@ -159,6 +159,8 @@ end
 
 
 function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+
+    -- print(self.body:getMass())
     if self.frozen then -- and b:getCategory() ~= PC_PLANK then
         self:set_frozen(false)
     end
@@ -218,7 +220,7 @@ function Plank:add_nail(position)
                 game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self, false))
                 goto continue
             end
-            if fixture:getCategory() == PC_BLOCK then
+            if fixture:getCategory() == PC_BLOCK and fixture:getBody():getUserData().solid then
                 game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
                 goto continue
             end

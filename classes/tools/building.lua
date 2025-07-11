@@ -16,6 +16,7 @@ end
 
 function ToolBuilding:use(position)
 
+    position = position - Vector(0, self.building.bb.size.y / 2)
     if self.building then
         if not game.economy:has(self.building.cost) then
             audio.play(sound.deny)
@@ -39,7 +40,7 @@ end
 function ToolBuilding:update(dt)
 
     if self.building then
-        self.building.position = ui.mouse.position.map
+        self.building.position = ui.mouse.position.map - Vector(0, self.building.bb.size.y / 2)
         -- print(ui.mouse.position.map.x, ui.mouse.position.map.y)
         -- print(self.building.position.x, self.building.position.y)
         return

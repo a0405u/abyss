@@ -6,14 +6,17 @@ function Building:init(position, rotation, sprite, colliders)
 
     self.position = position or Vector()
     self.rotation = rotation or 0.0
-    self.sprite = sprite:instantiate() or sprites.building:instantiate()
-    self.colliders = colliders or sprite.data.slices
+    self.sprite = sprite:instantiate() or sprites.buildings.house:instantiate()
+    self.colliders = colliders or self:load_colliders(sprite.data.slices)
+    self.bb = self:getBoundingBox()
+    self.fixtures = {}
     self.ghost = true
     self.strength = BUILDING_STRENGTH
     self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.body:setUserData(self)
     self.body:setActive(false)
     self.sprite:set(self.sprite.animations.ghost)
+    self.max = 0
 end
 
 
@@ -44,16 +47,69 @@ function Building:draw()
 end
 
 
+function Building:load_colliders(slices)
+
+    local colliders = {}
+
+    for i, slice in ipairs(slices) do
+
+        local collider = {}
+        collider.size = Vector(
+            slice.keys[1].bounds.w / game.map.scale,
+            slice.keys[1].bounds.h / game.map.scale
+        )
+        collider.min = Vector(
+            (slice.keys[1].bounds.x - self.sprite.size.x / 2.0) / game.map.scale,
+            (self.sprite.size.y / 2.0 - slice.keys[1].bounds.y - slice.keys[1].bounds.h) / game.map.scale
+        )
+        collider.center = Vector(
+            collider.min.x + collider.size.x / 2.0,
+            collider.min.y + collider.size.y / 2.0
+        )
+        collider.max = Vector(
+            collider.min.x + collider.size.x,
+            collider.min.y + collider.size.y
+        )
+        print("Sprt: ", self.sprite.size)
+        print("Min: ", collider.min * game.map.scale)
+        print("Cnt: ", collider.center * game.map.scale)
+        print("Max: ", collider.max * game.map.scale)
+        print("Size: ", collider.size * game.map.scale)
+        table.insert(colliders, collider)
+    end
+
+    return colliders
+end
+
+
+function Building:getBoundingBox()
+
+    local bb = {}
+    bb.min = Vector()
+    bb.max = Vector()
+
+    for i, collider in ipairs(self.colliders) do
+        
+        bb.min.x = math.min(bb.min.x, collider.min.x)
+        bb.min.y = math.min(bb.min.y, collider.min.y)
+        bb.max.x = math.max(bb.max.x, collider.max.x)
+        bb.max.y = math.max(bb.max.y, collider.max.y)
+    end
+    bb.size = Vector(bb.max.x - bb.min.x, bb.max.y - bb.min.y)
+    bb.center = Vector(bb.min.x + bb.size.x / 2.0, bb.min.y + bb.size.y / 2.0)
+    return bb
+end
+
+
 function Building:place(position)
 
     if position then self.body:setPosition(position.x, position.y) end
 
     for i, collider in ipairs(self.colliders) do
-        local w = collider.keys[1].bounds.w / game.map.scale
-        local h = collider.keys[1].bounds.h / game.map.scale
-        self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, h / 2, w, h), DS_BUILDING)
-        self.fixture:setCategory(PC_BUILDING)
-        self.fixture:setMask(PC_PLAYER, PC_BEAM)
+        local fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(collider.center.x, collider.center.y, collider.size.x, collider.size.y), DS_BUILDING)
+        fixture:setCategory(PC_BUILDING)
+        fixture:setMask(PC_PLAYER, PC_BEAM)
+        table.insert(self.fixtures, fixture)
     end
     self.ghost = false
     self.sprite:set(self.sprite.animations.idle)
@@ -97,6 +153,10 @@ function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
     --     self.update = function(dt) self:destroy(contact.position) end
     --     return
     -- end
+    -- if (normalimpulse > self.max) then
+    --     self.max = normalimpulse;
+    -- end
+    -- print(self.max)
     if b:getCategory() == PC_BUILDING or normalimpulse > self.strength then
         self.update = function(dt) self:destroy(contact.position) end
         return

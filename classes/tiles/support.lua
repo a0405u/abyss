@@ -1,9 +1,9 @@
 --- @class Support : Tile
-local Support = class("Support", Tile)
+local TileSupport = class("TileSupport", Tile)
 
 
-function Support:init()
-    Tile.init(self, sprites.support[math.random(#sprites.support)])
+function TileSupport:init()
+    Tile.init(self, sprites.tiles.support[math.random(#sprites.tiles.support)])
     -- self.body:setActive(false)
     self.fixture:setMask(PC_PLAYER)
     self.fixture:setSensor(true)
@@ -15,17 +15,17 @@ function Support:init()
 end
 
 
-function Support:instantiate()
+function TileSupport:instantiate()
 
-    return Support()
+    return TileSupport()
 end
 
 
-function Support:update_position()
+function TileSupport:update_position()
 
     local tile_under = self.map.tile[self.position.x][self.position.y - 1]
     local tile_over = self.map.tile[self.position.x][self.position.y + 1]
-    if tile_over and tile_over:is(Support) then
+    if tile_over and tile_over:is(TileSupport) then
         self.sprite:set(self.sprite.animations.middle)
     else
         self.sprite:set(self.sprite.animations.top)
@@ -36,21 +36,21 @@ function Support:update_position()
 end
 
 
-function Support:check_support(position)
+function TileSupport:check_support(position)
     local left = self.map.tile[position.x - 1][position.y]
     local tile = self.map.tile[position.x][position.y]
     local right = self.map.tile[position.x + 1][position.y]
-    if tile and (tile:is(Block) or tile:is(Soil)) then return true end
-    if tile and (tile:is(Block) or tile:is(Soil)) and
-        left and (left:is(Block) or left:is(Soil)) and
-        right and (right:is(Block) or right:is(Soil)) then
+    if tile and (tile:is(TileBlock) or tile:is(TileSoil)) then return true end
+    if tile and (tile:is(TileBlock) or tile:is(TileSoil)) and
+        left and (left:is(TileBlock) or left:is(TileSoil)) and
+        right and (right:is(TileBlock) or right:is(TileSoil)) then
         return true 
     end
     return false
 end
 
 
-function Support:is_stable()
+function TileSupport:is_stable()
 
     if Tile.is_stable(self) then
 
@@ -75,4 +75,4 @@ function Support:is_stable()
     return false
 end
 
-return Support
+return TileSupport
