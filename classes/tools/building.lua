@@ -16,7 +16,6 @@ end
 
 function ToolBuilding:use(position)
 
-    position = position - Vector(0, self.building.bb.size.y / 2)
     if self.building then
         if not game.economy:has(self.building.cost) then
             audio.play(sound.deny)
@@ -24,6 +23,7 @@ function ToolBuilding:use(position)
             return
         end
 
+        position = position - Vector(0, self.building.bb.size.y / 2)
         if game.player:in_range(position, game.player.range * 2) then
             if game:spawn_building(position, self.building) then
                 game.economy:take(self.building.cost)
