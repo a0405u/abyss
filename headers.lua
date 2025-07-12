@@ -1,5 +1,5 @@
--- if pcall(require, "lldebugger") then require("lldebugger").start() end
--- if pcall(require, "mobdebug") then require("mobdebug").start() end
+-- if pcall(require, "lldebugger") then require("lldebugger")/start() end
+-- if pcall(require, "mobdebug") then require("mobdebug")/start() end
 
 class = require "lib/middleclass"
 peachy = require "lib/peachy"
@@ -45,10 +45,10 @@ sprites = require "modules/sprites"
 
 -- Classes
 
-UI = require "modules.ui"
+UI = require "modules/ui"
 Camera = require "classes/camera"
 Drawable = require "classes/drawable"
-Tile = require "classes.tiles.tile"
+Tile = require "classes/tiles/tile"
 Tilemap = require "classes/tilemap"
 Map = require "classes/map"
 Resource = require "classes/resource"
@@ -61,26 +61,30 @@ Gib = require "classes/gib"
 -- Tools
 
 Tool = require "classes/tools/tool"
-ToolHand = require "classes.tools.hand"
-ToolPlank = require "classes.tools.plank"
-ToolTile = require "classes.tools.tile"
-ToolBuilding = require "classes.tools.building"
-ToolHammer = require "classes.tools.hammer"
+ToolHand = require "classes/tools/hand"
+ToolPlank = require "classes/tools/plank"
+ToolTile = require "classes/tools/tile"
+ToolBuilding = require "classes/tools/building"
+ToolHammer = require "classes/tools/hammer"
 
 -- Tiles
 
-TileContainer = require "classes.tiles.container"
-TileBlock = require "classes.tiles.block"
-TileSoil = require "classes.tiles.soil"
-TileSupport = require "classes.tiles.support"
-TileWheat = require "classes.tiles.wheat"
-TileTree = require "classes.tiles.tree"
+TileContainer = require "classes/tiles/container"
+TileBlock = require "classes/tiles/block"
+TileSoil = require "classes/tiles/soil"
+TileSupport = require "classes/tiles/support"
+TileWheat = require "classes/tiles/wheat"
+TileTree = require "classes/tiles/tree"
 
 -- Buildings
 
-Building = require "classes.buildings.building"
-BuildingHouse = require "classes.buildings.house"
-BuildingMine = require "classes.buildings.mine"
-BuildingWindmill = require "classes.buildings.windmill"
-BuildingSawmill = require "classes.buildings.sawmill"
-BuildingBlock = require "classes.buildings.block"
+Building = require "classes/buildings/building"
+BuildingHouse = require "classes/buildings/house"
+BuildingMine = require "classes/buildings/mine"
+BuildingWindmill = require "classes/buildings/windmill"
+BuildingSawmill = require "classes/buildings/sawmill"
+BuildingBlock = require "classes/buildings/block"
+BuildingSoil = require "classes/buildings/soil"
+BuildingSupport = require "classes/buildings/support"
+BuildingArch = require "classes/buildings/arch"
+BuildingArcade = require "classes/buildings/arcade"

@@ -148,7 +148,10 @@ function sprites.load()
         townhall = load_from_file("sprites/buildings/townhall"),
         temple = load_from_file("sprites/buildings/temple"),
         block = load_from_file("sprites/buildings/block"),
-        -- soil = load_from_file("sprites/buildings/soil")
+        soil = load_from_file("sprites/buildings/soil"),
+        support = load_from_file("sprites/buildings/support"),
+        arch = load_from_file("sprites/buildings/arch"),
+        arcade = load_from_file("sprites/buildings/arcade"),
     }
 
     sprites.null = load_from_file("sprites/null")
