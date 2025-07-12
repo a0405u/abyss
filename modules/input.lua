@@ -78,6 +78,12 @@ function love.mousereleased(x, y, button, istouch, presses)
 end
 
 
+function love.wheelmoved(x, y)
+
+    game.tool:switch(y)
+end
+
+
 function input.update(dt)
 
     if screen.state == screen.game then

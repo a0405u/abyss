@@ -20,6 +20,12 @@ function Building:init(position, rotation, sprite, colliders)
 end
 
 
+function Building:instantiate()
+
+    return Building(self.position, self.rotation, self.sprite, self.colliders)
+end
+
+
 function Building:update(dt)
 
     self.sprite:update(dt)

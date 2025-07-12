@@ -32,4 +32,9 @@ function Tool:secondary()
 end
 
 
+function Tool:switch(direction)
+
+end
+
+
 return Tool

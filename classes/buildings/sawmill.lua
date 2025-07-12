@@ -10,6 +10,12 @@ function BuildingSawmill:init(position, rotation)
 end
 
 
+function BuildingSawmill:instantiate()
+
+    return BuildingSawmill(self.position, self.rotation)
+end
+
+
 function BuildingSawmill:update(dt)
 
     Building.update(self, dt)

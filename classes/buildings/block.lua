@@ -2,10 +2,16 @@
 local BuildingBlock = class("BuildingBlock", Building)
 
 
-function BuildingBlock:init(position, rotation)
+function BuildingBlock:init(position, rotation, sprite)
 
-    Building.init(self, position, rotation, sprites.buildings.block)
+    Building.init(self, position, rotation, sprite or sprites.buildings.block)
     self.cost = COST_BLOCK
+end
+
+
+function BuildingBlock:instantiate()
+
+    return BuildingBlock(self.position, self.rotation)
 end
 
 

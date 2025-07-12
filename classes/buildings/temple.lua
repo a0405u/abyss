@@ -9,6 +9,12 @@ function BuildingTemple:init(position, rotation)
 end
 
 
+function BuildingTemple:instantiate()
+
+    return BuildingTemple(self.position, self.rotation)
+end
+
+
 function BuildingTemple:update(dt)
 
     Building.update(self, dt)

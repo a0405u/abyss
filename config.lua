@@ -49,6 +49,8 @@ function config:load()
         back = "escape",
         start = "enter",
         select = "space",
+        next = "e",
+        prev = "q",
         one = "1",
         two = "2",
         three = "3",

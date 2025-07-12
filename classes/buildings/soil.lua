@@ -9,6 +9,12 @@ function BuildingSoil:init(position, rotation)
 end
 
 
+function BuildingSoil:instantiate()
+
+    return BuildingSoil(self.position, self.rotation)
+end
+
+
 function BuildingSoil:update(dt)
 
     Building.update(self, dt)

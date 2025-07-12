@@ -10,6 +10,12 @@ function BuildingMine:init(position, rotation)
 end
 
 
+function BuildingMine:instantiate()
+
+    return BuildingMine(self.position, self.rotation)
+end
+
+
 function BuildingMine:update(dt)
 
     Building.update(self, dt)

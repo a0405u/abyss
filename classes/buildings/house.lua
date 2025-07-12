@@ -10,6 +10,12 @@ function BuildingHouse:init(position, rotation)
 end
 
 
+function BuildingHouse:instantiate()
+
+    return BuildingHouse(self.position, self.rotation)
+end
+
+
 function BuildingHouse:update(dt)
 
     Building.update(self, dt)

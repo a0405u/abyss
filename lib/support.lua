@@ -145,3 +145,12 @@ function sign(n)
 
   return n >= 0 and 1 or -1
 end
+
+
+function loop_index(index, size)
+
+    if size >= 0 then
+        return (index - 1) % size + 1
+    end
+    return 0
+end

@@ -10,6 +10,12 @@ function BuildingWindmill:init(position, rotation)
 end
 
 
+function BuildingWindmill:instantiate()
+
+    return BuildingWindmill(self.position, self.rotation)
+end
+
+
 function BuildingWindmill:update(dt)
 
     Building.update(self, dt)

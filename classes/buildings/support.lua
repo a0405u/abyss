@@ -1,17 +1,20 @@
---- @class BuildingSupport: Building
-local BuildingSupport = class("BuildingSupport", Building)
+--- @class BuildingSupport: BuildingBlock
+local BuildingSupport = class("BuildingSupport", BuildingBlock)
 
 
-function BuildingSupport:init(position, rotation)
+function BuildingSupport:init(position, rotation, sprite)
 
-    Building.init(self, position, rotation, sprites.buildings.support)
+    BuildingBlock.init(self, position, rotation, sprite or sprites.buildings.support)
     self.cost = COST_SOIL
+    self.category = PC_BGBLOCK
+    self.mask = PC_PLAYER
+    self.dl = DL_SUPPORT
 end
 
 
-function BuildingSupport:update(dt)
+function BuildingSupport:instantiate()
 
-    Building.update(self, dt)
+    return BuildingSupport(self.position, self.rotation)
 end
 
 
@@ -20,8 +23,8 @@ function BuildingSupport:place(position)
     Building.place(self, position)
 
     for i, fixture in ipairs(self.fixtures) do
-        fixture:setCategory(PC_BLOCK)
-        fixture:setMask()
+        fixture:setCategory(self.category)
+        fixture:setMask(self.mask)
     end
 end
 
