@@ -89,6 +89,9 @@ function ToolPlank:use(position)
         if not self.weld:isDestroyed() then
             self.weld:destroy()
         end
+        if self.support and not self.support:isDestroyed() then
+            self.support:destroy()
+        end
         if self.origin:is(Plank) then
             self.origin:set_frozen(false)
         end

@@ -264,14 +264,14 @@ function Plank:add_nail(position)
 
         for i, fixture in ipairs(fixtures) do
             if fixture == self.fixture then goto continue end
-            if fixture:getCategory() == PC_PLANK then
+            if fixture:getCategory() == PC_PLANK or fixture:getCategory() == PC_BLOCK then
                 game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self, false))
                 goto continue
             end
-            if fixture:getCategory() == PC_BLOCK and fixture:getBody():getUserData().solid then
-                game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
-                goto continue
-            end
+            -- if fixture:getCategory() == PC_BLOCK and fixture:getBody():getUserData().solid then
+            --     game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
+            --     goto continue
+            -- end
             ::continue::
         end
     end
