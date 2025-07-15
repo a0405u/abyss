@@ -8,10 +8,4 @@ function BuildingArcade:init(position, rotation)
 end
 
 
-function BuildingArcade:instantiate()
-
-    return BuildingArcade(self.position, self.rotation)
-end
-
-
 return BuildingArcade

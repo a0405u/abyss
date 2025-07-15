@@ -15,7 +15,7 @@ function TileSupport:init()
 end
 
 
-function TileSupport:instantiate()
+function TileSupport:clone()
 
     return TileSupport()
 end

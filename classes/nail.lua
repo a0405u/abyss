@@ -15,7 +15,7 @@ function Nail:init(position, a, b, fixed)
     if b.nails then 
         b.nails[self] = self
     end
-    self.strength = NAIL_STRENGTH
+    self.durability = DUR_NAIL
     self.fixed = (fixed ~= false)
 
     if not self.fixed then
@@ -37,7 +37,7 @@ end
 
 function Nail:update(dt)
 
-    if not self.fixed and Vector(self.joint:getReactionForce(1)):getLength() > self.strength then
+    if not self.fixed and Vector(self.joint:getReactionForce(1)):getLength() > self.durability then
         self:destroy()
         return
     end

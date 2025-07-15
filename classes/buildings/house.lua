@@ -10,7 +10,7 @@ function BuildingHouse:init(position, rotation)
 end
 
 
-function BuildingHouse:instantiate()
+function BuildingHouse:clone()
 
     return BuildingHouse(self.position, self.rotation)
 end

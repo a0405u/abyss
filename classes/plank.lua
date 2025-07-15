@@ -1,6 +1,6 @@
---- @class Plank : Object
+--- @class Plank : Body
 --- @field position Vector
-local Plank = class("Plank", Object)
+local Plank = class("Plank", Body)
 
 ---@class PlankType
 local PlankType = {
@@ -28,7 +28,7 @@ local PlankType = {
         color = color.purple,
         -- mask = PC_GIB,
         dl = DL_GIB,
-        strength = PLANK_STRENGTH / 4,
+        durability = DUR_PLANK / 4,
         animation = "gib",
     },
 	ghost = {
@@ -51,11 +51,10 @@ Plank.Type = PlankType
 ---@param mass number | nil
 function Plank:init(position, rotation, length, mass)
 
+    Body.init(self, position, rotation, sprites.plank, DL_GHOST)
+
     self.type = PlankType.ghost
-    self.sprite = sprites.plank:instantiate()
     self.sprite:set(self.sprite.animations.ghost)
-    self.position = position or Vector()
-    self.rotation = rotation or 0.0
     self.length = length or 2
     self.sprite.scale = Vector(self.length / 5, 1)
     self.width = 0.75
@@ -65,14 +64,11 @@ function Plank:init(position, rotation, length, mass)
         math.cos(self.rotation) * self.length + self.position.x, 
         math.sin(self.rotation) * self.length + self.position.y)
     self.velocity = Vector()
-    self.strength = PLANK_STRENGTH
+    self.durability = DUR_PLANK
     self.mass = mass or self.length * 5
     self.ghost = true
     self.frozen = false
 
-    self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
-    self.body:setUserData(self)
-    self.body:setAngle(self.rotation)
     -- self.body:setSleepingAllowed(false)
 
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.length / 2, 0, self.length, self.width), DS_PLANK)
@@ -82,6 +78,66 @@ function Plank:init(position, rotation, length, mass)
     self.nails = {}
     self.timer = Timer()
     self.visible = true
+end
+
+
+function Plank:update(dt)
+
+    if self.ghost then
+        -- return
+    end
+    self.position.x, self.position.y = self.body:getPosition()
+    self.rotation = self.body:getAngle()
+    
+    self.point = Vector(
+        math.cos(self.rotation) * self.length + self.position.x, 
+        math.sin(self.rotation) * self.length + self.position.y)
+    self.timer:update(dt)
+
+    if self.position.y <= -4 then
+        audio.play(sound.sink.plank, nil, 0.75 + math.random() * 0.75)
+        self.body:destroy()
+        for key, nail in pairs(self.nails) do
+            nail:destroy()
+        end
+        self.parent:remove(self)
+        ui.hint:queue("The ground seems unstable, planks need support!")
+        return
+    end
+
+    local fraction = self.dimpulse / (self.durability * self.body:getMass())
+    local volume = math.min(fraction * fraction * 2, 1.0)
+    audio.play(sound.hit.plank, volume, math.random() * 0.25 + 0.75)
+
+    if self.dimpulse > self.durability * self.body:getMass() then
+        self.update = function(dt) self:destroy() end
+    end
+
+    self.dimpulse = 0.0
+end
+
+
+function Plank:draw()
+
+    if not self.visible then return end
+    color.reset()
+    local origin = game.map:get_draw_position(self.position)
+    -- local point = game.map:get_draw_position(self.point)
+    self.sprite:draw(self.type.dl, origin, -self.rotation, Vector(self.sprite.scale.x, sign(math.cos(self.rotation))))
+    -- color.set(self.type.color)
+    -- love.graphics.setLineWidth(3)
+    -- love.graphics.line(origin.x, origin.y, point.x, point.y)
+    -- love.graphics.setLineWidth(1)
+    -- color.reset()
+    -- color.set(color.blue)
+    -- if not self.ghost then
+    --     local x1, y1, x2, y2, x3, y3, x4, y4 = self.body:getFixtures()[1]:getShape():getPoints()
+    --     local v1 = game.map:get_draw_position(Vector(self.position.x + x1, self.position.y + y1))
+    --     local v2 = game.map:get_draw_position(Vector(self.position.x + x2, self.position.y + y2))
+    --     local v3 = game.map:get_draw_position(Vector(self.position.x + x3, self.position.y + y3))
+    --     local v4 = game.map:get_draw_position(Vector(self.position.x + x4, self.position.y + y4))
+    --     love.graphics.polygon("line", v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, v4.x, v4.y)
+    -- end
 end
 
 
@@ -115,7 +171,7 @@ function Plank:make_gib(position, rotation, length, velocity)
 end
 
 
-function Plank:destroy(point, impulse)
+function Plank:destroy()
 
     local gibs = {}
     if self.length > 2 then
@@ -132,7 +188,7 @@ function Plank:destroy(point, impulse)
         nail:destroy()
     end
     self.parent:remove(self)
-    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    audio.play(sound.destroy.plank, 0.5, 0.75 + math.random() * 0.75)
 end
 
 
@@ -155,17 +211,9 @@ function Plank:presolve(a, b, contact)
             return true
         end
     end
-end
 
-
-function Plank:postsolve(a, b, contact, normalimpulse, tangentimpulse)
-
-    -- print(self.body:getMass())
     if self.frozen then -- and b:getCategory() ~= PC_PLANK then
         self:set_frozen(false)
-    end
-    if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(contact.position, normalimpulse) end
     end
 end
 
@@ -185,7 +233,7 @@ function Plank:set_type(type)
     self.fixture:setCategory(PC_PLANK, type.category)
     if type.mask then self.fixture:setMask(type.mask) else self.fixture:setMask() end
     if type.animation then self.sprite:set(self.sprite.animations[type.animation]) end
-    self.strength = type.strength or PLANK_STRENGTH
+    self.durability = type.durability or DUR_PLANK
     self.fixture:setDensity(type.density or DS_PLANK)
     self.body:resetMassData()
     self.fixture:setGroupIndex(type.group or 0)
@@ -208,7 +256,7 @@ end
 
 function Plank:add_nail(position)
 
-    if (game.map.fixture:testPoint(position.x, position.y)) then
+    if (game.map.ground.fixture:testPoint(position.x, position.y)) then
         -- game.map:add(Nail(Vector(position.x, position.y), game.map, self))
         return
     else
@@ -245,55 +293,6 @@ function Plank:set_angle(angle)
 
     self.rotation = angle
     self.body:setAngle(self.rotation)
-end
-
-
-function Plank:update(dt)
-
-    if self.ghost then
-        -- return
-    end
-    self.position.x, self.position.y = self.body:getPosition()
-    self.rotation = self.body:getAngle()
-    
-    self.point = Vector(
-        math.cos(self.rotation) * self.length + self.position.x, 
-        math.sin(self.rotation) * self.length + self.position.y)
-    self.timer:update(dt)
-
-    if self.position.y <= -4 then
-        audio.play(sound.sink, 0.75 + math.random() * 0.75)
-        self.body:destroy()
-        for key, nail in pairs(self.nails) do
-            nail:destroy()
-        end
-        self.parent:remove(self)
-        ui.hint:queue("The ground seems unstable, planks need support!")
-    end
-end
-
-
-function Plank:draw()
-
-    if not self.visible then return end
-    color.reset()
-    local origin = game.map:get_draw_position(self.position)
-    -- local point = game.map:get_draw_position(self.point)
-    self.sprite:draw(self.type.dl, origin, -self.rotation, Vector(self.sprite.scale.x, sign(math.cos(self.rotation))))
-    -- color.set(self.type.color)
-    -- love.graphics.setLineWidth(3)
-    -- love.graphics.line(origin.x, origin.y, point.x, point.y)
-    -- love.graphics.setLineWidth(1)
-    -- color.reset()
-    -- color.set(color.blue)
-    -- if not self.ghost then
-    --     local x1, y1, x2, y2, x3, y3, x4, y4 = self.body:getFixtures()[1]:getShape():getPoints()
-    --     local v1 = game.map:get_draw_position(Vector(self.position.x + x1, self.position.y + y1))
-    --     local v2 = game.map:get_draw_position(Vector(self.position.x + x2, self.position.y + y2))
-    --     local v3 = game.map:get_draw_position(Vector(self.position.x + x3, self.position.y + y3))
-    --     local v4 = game.map:get_draw_position(Vector(self.position.x + x4, self.position.y + y4))
-    --     love.graphics.polygon("line", v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, v4.x, v4.y)
-    -- end
 end
 
 

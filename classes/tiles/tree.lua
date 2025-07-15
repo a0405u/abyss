@@ -15,7 +15,7 @@ function TileTree:init()
 end
 
 
-function TileTree:instantiate()
+function TileTree:clone()
 
     return TileTree()
 end

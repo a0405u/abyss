@@ -46,7 +46,7 @@ function ToolBuilding:use(position)
         if game.player:in_range(position, game.player.range * 2) then
             local tile = game.map.tilemap:get_tile(position)
             if tile and tile.solid then return end
-            game:spawn_building(position, self.building:instantiate())
+            game:spawn_building(position, self.building:clone())
             game.economy:take(self.building.cost)
             self.building = self.respawn and self.building or nil
             audio.play(sound.build)

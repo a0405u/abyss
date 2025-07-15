@@ -10,9 +10,25 @@ function sound.load()
     sound.build = sound.from_file("sounds/dooropen.wav")
     sound.select = sound.from_file("sounds/pick.wav")
     sound.collide = sound.from_file("sounds/playerstepground.wav")
-    sound.destroy = sound.from_file("sounds/death.wav")
+    sound.destroy = {
+        block = sound.from_file("sounds/destroyf.wav"),
+        building = sound.from_file("sounds/destroyf.wav"),
+        plank = sound.from_file("sounds/destroyg.wav"),
+        gib = sound.from_file("sounds/hita.wav"),
+    }
+    sound.hit = {
+        block = sound.from_file("sounds/hit.wav"),
+        building = sound.from_file("sounds/hit.wav"),
+        plank = sound.from_file("sounds/hitb.wav"),
+        gib = sound.from_file("sounds/hit.wav"),
+    }
+    sound.sink = {
+        block = sound.from_file("sounds/sinkd.wav", 0.4),
+        building = sound.from_file("sounds/sinkd.wav", 0.4),
+        plank = sound.from_file("sounds/sinkd.wav", 0.4),
+        gib = sound.from_file("sounds/sinkd.wav", 0.4),
+    }
     sound.hint = sound.from_file("sounds/playerstepwater.wav")
-    sound.sink = sound.from_file("sounds/sinkd.wav", 0.4)
 
     sound.logo = sound.from_file("sounds/logo.wav")
     sound.start = sound.from_file("sounds/start.wav")

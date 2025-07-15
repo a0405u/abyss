@@ -10,7 +10,7 @@ function BuildingSawmill:init(position, rotation)
 end
 
 
-function BuildingSawmill:instantiate()
+function BuildingSawmill:clone()
 
     return BuildingSawmill(self.position, self.rotation)
 end

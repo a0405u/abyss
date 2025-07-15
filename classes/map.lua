@@ -5,6 +5,7 @@ local Map = class("Map", Object)
 function Map:init()
 
     Object.init(self)
+
     self.position = {
         x = 0.0,
         y = 0.0
@@ -14,23 +15,30 @@ function Map:init()
         x = screen.size.x / self.scale,
         y = screen.size.y / self.scale
     }
-    self.objects = {}
-    self.ground = {
-        height = 2,
-        drawable = Drawable(Vector(60, 2.25), sprites.ground, DL_GROUND),
-        -- timer = Timer(function () self.body:setActive(not self.body:isActive()) self.ground.timer:restart() end, 0.2, true)
-    }
-    self.tilemap = Tilemap(Vector(0, self.ground.height), Vector(64, 64))
-    self.body = love.physics.newBody(game.world, self.size.x / 2, 0, "static")
-    self.body:setUserData(self)
-    self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, 0, self.size.x, self.ground.height * 2))
-    self.fixture:setCategory(PC_GROUND)
-    -- self.fixture:setRestitution(RST_GROUND)
-    self.left_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(-self.size.x, self.size.y / 2, self.size.x, self.size.y))
-    self.right_fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y / 2, self.size.x, self.size.y))
-    self.background = Drawable(Vector(64, 48), sprites.background, DL_BACKGROUND)
-end
+    self.body = love.physics.newBody(game.world)
 
+    self.ground = Body(Vector(self.size.x / 2, 0), 0.0, sprites.ground, DL_GROUND, "static")
+    self.ground.height = 2.0
+    self.ground.sprite.offset.y = self.ground.sprite.size.y / 2 + self.ground.height * self.scale
+    self.ground.fixture = love.physics.newFixture(self.ground.body, love.physics.newRectangleShape(0, 0, self.size.x, self.ground.height * 2))
+    self.left_fixture = love.physics.newFixture(self.ground.body, love.physics.newRectangleShape(-self.size.x, self.size.y / 2, self.size.x, self.size.y))
+    self.right_fixture = love.physics.newFixture(self.ground.body, love.physics.newRectangleShape(self.size.x, self.size.y / 2, self.size.x, self.size.y))
+    self.ground.fixture:setCategory(PC_GROUND)
+    -- self.fixture:setRestitution(RST_GROUND)
+
+    function self.ground:presolve(a, b, contact)
+        
+        if b:getCategory() == PC_PLAYER then return end
+
+        local body = b:getBody()
+        contact:setRestitution(RST_GROUND)
+        body:applyForce(0, - SAND_FORCE * body:getMass())
+    end
+
+    self.background = Drawable(Vector(64, 48), 0.0, sprites.background, DL_BACKGROUND)
+
+    self.tilemap = Tilemap(Vector(0, self.ground.height), Vector(64, 64))
+end
 
 function Map:update(dt)
 
@@ -53,7 +61,7 @@ function Map:draw()
     --     love.graphics.line(0, position.y, position.x, position.y)
     --     color.reset()
     -- end)
-    self.ground.drawable:draw()
+    self.ground:draw()
     self.background:draw(nil, 0.5)
     Object.draw(self)
     self.tilemap:draw()
@@ -172,16 +180,6 @@ function Map:get_fixtures_in_box(position, size)
         return true
     end)
     return fixtures
-end
-
---- @param a love.Fixture
---- @param b love.Fixture
---- @param contact love.Contact
-function Map:presolve(a, b, contact)
-    if b:getCategory() == PC_PLAYER then return end
-    contact:setRestitution(RST_GROUND)
-    local body = b:getBody()
-    body:applyForce(0, - SAND_FORCE * body:getMass())
 end
 
 

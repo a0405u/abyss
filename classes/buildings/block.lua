@@ -6,42 +6,19 @@ function BuildingBlock:init(position, rotation, sprite)
 
     Building.init(self, position, rotation, sprite or sprites.buildings.block)
     self.cost = COST_BLOCK
+    self.category = PC_BLOCK
+    self.durability = DUR_BLOCK
+    self.mask = {PC_BEAM}
 end
 
 
-function BuildingBlock:instantiate()
-
-    return BuildingBlock(self.position, self.rotation)
-end
-
-
-function BuildingBlock:update(dt)
-
-    Building.update(self, dt)
-end
-
-
-function BuildingBlock:place(position)
-
-    Building.place(self, position)
-
-    for i, fixture in ipairs(self.fixtures) do
-        fixture:setCategory(PC_BLOCK)
-        fixture:setMask()
-    end
-end
-
-
-function BuildingBlock:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+-- function BuildingBlock:postsolve(a, b, contact, normalimpulse, tangentimpulse)
 
     -- audio.play(sound.collide)
     -- if normalimpulse > 1000 then print(normalimpulse) end
     -- print(self.body:getMass())
-    if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(contact.position) end
-        return
-    end
-end
+    -- self.dimpulse = self.dimpulse + normalimpulse + math.abs(tangentimpulse)
+-- end
 
 
 return BuildingBlock

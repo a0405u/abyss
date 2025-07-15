@@ -8,10 +8,4 @@ function BuildingArch:init(position, rotation)
 end
 
 
-function BuildingArch:instantiate()
-
-    return BuildingArch(self.position, self.rotation)
-end
-
-
 return BuildingArch

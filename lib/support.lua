@@ -1,5 +1,5 @@
 inspect = require "lib/inspect"
-
+socket = require "socket"
 
 throw = love.errhand
 
@@ -153,4 +153,10 @@ function loop_index(index, size)
         return (index - 1) % size + 1
     end
     return 0
+end
+
+
+function sql(x, y)
+
+  return x * x + y * y
 end

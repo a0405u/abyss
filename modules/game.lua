@@ -1,4 +1,3 @@
-
 --- @class Game
 --- @field map Map
 local game = {}
@@ -31,7 +30,9 @@ end
 
 
 function game:update(dt)
+
     if self.paused then return end
+
     self.timer:update(dt)
     self.world:update(dt)
     self.map:update(dt)
@@ -100,82 +101,50 @@ end
 
 function beginContact(a, b, contact)
 
-    if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
-
-        -- b:getBody():getUserData():presolve(a, b, contact)
-        return
-    end
-    if a:getCategory() == PC_PLAYER_FLOOR_BOX then
-
-        game.player:begincontact(a, b, contact)
-    end
-    if b:getCategory() == PC_PLAYER_FLOOR_BOX then
-
-        game.player:begincontact(b, a, contact)
-    end
+    -- Pass processing to the objects colliding
+    a:getBody():getUserData():begincontact(a, b, contact)
+    b:getBody():getUserData():begincontact(b, a, contact)
 end
 
 
 function endContact(a, b, contact)
 
-    if a:getCategory() == PC_PLANK and b:getCategory() == PC_PLAYER_AREA then
-
-        a:getBody():getUserData():endcontact(a, b, contact)
-        return
-    end
-    if a:getCategory() == PC_PLAYER_FLOOR_BOX then
-
-        game.player:endcontact(a, b, contact)
-    end
-    if b:getCategory() == PC_PLAYER_FLOOR_BOX then
-
-        game.player:endcontact(b, a, contact)
-    end
+    -- Pass processing to the objects colliding
+    a:getBody():getUserData():endcontact(a, b, contact)
+    b:getBody():getUserData():endcontact(b, a, contact)
 end
 
 
 function preSolve(a, b, contact)
 
-    if b:getCategory() == PC_PLANK then
-        b:getBody():getUserData():presolve(b, a, contact)
-    end
-    if a:getCategory() == PC_GROUND then
-        a:getBody():getUserData():presolve(a, b, contact)
-    end
-    if b:getCategory() == PC_GROUND then
-        b:getBody():getUserData():presolve(b, a, contact)
-    end
+    -- Pass processing to the objects colliding
+    a:getBody():getUserData():presolve(a, b, contact)
+    b:getBody():getUserData():presolve(b, a, contact)
 end
 
 
-function postSolve(a, b, contact, normalimpulse, tangentimpulse)
+function postSolve(a, b, contact, ni1, ti1, ni2, ti2)
 
     local xa, ya, xb, yb = contact:getPositions();
+    local normalimpulse = {ni1, ni2 or 0.0}
+    local tangentimpulse = {ti1, ti2 or 0.0}
 
-    -- Save contact to cache since it might be destroyed soon
+    -- Save contact to cache since it might be destroyed before processed
     local cache = {
         position = Vector(xa, ya),
         secondary = xb and Vector(xb, yb) or nil, -- might be absent
         normal = Vector(contact:getNormal()),
+        istouching = contact:isTouching()
     }
 
-    -- Compensate two-point contact impulse
-    if(xb or yb) then normalimpulse = normalimpulse * 2 end
+    -- Compensate two-point contact impulse (Solved with impulse accumulation)
+    -- if(xb or yb) then normalimpulse = normalimpulse * 2 end
 
-    -- if normalimpulse > 200 then 
-    --     print(normalimpulse, tangentimpulse)
-    --     print(xa, ya, xb, yb)
-    -- end
+    -- if (normalimpulse > 200) then print(normalimpulse) end
 
-    local object_a, object_b = a:getBody():getUserData(), b:getBody():getUserData()
-
-    if object_a and object_a.postsolve then
-        object_a:postsolve(a, b, cache, normalimpulse, tangentimpulse)
-    end
-
-    if object_b and object_b.postsolve then
-        object_b:postsolve(b, a, cache, normalimpulse, tangentimpulse)
-    end
+    -- Pass processing to the objects colliding
+    a:getBody():getUserData():postsolve(a, b, cache, normalimpulse, tangentimpulse)
+    b:getBody():getUserData():postsolve(b, a, cache, normalimpulse, tangentimpulse)
 end
 
 

@@ -8,7 +8,7 @@ function TileBlock:init()
 end
 
 
-function TileBlock:instantiate()
+function TileBlock:clone()
 
     return TileBlock()
 end

@@ -11,10 +11,12 @@ function audio.volume(v)
     love.audio.setVolume(v)
 end
 
-function audio.play(sound, pitch)
+function audio.play(sound, volume, pitch)
 
+    sound = sound:clone()
     if config.audio.enabled then
         if pitch then sound:setPitch(pitch) end
+        if volume then sound:setVolume(volume) end
         sound:stop()
         sound:seek(0)
         sound:play()

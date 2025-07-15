@@ -12,7 +12,7 @@ local Button = class("Button", UIElement)
 function Button:init(position, sprite, icon, size, disabled, on_click, parent, activate)
 
     UIElement.init(self, sprite or sprites.ui.button, DL_UI_BUTTON, position, size, disabled, parent)
-    self.icon = icon and icon:instantiate() or sprites.ui.icons.empty:instantiate()
+    self.icon = icon and icon:clone() or sprites.ui.icons.empty:clone()
     self.on_click = on_click
     self:set_state("idle")
     if disabled then self:set_state("disabled") end

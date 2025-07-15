@@ -12,7 +12,7 @@ end
 function ToolTile:use(position)
 
     if game.player:in_range(position, game.player.range) and self.block then
-        if game:build_block(self.block:instantiate(), self.block.cost, position) then
+        if game:build_block(self.block:clone(), self.block.cost, position) then
             audio.play(sound.build)
         end
         audio.play(sound.deny)

@@ -10,7 +10,7 @@ function BuildingWindmill:init(position, rotation)
 end
 
 
-function BuildingWindmill:instantiate()
+function BuildingWindmill:clone()
 
     return BuildingWindmill(self.position, self.rotation)
 end

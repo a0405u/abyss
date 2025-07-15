@@ -15,7 +15,7 @@ function TileWheat:init()
 end
 
 
-function TileWheat:instantiate()
+function TileWheat:clone()
 
     return TileWheat()
 end

@@ -8,7 +8,7 @@ function TileSoil:init()
 end
 
 
-function TileSoil:instantiate()
+function TileSoil:clone()
 
     return TileSoil()
 end

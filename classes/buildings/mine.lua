@@ -10,7 +10,7 @@ function BuildingMine:init(position, rotation)
 end
 
 
-function BuildingMine:instantiate()
+function BuildingMine:clone()
 
     return BuildingMine(self.position, self.rotation)
 end

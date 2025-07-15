@@ -9,7 +9,7 @@ function BuildingTemple:init(position, rotation)
 end
 
 
-function BuildingTemple:instantiate()
+function BuildingTemple:clone()
 
     return BuildingTemple(self.position, self.rotation)
 end

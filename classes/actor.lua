@@ -1,4 +1,4 @@
---- @class Actor
+--- @class Actor : Body
 --- @field name string|nil
 --- @field sprite Sprite
 --- @field position Vector
@@ -8,16 +8,20 @@
 --- @field health number
 --- @field acceleration number
 --- @field friction number
-local Actor = class("Actor", Object)
+local Actor = class("Actor", Body)
 
-
+--- Actor constructor
+--- @param position Vector
+--- @param name string|nil
+--- @param sprite Sprite
+--- @param args table|nil
 function Actor:init(position, name, sprite, args)
     if not args then args = {} end
 
+    Body.init(self, position, 0.0, sprites.player, DL_PLAYER)
+
     self.name = name or nil
-    self.sprite = sprites.player:instantiate()
     self.mass = 70
-    self.position = position or Vector()
     self.size = Vector(1.5, 1.75)
     self.direction = 0.0
     self.moving = false
@@ -30,18 +34,20 @@ function Actor:init(position, name, sprite, args)
     self.jump_impulse =  JUMP * self.mass * ((DEBUG and 2) or 1)
     self.health = args.health or 3
     self.range = 8 * ((DEBUG and 8) or 1)
-    self.floor_count = 0
     self.down = false
 
-    self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(0, self.size.y / 2, self.size.x, self.size.y), 26)
     self.fixture:setCategory(PC_PLAYER)
+    
     self.area = love.physics.newFixture(self.body, love.physics.newCircleShape(0, self.size.y / 2, self.range), 0)
     self.area:setCategory(PC_PLAYER_AREA)
     self.area:setSensor(true)
+
+    self.floor_count = 0
     self.floor_box = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x - self.size.x / 4, 1), 0)
-    self.floor_box:setCategory(PC_PLAYER_FLOOR_BOX)
+    self.floor_box:setCategory(PC_PLAYER, PC_FLOOR_BOX)
     self.floor_box:setSensor(true)
+
     self.body:setMass(self.mass)
     self.body:setFixedRotation(true)
 
@@ -189,23 +195,19 @@ end
 
 function Actor:begincontact(a, b, contact)
 
-    for i, mask in ipairs{b:getMask()} do
-        if mask == PC_PLAYER then return end
+    local categories = {a:getCategory()}
+    if categories[2] == PC_FLOOR_BOX then
+        self.floor_count = math.max(0, self.floor_count + 1)
     end
-    self.floor_count = math.max(0, self.floor_count + 1)
 end
 
 
 function Actor:endcontact(a, b, contact)
 
-    for i, mask in ipairs{b:getMask()} do
-        if mask == PC_PLAYER then return end
+    local categories = {a:getCategory()}
+    if categories[2] == PC_FLOOR_BOX then
+        self.floor_count = math.max(0, self.floor_count - 1)
     end
-    self.floor_count = math.max(0, self.floor_count - 1)
-end
-
-function Actor:postsolve(a, b, contact, normalimpulse, tangentimpulse)
-
 end
 
 

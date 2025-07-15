@@ -7,7 +7,7 @@ function TileContainer:init()
 end
 
 
-function TileContainer:instantiate()
+function TileContainer:clone()
 
     return TileContainer()
 end

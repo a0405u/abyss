@@ -52,7 +52,7 @@ function Sprite:init(image, data, size, scale, offset, parent)
 end
 
 
-function Sprite:instantiate(parent)
+function Sprite:clone(parent)
 
     return Sprite(self.image, self.data, self.size, self.scale, self.offset, self.parent)
 end

@@ -17,7 +17,7 @@ end
 function Tilemap:line(block, position, count, indestructible)
 
     for i = 1, count do
-        local tile = block:instantiate()
+        local tile = block:clone()
         self:place(tile, Vector(position.x + i - 1, position.y))
         tile.indestructible = indestructible
     end
@@ -29,8 +29,8 @@ function Tilemap:add_hill(position)
     local world_position = self:get_world_position(position)
     world_position.x = world_position.x - self.tile_size.x / 2
     world_position.y = world_position.y - self.tile_size.y / 2
-    game.map:add(Drawable(world_position, sprites.hillbg, DL_HILL_BG))
-    game.map:add(Drawable(world_position, sprites.hill, DL_HILL))
+    game.map:add(Drawable(world_position, 0.0, sprites.hillbg, DL_HILL_BG))
+    game.map:add(Drawable(world_position, 0.0, sprites.hill, DL_HILL))
 
     self:line(TileBlock(), Vector(position.x + 8, 1), 11, true)
     self:line(TileBlock(), Vector(position.x + 9, 2), 10, true)

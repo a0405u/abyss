@@ -1,26 +1,24 @@
---- @class Tile
-local Tile = class("Tile", Object)
+--- @class Tile : Body
+local Tile = class("Tile", Body)
 
-
+--- comment
+--- @param sprite Sprite|nil
+--- @param size Vector|nil
 function Tile:init(sprite, size)
 
+    Body.init(self, Vector(), 0.0, sprite or sprites.tiles.tile, DL_TILE, 'static')
     self.map = nil
-    self.position = Vector()
-    self.sprite = sprite and sprite:instantiate() or sprites.tiles.tile:instantiate()
     self.size = size or Vector(TILESIZE, TILESIZE)
-    self.body = love.physics.newBody(game.world, 0, 0, "static")
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y))
     self.fixture:setCategory(PC_BLOCK)
-    self.body:setUserData(self)
     self.cost = COST_BLOCK
-    self.dl = nil
     self.indestructible = nil
     self.support = true
     self.solid = true
 end
 
 
-function Tile:instantiate()
+function Tile:clone()
 
     return Tile(self.sprite, self.size)
 end
@@ -73,7 +71,7 @@ end
 
 function Tile:destroy(position)
 
-    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    audio.play(sound.destroy, nil, 0.75 + math.random() * 0.75)
     local joints = self.body:getJoints()
     for i, joint in ipairs(joints) do
         local nail = joint:getUserData()

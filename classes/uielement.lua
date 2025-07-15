@@ -12,7 +12,7 @@ function UIElement:init(sprite, dl, position, size, disabled, parent)
     assert(sprite, "No sprite in UIElement")
 
     CanvasArea.init(self, position, size or sprite:get_size(), disabled, parent)
-    self.sprite = sprite:instantiate()
+    self.sprite = sprite:clone()
     self.dl = dl or DL_UI
 end
 

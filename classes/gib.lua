@@ -1,5 +1,5 @@
---- @class Gib: Drawable
-local Gib = class("Gib", Drawable)
+--- @class Gib: Body
+local Gib = class("Gib", Body)
 
 --- @param position Vector
 ---@param rotation number | nil
@@ -8,12 +8,9 @@ local Gib = class("Gib", Drawable)
 function Gib:init(position, rotation, sprite, dl)
 
     sprite = sprite or sprites.gib[math.random(1, #sprites.gib)]
-    dl = dl or DL_GIB
-    Drawable.init(self, position, sprite, dl)
-    self.rotation = rotation or 0.0
-    self.strength = GIB_STRENGTH
-    self.body = love.physics.newBody(game.world, self.position.x, self.position.y, "dynamic")
-    self.body:setUserData(self)
+    Body.init(self, position, rotation, sprite, dl or DL_GIB)
+    
+    self.durability = DUR_GIB
 end
 
 
@@ -23,17 +20,21 @@ function Gib:update(dt)
     self.rotation = self.body:getAngle()
 
     if self.position.y <= -4 then
-        audio.play(sound.sink, 0.75 + math.random() * 0.75)
+        audio.play(sound.sink.gib, nil, 0.75 + math.random() * 0.75)
         self.body:destroy()
         self.parent:remove(self)
+        return
     end
-end
 
+    local fraction = self.dimpulse / (self.durability * self.body:getMass())
+    local volume = math.min(fraction * fraction * 2, 1.0)
+    audio.play(sound.hit.gib, volume, math.random() * 0.25 + 0.75)
 
-function Gib:draw()
-
-    local position = game.map:get_draw_position(self.position)
-    self.sprite:draw(DL_GIB, position, -self.rotation, nil, nil, nil, nil)
+    if self.dimpulse > self.durability * self.body:getMass() then
+        self.update = function(dt) self:destroy() end
+    end
+    
+    self.dimpulse = 0.0
 end
 
 
@@ -50,17 +51,14 @@ function Gib:place()
 end
 
 
-function Gib:postsolve(a, b, contact, normalimpulse, tangentimpulse)
+function Gib:begincontact(a, b, contact)
 
-    if normalimpulse > self.strength then
-        self.update = function(dt) self:destroy(contact.position) end
-    end
 end
 
 
 function Gib:destroy(position)
 
-    audio.play(sound.destroy, 0.75 + math.random() * 0.75)
+    audio.play(sound.destroy.gib, nil, 0.75 + math.random() * 0.5)
     self.body:destroy()
     self.parent:remove(self)
 end
