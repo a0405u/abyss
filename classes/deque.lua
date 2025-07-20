@@ -9,40 +9,40 @@ function Deque:init()
 end
 
 
-function Deque:push_left(list, value)
+function Deque:push_left(value)
 
-    local first = list.first - 1
-    list.first = first
-    list[first] = value
+    local first = self.first - 1
+    self.first = first
+    self[first] = value
 end
 
 
-function Deque:push_right(list, value)
+function Deque:push_right(value)
 
-    local last = list.last + 1
-    list.last = last
-    list[last] = value
+    local last = self.last + 1
+    self.last = last
+    self[last] = value
 end
 
 
-function Deque:pop_left(list)
+function Deque:pop_left()
 
-    local first = list.first
-    if first > list.last then error("list is empty") end
-    local value = list[first]
-    list[first] = nil        -- to allow garbage collection
-    list.first = first + 1
+    local first = self.first
+    if first > self.last then return end
+    local value = self[first]
+    self[first] = nil        -- to allow garbage collection
+    self.first = first + 1
     return value
 end
 
 
-function Deque:pop_right(list)
+function Deque:pop_right()
 
-    local last = list.last
-    if list.first > last then error("list is empty") end
-    local value = list[last]
-    list[last] = nil         -- to allow garbage collection
-    list.last = last - 1
+    local last = self.last
+    if self.first > last then return end
+    local value = self[last]
+    self[last] = nil         -- to allow garbage collection
+    self.last = last - 1
     return value
 end
 

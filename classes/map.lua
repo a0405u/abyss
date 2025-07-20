@@ -28,11 +28,17 @@ function Map:init()
 
     function self.ground:presolve(a, b, contact)
         
-        if b:getCategory() == PC_PLAYER then return end
+        if b:getCategory() == PC_PLAYER or b:getCategory() == PC_BLOCK then return end
 
         local body = b:getBody()
-        contact:setRestitution(RST_GROUND)
-        body:applyForce(0, - SAND_FORCE * body:getMass())
+        local x, y = contact:getPositions()
+        -- contact:setRestitution(RST_GROUND)
+        -- body:applyForce(0, - SAND_FORCE * body:getMass())
+
+        contact:setEnabled(false)
+        local depth = 2 - y
+        body:applyLinearImpulse(0, SAND_FORCE * body:getMass() * y * 0.002, x, y)
+        body:setAngularVelocity(body:getAngularVelocity() * (y / 2))
     end
 
     self.background = Drawable(Vector(64, 48), 0.0, sprites.background, DL_BACKGROUND)

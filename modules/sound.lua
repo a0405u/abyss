@@ -15,6 +15,7 @@ function sound.load()
         building = sound.from_file("sounds/destroyf.wav"),
         plank = sound.from_file("sounds/destroyg.wav"),
         gib = sound.from_file("sounds/hita.wav"),
+        nail = sound.from_file("sounds/naila.wav")
     }
     sound.hit = {
         block = sound.from_file("sounds/hit.wav"),

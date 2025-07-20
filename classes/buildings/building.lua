@@ -2,10 +2,15 @@
 --- @field mask table
 local Building = class("Building", Body)
 
+--- comment
+--- @param position Vector|nil
+--- @param rotation number|nil
+--- @param sprite Sprite
+--- @param colliders table|nil
+--- @param dl number|nil
+function Building:init(position, rotation, sprite, colliders, dl)
 
-function Building:init(position, rotation, sprite, colliders)
-
-    Body.init(self, position, rotation, sprite, DL_BUILDING)
+    Body.init(self, position, rotation, sprite, dl or DL_BUILDING)
 
     self.colliders = colliders or self:load_colliders(sprite.data.slices)
     self.bb = self:getBoundingBox()
@@ -13,7 +18,7 @@ function Building:init(position, rotation, sprite, colliders)
     self.ghost = true
     self.durability = DUR_BUILDING
     self.body:setActive(false)
-    self.category = PC_BUILDING
+    self.category = {PC_BUILDING}
     self.mask = {PC_PLAYER, PC_BEAM}
     self.sprite:set(self.sprite.animations.ghost)
     self.max = 0
@@ -27,13 +32,9 @@ end
 
 
 function Building:update(dt)
-
-    self.sprite:update(dt)
-
-    if self.ghost then return end
+    Body.update(self, dt)
     
-    self.position.x, self.position.y = self.body:getPosition()
-    self.rotation = self.body:getAngle()
+    if self.ghost then return end
     
     if self.position.y <= -4 then
         audio.play(sound.sink.building, nil, 0.75 + math.random() * 0.75)
@@ -43,9 +44,7 @@ function Building:update(dt)
         return
     end
 
-    local fraction = self.dimpulse / (self.durability * self.body:getMass())
-    local volume = math.min(fraction * fraction * 4, 1.0)
-    audio.play(sound.hit.building, volume, math.random() * 0.25 + 0.25)
+    self:collision_sound(sound.hit.building, math.random() * 0.25 + 0.25)
 
     if self.dimpulse > self.durability * self.body:getMass() then
         self.update = function(dt) self:destroy() end
@@ -62,7 +61,7 @@ function Building:draw()
     local position = game.map:get_draw_position(self.position)
     -- local c = color.white
     -- local a = (self.ghost and 0.4) or 1
-    self.sprite:draw(DL_BUILDING, position, -self.rotation, nil, nil, nil, nil)
+    self.sprite:draw(self.dl, position, -self.rotation, nil, nil, nil, nil)
 end
 
 --- Create collider bounding boxes from slices on a sprite
@@ -125,7 +124,7 @@ function Building:place(position)
 
     for i, collider in ipairs(self.colliders) do
         local fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(collider.center.x, collider.center.y, collider.size.x, collider.size.y), DS_BUILDING)
-        fixture:setCategory(self.category)
+        fixture:setCategory(unpack(self.category))
         fixture:setMask(unpack(self.mask))
         table.insert(self.fixtures, fixture)
     end
@@ -163,40 +162,6 @@ function Building:begincontact(a, b, contact)
     -- if sql(a:getBody():getLinearVelocity()) > 0.1 then
     --     audio.play(sound.hit, nil, math.random() * 0.5 + 0.5)
     -- end
-end
-
-
-function Building:presolve(a, b, contact)
-
-end
-
-
-function Building:postsolve(a, b, contact, normalimpulse, tangentimpulse)
-
-    -- local fraction = normalimpulse / self.durability
-    -- local volume = math.min(fraction * fraction * 8, 1.0)
-    -- if not sound.hit:isPlaying() or volume > sound.hit:getVolume() then
-    --     audio.play(sound.hit, volume, math.random() * 0.25 + 0.5)
-    -- end
-
-    -- if self.rotation > math.pi / 2 or self.rotation < - math.pi / 2 then
-    --     normalimpulse = normalimpulse * 4
-    -- end 
-    -- if contact.normal.y < 0.5 then
-    --     normalimpulse = normalimpulse * 4
-    -- end
-    local impulse = normalimpulse[1] + normalimpulse[2] + math.abs(tangentimpulse[1] + tangentimpulse[2])
-    self.dimpulse = math.max(self.dimpulse, impulse)
-
-    -- if b:getCategory() == PC_GROUND then
-    --     ui.hint:queue("The ground seems unstable, buildings need support!")
-    --     self.update = function(dt) self:destroy(contact.position) end
-    --     return
-    -- end
-    -- if (normalimpulse > self.max) then
-    --     self.max = normalimpulse;
-    -- end
-    -- print(self.max)
 end
 
 

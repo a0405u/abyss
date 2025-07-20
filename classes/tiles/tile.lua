@@ -10,7 +10,7 @@ function Tile:init(sprite, size)
     self.map = nil
     self.size = size or Vector(TILESIZE, TILESIZE)
     self.fixture = love.physics.newFixture(self.body, love.physics.newRectangleShape(self.size.x, self.size.y))
-    self.fixture:setCategory(PC_BLOCK)
+    self.fixture:setCategory(PC_TILE)
     self.cost = COST_BLOCK
     self.indestructible = nil
     self.support = true

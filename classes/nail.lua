@@ -17,6 +17,7 @@ function Nail:init(position, a, b, fixed)
     end
     self.durability = DUR_NAIL
     self.fixed = (fixed ~= false)
+    self.destructible = not self.fixed
 
     if not self.fixed then
         self.joint = love.physics.newRevoluteJoint(self.objects.a.body, self.objects.b.body, self.position.x, self.position.y, false)
@@ -28,6 +29,7 @@ end
 
 
 function Nail:destroy()
+    audio.play(sound.destroy.nail, nil, 0.75 + math.random() * 0.5)
     if not self.joint:isDestroyed() then self.joint:destroy() end
     if self.objects.a.nails then self.objects.a.nails[self] = nil end
     if self.objects.b.nails then self.objects.b.nails[self] = nil end
@@ -37,7 +39,7 @@ end
 
 function Nail:update(dt)
 
-    if not self.fixed and Vector(self.joint:getReactionForce(1)):getLength() > self.durability then
+    if self.destructible and Vector(self.joint:getReactionForce(1)):getLength() > self.durability then
         self:destroy()
         return
     end

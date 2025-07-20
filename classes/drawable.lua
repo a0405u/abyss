@@ -21,6 +21,12 @@ function Drawable:init(position, rotation, sprite, dl)
 end
 
 
+function Drawable:update(dt)
+
+    self.sprite:update(dt)
+end
+
+
 function Drawable:draw(position, camera_scale)
 
     -- print(game.map:get_draw_position(self.position).x, game.map:get_draw_position(self.position).y)

@@ -7,26 +7,28 @@ local PlankType = {
     platform = {
         category = PC_PLATFORM,
         color = color.dark,
+        mask = {PC_BACKGROUND},
         dl = DL_PLATFORM,
         animation = "platform",
     },
     wall = {
         category = PC_WALL,
         color = color.dark,
+        mask = {PC_BACKGROUND},
         dl = DL_WALL,
         animation = "wall",
     },
 	beam = {
         category = PC_BEAM,
         color = color.darkest,
-        mask = {PC_PLAYER, PC_BUILDING},
+        mask = {PC_PLAYER, PC_BUILDING, PC_BACKGROUND},
         dl = DL_BEAM,
         animation = "beam",
     },
 	gib = {
         category = PC_GIB,
         color = color.purple,
-        -- mask = PC_GIB,
+        mask = {PC_BACKGROUND},
         dl = DL_GIB,
         durability = DUR_PLANK / 4,
         animation = "gib",
@@ -82,12 +84,7 @@ end
 
 
 function Plank:update(dt)
-
-    if self.ghost then
-        -- return
-    end
-    self.position.x, self.position.y = self.body:getPosition()
-    self.rotation = self.body:getAngle()
+    Body.update(self, dt)
     
     self.point = Vector(
         math.cos(self.rotation) * self.length + self.position.x, 
@@ -105,9 +102,7 @@ function Plank:update(dt)
         return
     end
 
-    local fraction = self.dimpulse / (self.durability * self.body:getMass())
-    local volume = math.min(fraction * fraction * 2, 1.0)
-    audio.play(sound.hit.plank, volume, math.random() * 0.25 + 0.75)
+    self:collision_sound(sound.hit.plank, math.random() * 0.25 + 0.75)
 
     if self.dimpulse > self.durability * self.body:getMass() then
         self.update = function(dt) self:destroy() end
@@ -202,6 +197,8 @@ end
 
 function Plank:presolve(a, b, contact)
 
+    Body.presolve(self, a, b, contact)
+    
     if b:getCategory() == PC_PLAYER then
         local x, y = contact:getPositions()
         local nx, ny = contact:getNormal()
@@ -264,14 +261,20 @@ function Plank:add_nail(position)
 
         for i, fixture in ipairs(fixtures) do
             if fixture == self.fixture then goto continue end
-            if fixture:getCategory() == PC_PLANK or fixture:getCategory() == PC_BLOCK then
-                game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self, false))
+            local category = {fixture:getCategory()}
+            if category[1] == PC_PLANK or category[1] == PC_BLOCK then
+                local object = fixture:getBody():getUserData()
+                if object:is(BuildingSoil) then
+                    game.map:add(Nail(Vector(position.x, position.y), object, self))
+                else
+                    game.map:add(Nail(Vector(position.x, position.y), object, self, false))
+                end
                 goto continue
             end
-            -- if fixture:getCategory() == PC_BLOCK and fixture:getBody():getUserData().solid then
-            --     game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
-            --     goto continue
-            -- end
+            if category[1] == PC_TILE and fixture:getBody():getUserData().solid then
+                game.map:add(Nail(Vector(position.x, position.y), fixture:getBody():getUserData(), self))
+                goto continue
+            end
             ::continue::
         end
     end

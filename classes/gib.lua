@@ -26,9 +26,7 @@ function Gib:update(dt)
         return
     end
 
-    local fraction = self.dimpulse / (self.durability * self.body:getMass())
-    local volume = math.min(fraction * fraction * 2, 1.0)
-    audio.play(sound.hit.gib, volume, math.random() * 0.25 + 0.75)
+    self:collision_sound(sound.hit.gib, math.random() * 0.25 + 0.75)
 
     if self.dimpulse > self.durability * self.body:getMass() then
         self.update = function(dt) self:destroy() end

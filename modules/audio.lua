@@ -13,7 +13,7 @@ end
 
 function audio.play(sound, volume, pitch)
 
-    sound = sound:clone()
+    -- sound = sound:clone()
     if config.audio.enabled then
         if pitch then sound:setPitch(pitch) end
         if volume then sound:setVolume(volume) end
